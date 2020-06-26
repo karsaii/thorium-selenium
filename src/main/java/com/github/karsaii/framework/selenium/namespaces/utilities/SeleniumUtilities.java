@@ -50,7 +50,7 @@ public interface SeleniumUtilities {
     }
 
     static boolean areNullLazyData(LazyLocator... data) {
-        return areAll(SeleniumLazyLocatorValidators::isInvalidLazyLocator, data);
+        return areAll(SeleniumUtilities::isInvalidLazyLocator, data);
     }
 
     static boolean areNullLazyData(List<LazyLocator> data) {
