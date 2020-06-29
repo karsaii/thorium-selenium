@@ -3,16 +3,12 @@ package com.github.karsaii.framework.selenium.namespaces.element.validators;
 import com.github.karsaii.core.extensions.namespaces.EmptiableFunctions;
 import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
 import com.github.karsaii.core.namespaces.validators.CoreFormatter;
-import com.github.karsaii.core.records.Data;
+import com.github.karsaii.framework.core.abstracts.element.finder.BaseFilterParameters;
 import com.github.karsaii.framework.core.namespaces.extensions.boilers.LazyLocatorList;
-import com.github.karsaii.framework.core.records.element.finder.BaseFilterParameters;
+
 import com.github.karsaii.framework.selenium.enums.ManyGetter;
 import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.WebElementList;
-import com.github.karsaii.framework.selenium.records.element.finder.ElementFilterParameters;
 import org.openqa.selenium.WebDriver;
-
-import java.util.Map;
-import java.util.function.Function;
 
 import static com.github.karsaii.framework.selenium.namespaces.validators.SeleniumFormatter.getManyGetterErrorMessage;
 
@@ -20,8 +16,6 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public interface ElementFilterParametersValidators {
-
-
     static String isNullLazyLocatorListMessage(LazyLocatorList locators) {
         var message = CoreFormatter.isNullMessageWithName(locators, "Locators");
         if (isBlank(message) && EmptiableFunctions.isEmpty(locators)) {
@@ -43,5 +37,4 @@ public interface ElementFilterParametersValidators {
 
         return isNotBlank(message) ? "isInvalidElementIndexFilterParametersMessage: " + message : CoreFormatterConstants.EMPTY;
     }
-
 }

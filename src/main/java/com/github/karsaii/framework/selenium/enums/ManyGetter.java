@@ -7,7 +7,8 @@ public enum ManyGetter {
     GET_ELEMENTS("getElements"),
     GET_NESTED_ELEMENTS_FROM_LAST("getNestedElementsFromLast"),
     GET_FRAME_NESTED_ELEMENTS("getFrameNestedElements"),
-    GET_SHADOW_NESTED_ELEMENTS("getShadowNestedElements");
+    GET_SHADOW_NESTED_ELEMENTS("getShadowNestedElements"),
+    DEFAULT("getElements");
 
     private static final Map<String, ManyGetter> VALUES = new HashMap<>();
     private final String name;

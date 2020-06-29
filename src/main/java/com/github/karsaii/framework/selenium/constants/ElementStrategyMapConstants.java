@@ -3,9 +3,10 @@ package com.github.karsaii.framework.selenium.constants;
 import org.openqa.selenium.By;
 import com.github.karsaii.framework.selenium.enums.SeleniumSelectorStrategy;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumMap;
-import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
@@ -28,5 +29,14 @@ public abstract class ElementStrategyMapConstants {
         )
     );
 
-    public static final Set<SeleniumSelectorStrategy> STRATEGY_MAP_KEY_SET = EnumSet.allOf(SeleniumSelectorStrategy.class);
+    public static final Set<String> STRATEGY_MAP_KEY_SET = new HashSet<>(Arrays.asList(
+        SeleniumSelectorStrategy.ID.getName(),
+        SeleniumSelectorStrategy.CSS_SELECTOR.getName(),
+        SeleniumSelectorStrategy.CLASS.getName(),
+        SeleniumSelectorStrategy.XPATH.getName(),
+        SeleniumSelectorStrategy.TAG_NAME.getName(),
+        SeleniumSelectorStrategy.NAME.getName(),
+        SeleniumSelectorStrategy.PARTIAL_LINK_TEXT.getName(),
+        SeleniumSelectorStrategy.LINK_TEXT.getName()
+    ));
 }

@@ -2,7 +2,7 @@ package com.github.karsaii.framework.selenium.namespaces.element;
 
 import com.github.karsaii.core.records.Data;
 import com.github.karsaii.core.namespaces.validators.CoreFormatter;
-import com.github.karsaii.framework.core.records.element.finder.BaseFilterParameters;
+import com.github.karsaii.framework.core.abstracts.element.finder.BaseFilterParameters;
 import com.github.karsaii.framework.selenium.enums.ManyGetter;
 import com.github.karsaii.framework.selenium.namespaces.factories.DriverFunctionFactory;
 import com.github.karsaii.framework.selenium.namespaces.validators.SeleniumFormatter;

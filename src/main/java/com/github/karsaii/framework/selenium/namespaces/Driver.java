@@ -19,6 +19,7 @@ import com.github.karsaii.core.namespaces.validators.CoreFormatter;
 import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
 import com.github.karsaii.framework.selenium.constants.validators.SeleniumFormatterConstants;
 import com.github.karsaii.framework.selenium.namespaces.factories.DriverFunctionFactory;
+import com.github.karsaii.framework.selenium.namespaces.factories.ElementFilterParametersFactory;
 import com.github.karsaii.framework.selenium.namespaces.factories.LazyElementWithOptionsDataFactory;
 import com.github.karsaii.framework.selenium.namespaces.factories.SeleniumDataFactory;
 import com.github.karsaii.framework.selenium.namespaces.factories.SeleniumLazyLocatorFactory;
@@ -1766,25 +1767,6 @@ public interface Driver {
         );
     }
 
-    static Data<WebElement> cacheNonNullAndNotFalseLazyElement(AbstractLazyResult<LazyFilteredElementParameters> element, Data<ExternalElementData> regular, Data<ExternalElementData> external) {
-        final var nameof = "cacheNonNullAndNotFalseLazyElement";
-        if (isNotBlank(FrameworkCoreFormatter.isNullLazyElementMessage(element)) || areAnyNull(regular, external)) {
-            return replaceMessage(SeleniumDataConstants.NULL_ELEMENT, nameof, CoreFormatterConstants.PARAMETER_ISSUES + CoreFormatterConstants.WAS_NULL);
-        }
-
-        final var regularStatus = isValidNonFalse(regular);
-        final var externalStatus = isValidNonFalse(external);
-        if (!(regularStatus || externalStatus)) {
-            return SeleniumDataConstants.NULL_ELEMENT;
-        }
-
-        final var externalElement = (externalStatus ? external : regular).object;
-        final var currentElement = externalElement.found;
-        return isNotNullWebElement(currentElement) ? (
-            appendMessage(currentElement, ElementRepository.cacheIfAbsent(element, FrameworkCoreUtilities.getKeysCopy(externalElement.typeKeys)))
-        ) : prependMessage(currentElement, "All approaches were tried" + CoreFormatterConstants.END_LINE);
-    }
-
     static <T> Data<Integer> getNextCachedKey(Map<String, T> parameterMap, Iterator<String> getOrder, Map<String, DecoratedList<SelectorKeySpecificityData>> typeKeys, int parameterIndex) {
         final var nameof = "getNextCachedKey";
         var type = typeKeys.getOrDefault(getOrder.next(), null);
@@ -1867,7 +1849,7 @@ public interface Driver {
                     var indexData = parameters.elementFilterData;
                     currentElement = (
                         indexData.isFiltered ? (
-                            indexData.apply(new ElementFilterParameters(locators, ElementFinderConstants.manyGetterMap, ManyGetter.getValueOf(getter)))
+                            indexData.apply(ElementFilterParametersFactory.getWithManyGetterAndDefaultGetterMap(locators, getter))
                         ) : ElementFilterFunctions.getElement(locators, ElementFinderConstants.singleGetterMap, SingleGetter.getValueOf(getter))
                     ).apply(driver);
                     message = appendMessage(message, currentElement.message.toString());
@@ -1880,7 +1862,7 @@ public interface Driver {
                 }
 
                 final var externalData = data.externalData;
-                return cacheNonNullAndNotFalseLazyElement(
+                return ElementRepository.cacheValidLazyElement(
                     dataElement,
                     DataFactoryFunctions.getWithMessage(new ExternalElementData(typeKeys, currentElement), isValidNonFalse(currentElement), message.message.toString()),
                     isBlank(FrameworkCoreFormatter.getExternalSelectorDataMessage(externalData)) ? getLazyElementByExternal(dataElement, externalData, typeKeys).apply(driver) : SeleniumDataConstants.NULL_EXTERNAL_ELEMENT
@@ -1930,7 +1912,7 @@ public interface Driver {
             data = DataFactoryFunctions.getBoolean(true, "Driver navigated successfully to \"" + url + "\"" + CoreFormatterConstants.END_LINE);
         } catch (NullPointerException ex) {
             final var exMessage = ex.getMessage();
-            data = DataFactoryFunctions.getBoolean(false, "Exception occurred while navigating. Exception:" + ex.getClass() + " Message: " +  exMessage, ex, exMessage);
+            data = DataFactoryFunctions.getBoolean(false, "Exception occurred while navigating to \"" + url + "\". Exception:" + ex.getClass() + " Message: " +  exMessage, ex, exMessage);
         }
 
         return data;
