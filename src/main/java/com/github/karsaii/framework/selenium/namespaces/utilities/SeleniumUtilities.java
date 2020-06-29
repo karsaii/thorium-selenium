@@ -53,8 +53,12 @@ public interface SeleniumUtilities {
         return areAll(SeleniumUtilities::isInvalidLazyLocator, data);
     }
 
+    static LazyLocator[] getEmptyLazyLocatorArray() {
+        return new LazyLocator[0];
+    }
+
     static boolean areNullLazyData(List<LazyLocator> data) {
-        return areNullLazyData(data.toArray(LazyLocatorConstants.NULL_LAZY_LOCATOR_ARRAY));
+        return areNullLazyData(data.toArray(getEmptyLazyLocatorArray()));
     }
 
     static boolean isNullLazyDataList(LazyLocatorList list) {

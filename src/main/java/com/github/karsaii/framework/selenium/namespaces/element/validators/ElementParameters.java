@@ -1,5 +1,6 @@
 package com.github.karsaii.framework.selenium.namespaces.element.validators;
 
+import com.github.karsaii.core.extensions.namespaces.NullableFunctions;
 import com.github.karsaii.core.namespaces.validators.CoreFormatter;
 import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
 import com.github.karsaii.framework.core.namespaces.validators.FrameworkCoreFormatter;
@@ -47,20 +48,17 @@ public interface ElementParameters {
     }
 
     static boolean isInvalidLazyElemenet(LazyElementParameters data) {
-        return Objects.isNull(data) || StringUtils.isBlank(data.getter) || areNullLazyData(data.lazyLocators);
+        return NullableFunctions.isNull(data) || StringUtils.isBlank(data.getter) || areNullLazyData(data.lazyLocators);
     }
 
     static boolean isValidLazyElement(LazyElementParameters data) {
         return !isInvalidLazyElemenet(data);
     }
 
-    static boolean isValidLazyIndexedElement(LazyFilteredElementParameters data) {
-        return !(isInvalidLazyElemenet(data) || (Objects.isNull(data.elementFilterData)) || (Objects.isNull(data.elementFilterData.filterParameter)));
+    static boolean isValidLazyFilteredElement(LazyFilteredElementParameters data) {
+        return !(isInvalidLazyElemenet(data) || (NullableFunctions.isNull(data.elementFilterData)) || (NullableFunctions.isNull(data.elementFilterData.filterParameter)));
     }
 
-    static boolean isValidLazyTextFilteredElement(LazyFilteredElementParameters data) {
-        return !(isInvalidLazyElemenet(data) || (Objects.isNull(data.elementFilterData)) || (Objects.isNull(data.elementFilterData.filterParameter)));
-    }
 
     static <T> String validateCommonElementMethodParamaters(WrappedCastData<T> castData, BiPredicate<Method, String> condition, String methodName) {
         return (

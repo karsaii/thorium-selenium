@@ -16,18 +16,23 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Predicate;
 
 import static java.util.Map.entry;
 import static com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilities.getEntry;
 import static com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilities.getEntryIndexed;
 
 public interface LazyElementFactory {
+    static <T> LazyElement getWith(String name, Map<String, LazyFilteredElementParameters> parameters, Predicate<LazyFilteredElementParameters> validator) {
+        return new LazyElement(name, parameters, validator);
+    }
+
     static <T> LazyElement getWithDefaultValidator(String name, Map<String, LazyFilteredElementParameters> parameters) {
-        return new LazyElement(name, parameters, Invalids::defaultFalseValidator);
+        return getWith(name, parameters, Invalids::defaultFalseValidator);
     }
 
     static <T> LazyElement getWithDefaultLocatorsAndValidator(String name) {
-        return new LazyElement(name, new HashMap<>(), Invalids::defaultFalseValidator);
+        return getWithDefaultValidator(name, new HashMap<>());
     }
 
     static LazyElement getWithFilterParameters(String name, boolean isIndexed, int index, LazyLocator locator, String getter) {
@@ -35,7 +40,15 @@ public interface LazyElementFactory {
         final var linkedHashMap = new LinkedHashMap<>(Map.ofEntries(entry(locator.strategy, lep)));
         final var synchronizedMap = Collections.synchronizedMap(linkedHashMap);
 
-        return new LazyElement(name, synchronizedMap, ElementParameters::isValidLazyIndexedElement);
+        return getWith(name, synchronizedMap, ElementParameters::isValidLazyFilteredElement);
+    }
+
+    static LazyElement getWithFilterParameters(String name, boolean isFiltered, String message, LazyLocator locator, String getter) {
+        final var lep = LazyIndexedElementFactory.getWithFilterParametersAndLocator(isFiltered, message, locator, getter);
+        final var linkedHashMap = new LinkedHashMap<>(Map.ofEntries(entry(locator.strategy, lep)));
+        final var synchronizedMap = Collections.synchronizedMap(linkedHashMap);
+
+        return getWith(name, synchronizedMap, ElementParameters::isValidLazyFilteredElement);
     }
 
     static LazyElement getWithFilterParameters(By locator, SingleGetter getter) {
@@ -43,7 +56,15 @@ public interface LazyElementFactory {
         final var linkedHashMap = new LinkedHashMap<>(Map.ofEntries(lep));
         final var synchronizedMap = Collections.synchronizedMap(linkedHashMap);
 
-        return new LazyElement(CoreUtilities.getIncrementalUUID(SeleniumCoreConstants.ATOMIC_COUNT), synchronizedMap, ElementParameters::isValidLazyIndexedElement);
+        return getWith(CoreUtilities.getIncrementalUUID(SeleniumCoreConstants.ATOMIC_COUNT), synchronizedMap, ElementParameters::isValidLazyFilteredElement);
+    }
+
+    static LazyElement getWithFilterParameters(ElementFilterData<Integer> elementFilterData, By locator, ManyGetter getter) {
+        final var lep = getEntryIndexed(LazyIndexedElementFactory::getWithFilterDataAndLocator, elementFilterData, locator, getter.getName());
+        final var linkedHashMap = new LinkedHashMap<>(Map.ofEntries(lep));
+        final var synchronizedMap = Collections.synchronizedMap(linkedHashMap);
+
+        return getWith(CoreUtilities.getIncrementalUUID(SeleniumCoreConstants.ATOMIC_COUNT), synchronizedMap, ElementParameters::isValidLazyFilteredElement);
     }
 
     static LazyElement getWithFilterParameters(String name, boolean isIndexed, LazyLocator locator, String getter) {
@@ -72,22 +93,6 @@ public interface LazyElementFactory {
 
     static LazyElement getWithFilterParameters(By locator) {
         return getWithFilterParameters(locator, SingleGetter.DEFAULT);
-    }
-
-    static LazyElement getWithFilterParameters(ElementFilterData<Integer> elementFilterData, By locator, ManyGetter getter) {
-        final var lep = getEntryIndexed(LazyIndexedElementFactory::getWithFilterDataAndLocator, elementFilterData, locator, getter.getName());
-        final var linkedHashMap = new LinkedHashMap<>(Map.ofEntries(lep));
-        final var synchronizedMap = Collections.synchronizedMap(linkedHashMap);
-
-        return new LazyElement(CoreUtilities.getIncrementalUUID(SeleniumCoreConstants.ATOMIC_COUNT), synchronizedMap, ElementParameters::isValidLazyIndexedElement);
-    }
-
-    static LazyElement getWithFilterParameters(String name, boolean isFiltered, String message, LazyLocator locator, String getter) {
-        final var lep = LazyIndexedElementFactory.getWithFilterParametersAndLocator(isFiltered, message, locator, getter);
-        final var linkedHashMap = new LinkedHashMap<>(Map.ofEntries(entry(locator.strategy, lep)));
-        final var synchronizedMap = Collections.synchronizedMap(linkedHashMap);
-
-        return new LazyElement(name, synchronizedMap, ElementParameters::isValidLazyTextFilteredElement);
     }
 
     static LazyElement getWithFilterParameters(String name, String message, LazyLocator locator, String getter) {
