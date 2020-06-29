@@ -1,12 +1,16 @@
 package com.github.karsaii.framework.selenium.namespaces.validators;
 
+import com.github.karsaii.core.extensions.DecoratedList;
 import com.github.karsaii.core.extensions.namespaces.CoreUtilities;
 import com.github.karsaii.core.namespaces.DataFactoryFunctions;
 import com.github.karsaii.core.namespaces.validators.CoreFormatter;
 import com.github.karsaii.core.records.Data;
 import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
 import com.github.karsaii.framework.core.namespaces.validators.FrameworkCoreFormatter;
+import com.github.karsaii.framework.core.selector.records.SelectorKeySpecificityData;
 import com.github.karsaii.framework.selenium.constants.validators.SeleniumFormatterConstants;
+import com.github.karsaii.framework.selenium.records.CacheElementDefaultsData;
+import com.github.karsaii.framework.selenium.records.lazy.CachedLazyElementData;
 import org.openqa.selenium.By;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebDriver;
@@ -29,6 +33,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 
+import static com.github.karsaii.core.namespaces.validators.CoreFormatter.getNamedErrorMessageOrEmpty;
+import static com.github.karsaii.core.namespaces.validators.CoreFormatter.isBlankMessageWithName;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilities.getLocator;
@@ -68,7 +74,7 @@ public interface SeleniumFormatter {
             );
         }
 
-        return CoreFormatter.getNamedErrorMessageOrEmpty("isValidElementFormatData: ", message);
+        return getNamedErrorMessageOrEmpty("isValidElementFormatData: ", message);
     }
 
     static String isValidElementValueParametersMessage(ElementValueParameters<?, ?> parameters) {
@@ -82,7 +88,7 @@ public interface SeleniumFormatter {
             );
         }
 
-        return CoreFormatter.getNamedErrorMessageOrEmpty("isValidElementValueParametersMessage: ", message);
+        return getNamedErrorMessageOrEmpty("isValidElementValueParametersMessage: ", message);
     }
 
     static String isValidElementParameterizedValueParametersMessage(ElementParameterizedValueParameters<?> parameters) {
@@ -96,7 +102,7 @@ public interface SeleniumFormatter {
             );
         }
 
-        return CoreFormatter.getNamedErrorMessageOrEmpty("isValidElementParameterizedValueParametersMessage: ", message);
+        return getNamedErrorMessageOrEmpty("isValidElementParameterizedValueParametersMessage: ", message);
     }
 
     static String getScrollIntoViewMessage(String message, boolean status) {
@@ -168,12 +174,12 @@ public interface SeleniumFormatter {
 
     static String isElementFunctionMessage(LazyElement element, ElementValueParameters<?, ?> parameters) {
         final var message = FrameworkCoreFormatter.isNullLazyElementMessage(element) + isValidElementValueParametersMessage(parameters);
-        return CoreFormatter.getNamedErrorMessageOrEmpty("isElementFunctionMessage: ", message);
+        return getNamedErrorMessageOrEmpty("isElementFunctionMessage: ", message);
     }
 
     static String isElementFunctionMessage(LazyElement element, ElementParameterizedValueParameters<?> parameters) {
         final var message = FrameworkCoreFormatter.isNullLazyElementMessage(element) + isValidElementParameterizedValueParametersMessage(parameters);
-        return CoreFormatter.getNamedErrorMessageOrEmpty("isElementFunctionMessage: ", message);
+        return getNamedErrorMessageOrEmpty("isElementFunctionMessage: ", message);
     }
 
     static <T> String getManyGetterErrorMessage(Map<ManyGetter, Function<LazyLocatorList, Function<WebDriver, Data<T>>>> getterMap, ManyGetter key) {
@@ -231,15 +237,6 @@ public interface SeleniumFormatter {
         return isNotBlank(message) ? "isNotNullLazyDataMessage: " + message : CoreFormatterConstants.EMPTY;
     }
 
-    static String getProbabilityAdjustmentMessage(String key, double original, double adjusted, boolean increase, boolean generated, boolean belowThreshold) {
-        var message = (increase ? "Increased" : "Reduced") + " probability of com.github.karsaii.framework.core.selector(\"" + original + "\") to \"" + adjusted + "\"" + CoreFormatterConstants.END_LINE;
-        if (belowThreshold) {
-            message += (generated ? "External" : "Regular") + "com.github.karsaii.framework.core.selector by key(\"" + key + "\") is below threshold(\"" + adjusted + "\"), set to \"0.0\"" + CoreFormatterConstants.END_LINE;
-        }
-
-        return message;
-    }
-
     static String getElementAttributeMessage(Data<LazyElement> data, String value, String parameterName) {
         final var name = isBlank(parameterName) ? "Value" : parameterName;
         var message = CoreFormatter.isInvalidOrFalseMessageWithName(data, "Element data");
@@ -262,7 +259,7 @@ public interface SeleniumFormatter {
             );
         }
 
-        return isNotBlank(message) ? "isNullWebElementMessage: " + CoreFormatterConstants.PARAMETER_ISSUES_LINE + message + CoreFormatterConstants.END_LINE : CoreFormatterConstants.EMPTY;
+        return getNamedErrorMessageOrEmpty("isNullWebElementMessage: ", message);
     }
 
     static String isNullWebElementDataMessage(Data<WebElement> element) {
@@ -278,10 +275,67 @@ public interface SeleniumFormatter {
     }
 
     static String getElementsParametersMessage(LazyLocatorList locators, Function<LazyLocator, DriverFunction<WebElementList>> getter) {
-        return CoreFormatter.getNamedErrorMessageOrEmpty("getElementsParametersMessage: ", CoreFormatter.isNullOrEmptyMessageWithName(locators, "Lazy Locators List") + CoreFormatter.isNullMessageWithName(getter, "Getter"));
+        return getNamedErrorMessageOrEmpty("getElementsParametersMessage: ", CoreFormatter.isNullOrEmptyMessageWithName(locators, "Lazy Locators List") + CoreFormatter.isNullMessageWithName(getter, "Getter"));
     }
 
     static String getElementsParametersMessage(LazyLocatorList locators) {
-        return CoreFormatter.getNamedErrorMessageOrEmpty("getElementsParametersMessage: ", CoreFormatter.isNullOrEmptyMessageWithName(locators, "Lazy Locators List"));
+        return getNamedErrorMessageOrEmpty("getElementsParametersMessage: ", CoreFormatter.isNullOrEmptyMessageWithName(locators, "Lazy Locators List"));
+    }
+
+    static String getRepositoryNullMessage(Map<String, CachedLazyElementData> repository) {
+        return getNamedErrorMessageOrEmpty("getRepositoryNullMessage: ", CoreFormatter.isNullMessageWithName(repository, "Element repository"));
+    }
+
+    static String getCacheElementDefaultsDataInvalidMessage(CacheElementDefaultsData defaults) {
+        var message = CoreFormatter.isNullMessageWithName(defaults, "Defaults data");
+        if (isBlank(message)) {
+            message += (
+                isBlankMessageWithName(defaults.name, "Name of the function") +
+                getRepositoryNullMessage(defaults.repository) +
+                CoreFormatter.isNullMessageWithName(defaults.defaultValue, "Default data value")
+            );
+        }
+
+        return getNamedErrorMessageOrEmpty("getCacheElementDefaultsDataInvalidMessage: ", message);
+    }
+
+    static String getCachedLazyElementDataInvalidMessage(CachedLazyElementData data) {
+        var message = CoreFormatter.isNullMessageWithName(data, "Lazy Element Cache data");
+        if (isBlank(message)) {
+            message += FrameworkCoreFormatter.isNullLazyElementMessage(data.element) + CoreFormatter.isNullMessageWithName(data.typeKeys, "Type keys");
+        }
+
+        return getNamedErrorMessageOrEmpty("getCachedLazyElementDataInvalidMessage: ", message);
+    }
+
+    static String getCacheElementParametersErrorMessage(CacheElementDefaultsData defaults, CachedLazyElementData data) {
+        var message = getCacheElementDefaultsDataInvalidMessage(defaults) + getCachedLazyElementDataInvalidMessage(data);
+        if (isBlank(message)) {
+            message += getAlreadyCachedMessage(defaults.repository, data.element.name);
+        }
+
+        return getNamedErrorMessageOrEmpty("getCacheElementParametersErrorMessage: ", message);
+    }
+
+    private static String getCachedCommonMessage(Map<String, CachedLazyElementData> repository, String name) {
+        return getNamedErrorMessageOrEmpty("getCachedCommonMessage: ", getRepositoryNullMessage(repository) + isBlankMessageWithName(name, "Name of item"));
+    }
+
+    static String getAlreadyCachedMessage(Map<String, CachedLazyElementData> repository, String name) {
+        var message = getCachedCommonMessage(repository, name);
+        if (isBlank(message) && CoreUtilities.isTrue(repository.containsKey(name))) {
+            message += SeleniumFormatterConstants.LAZY_ELEMENT + " with name(\"" + name + "\") was already cached" + CoreFormatterConstants.END_LINE;
+        }
+
+        return getNamedErrorMessageOrEmpty("getAlreadyCachedMessage: ", message);
+    }
+
+    static String getNotCachedMessage(Map<String, CachedLazyElementData> repository, String name) {
+        var message = getCachedCommonMessage(repository, name);
+        if (isBlank(message) && CoreUtilities.isFalse(repository.containsKey(name))) {
+            message += SeleniumFormatterConstants.LAZY_ELEMENT + " with name(\"" + name + "\") wasn't cached" + CoreFormatterConstants.END_LINE;
+        }
+
+        return getNamedErrorMessageOrEmpty("getNotCachedMessage: ", message);
     }
 }
