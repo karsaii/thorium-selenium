@@ -148,7 +148,7 @@ public interface ElementRepository {
             return replaceMessage(CoreDataConstants.NULL_BOOLEAN, nameof, "Strategy passed" + CoreFormatterConstants.WAS_NULL);
         }
 
-        final var typeKey = types.stream().map(String::toLowerCase).filter(key::contains).findFirst();
+        final var typeKey = types.stream().filter(key::contains).findFirst();
         if (typeKey.isEmpty()) {
             return replaceMessage(CoreDataConstants.NULL_BOOLEAN, nameof, "Types didn't contain type key(\"" + typeKey + "\")" + CoreFormatterConstants.END_LINE);
         }
