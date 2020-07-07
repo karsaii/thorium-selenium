@@ -1,7 +1,7 @@
 package com.github.karsaii.framework.selenium.constants;
 
 import com.github.karsaii.core.constants.CastDataConstants;
-import com.github.karsaii.core.extensions.namespaces.predicates.AmountPredicatesFunctions;
+import com.github.karsaii.core.extensions.namespaces.predicates.AmountPredicates;
 import com.github.karsaii.framework.selenium.namespaces.validators.SeleniumFormatter;
 import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
 import com.github.karsaii.core.namespaces.ExceptionHandlers;
@@ -18,10 +18,10 @@ import com.github.karsaii.framework.selenium.records.scripter.RegularExecutorDat
 import com.github.karsaii.framework.selenium.namespaces.validators.ScriptExecutions;
 
 public abstract class ScriptExecutorDefaults {
-    public static final ParametersFieldDefaultsData SINGLE_PARAMETER_DEFAULTS = new ParametersFieldDefaultsData(AmountPredicatesFunctions::isSingle, ScriptExecuteFunctions.executeScriptWithParameters());
-    public static final ParametersFieldDefaultsData SINGLE_PARAMETER_ASYNC_DEFAULTS = new ParametersFieldDefaultsData(AmountPredicatesFunctions::isSingle, ScriptExecuteFunctions.executeAsyncScriptWithParameters());
-    public static final ParametersFieldDefaultsData PARAMETERS_DEFAULTS = new ParametersFieldDefaultsData(AmountPredicatesFunctions::isNonZero, ScriptExecuteFunctions.executeScriptWithParameters());
-    public static final ParametersFieldDefaultsData PARAMETERS_ASYNC_DEFAULTS = new ParametersFieldDefaultsData(AmountPredicatesFunctions::isNonZero, ScriptExecuteFunctions.executeAsyncScriptWithParameters());
+    public static final ParametersFieldDefaultsData SINGLE_PARAMETER_DEFAULTS = new ParametersFieldDefaultsData(AmountPredicates::isSingle, ScriptExecuteFunctions.executeScriptWithParameters());
+    public static final ParametersFieldDefaultsData SINGLE_PARAMETER_ASYNC_DEFAULTS = new ParametersFieldDefaultsData(AmountPredicates::isSingle, ScriptExecuteFunctions.executeAsyncScriptWithParameters());
+    public static final ParametersFieldDefaultsData PARAMETERS_DEFAULTS = new ParametersFieldDefaultsData(AmountPredicates::isNonZero, ScriptExecuteFunctions.executeScriptWithParameters());
+    public static final ParametersFieldDefaultsData PARAMETERS_ASYNC_DEFAULTS = new ParametersFieldDefaultsData(AmountPredicates::isNonZero, ScriptExecuteFunctions.executeAsyncScriptWithParameters());
     public static final ExecutorWrappedResultFunctionsData<HandleResultData<String, Object>, Boolean, Object> OBJECT_RESULT_HANDLER = new ExecutorWrappedResultFunctionsData<>(SeleniumFormatter::getScriptExecutionMessage, ExceptionHandlers::classCastHandler);
     public static final ExecutorWrappedResultFunctionsData<HandleResultData<String, String>, Boolean, String> STRING_RESULT_HANDLER = new ExecutorWrappedResultFunctionsData<>(SeleniumFormatter::getScriptExecutionMessage, ExceptionHandlers::classCastHandler);
     public static final DriverFunction<JavascriptExecutor> JAVASCRIPT_EXECUTOR_GETTER = Driver.getExecutorData();

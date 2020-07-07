@@ -38,8 +38,8 @@ import java.util.Map;
 
 import static com.github.karsaii.core.extensions.namespaces.CoreUtilities.areAnyNull;
 import static com.github.karsaii.core.namespaces.DataFactoryFunctions.appendMessage;
-import static com.github.karsaii.core.namespaces.validators.DataValidators.isInvalidOrFalse;
-import static com.github.karsaii.core.namespaces.validators.DataValidators.isValidNonFalse;
+import static com.github.karsaii.core.namespaces.predicates.DataPredicates.isInvalidOrFalse;
+import static com.github.karsaii.core.namespaces.predicates.DataPredicates.isValidNonFalse;
 import static com.github.karsaii.core.namespaces.DataFactoryFunctions.prependMessage;
 import static com.github.karsaii.core.namespaces.DataFactoryFunctions.replaceMessage;
 

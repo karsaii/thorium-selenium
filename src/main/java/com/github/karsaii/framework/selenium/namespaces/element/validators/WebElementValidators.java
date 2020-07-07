@@ -2,6 +2,7 @@ package com.github.karsaii.framework.selenium.namespaces.element.validators;
 
 import com.github.karsaii.core.extensions.namespaces.NullableFunctions;
 import com.github.karsaii.core.namespaces.DataFactoryFunctions;
+import com.github.karsaii.core.namespaces.predicates.DataPredicates;
 import com.github.karsaii.core.namespaces.validators.DataValidators;
 import com.github.karsaii.core.records.Data;
 import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
@@ -10,7 +11,7 @@ import org.openqa.selenium.WebElement;
 import com.github.karsaii.framework.selenium.constants.SeleniumDataConstants;
 
 import static com.github.karsaii.core.extensions.namespaces.CoreUtilities.isEqual;
-import static com.github.karsaii.core.namespaces.validators.DataValidators.isInvalidOrFalse;
+import static com.github.karsaii.core.namespaces.predicates.DataPredicates.isInvalidOrFalse;
 
 public interface WebElementValidators {
     static boolean isNull(WebElement element) {
@@ -40,7 +41,7 @@ public interface WebElementValidators {
     }
 
     static Data<Boolean> isInitialized(Data<WebElement> data) {
-        final var status = DataValidators.isInitialized(data);
+        final var status = DataPredicates.isInitialized(data);
         final var message = "Element container was" + (status ? "" : "n't") + "initialized" + CoreFormatterConstants.END_LINE;
         return DataFactoryFunctions.getBoolean(status, "isInitialized", message);
     }

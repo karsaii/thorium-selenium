@@ -1,11 +1,13 @@
 package com.github.karsaii.framework.selenium.namespaces;
 
+import com.github.karsaii.core.namespaces.predicates.DataPredicates;
 import com.github.karsaii.core.namespaces.validators.DataValidators;
 import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.ScriptFunction;
 import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.ScriptHandlerFunction;
 import com.github.karsaii.core.namespaces.DataFunctions;
 import com.github.karsaii.core.records.Data;
 import com.github.karsaii.core.constants.CoreConstants;
+import com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilities;
 import com.github.karsaii.framework.selenium.records.scripter.ScriptParametersData;
 import com.github.karsaii.framework.selenium.namespaces.validators.ScriptExecutions;
 
@@ -38,7 +40,7 @@ public interface ScriptExecuteFunctions {
     }
 
     static <T> ScriptParametersData<Data<T>> getScriptParametersDataWithDefaults(Data<T> data) {
-        return new ScriptParametersData<>(data, DataValidators::isValidNonFalse, DataFunctions::unwrapToArray);
+        return new ScriptParametersData<>(data, DataPredicates::isValidNonFalse, SeleniumUtilities::unwrapToArray);
     }
 
     static <T, V extends Data<T>> Object[] handleDataParameterWithDefaults(V data) {

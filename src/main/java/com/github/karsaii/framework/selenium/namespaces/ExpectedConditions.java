@@ -1,7 +1,7 @@
 package com.github.karsaii.framework.selenium.namespaces;
 
 import com.github.karsaii.core.constants.CoreDataConstants;
-import com.github.karsaii.core.extensions.namespaces.predicates.BasicPredicateFunctions;
+import com.github.karsaii.core.extensions.namespaces.predicates.BasicPredicates;
 import com.github.karsaii.core.namespaces.StringUtilities;
 import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
 import com.github.karsaii.framework.selenium.constants.validators.SeleniumFormatterConstants;
@@ -23,8 +23,8 @@ import java.util.function.Function;
 import static com.github.karsaii.core.extensions.namespaces.CoreUtilities.areAnyNull;
 import static com.github.karsaii.core.extensions.namespaces.CoreUtilities.areNotBlank;
 import static com.github.karsaii.core.extensions.namespaces.CoreUtilities.areNotNull;
-import static com.github.karsaii.core.namespaces.validators.DataValidators.isValidNonFalse;
-import static com.github.karsaii.core.namespaces.validators.DataValidators.isInvalidOrFalse;
+import static com.github.karsaii.core.namespaces.predicates.DataPredicates.isValidNonFalse;
+import static com.github.karsaii.core.namespaces.predicates.DataPredicates.isInvalidOrFalse;
 import static com.github.karsaii.core.namespaces.DataFactoryFunctions.replaceMessage;
 import static com.github.karsaii.core.namespaces.DataFactoryFunctions.replaceName;
 
@@ -310,7 +310,7 @@ public interface ExpectedConditions {
     static DriverFunction<Boolean> isNumberOfWindowsEqualTo(int expected) {
         return ifDriver(
             "isNumberOfWindowsEqualTo",
-            BasicPredicateFunctions.isPositiveNonZero(expected),
+            BasicPredicates.isPositiveNonZero(expected),
             ExecutionCore.validChain(Driver.getWindowHandleAmount(), ExpectedConditions.isNumberOfWindowsEqualToCore(expected), CoreDataConstants.NULL_BOOLEAN),
             CoreDataConstants.NULL_BOOLEAN
         );

@@ -5,8 +5,8 @@ import com.github.karsaii.core.records.Data;
 import com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilities;
 import com.github.karsaii.framework.selenium.records.lazy.LazyElement;
 
-import static com.github.karsaii.core.namespaces.validators.DataValidators.isInvalidOrFalse;
-import static com.github.karsaii.core.namespaces.validators.DataValidators.isValidNonFalse;
+import static com.github.karsaii.core.namespaces.predicates.DataPredicates.isInvalidOrFalse;
+import static com.github.karsaii.core.namespaces.predicates.DataPredicates.isValidNonFalse;
 
 public interface WaitPredicateFunctions {
     static <T> boolean isFalsyData(T object) {

@@ -2,7 +2,7 @@ package com.github.karsaii.framework.selenium.constants;
 
 import com.github.karsaii.core.constants.CastDataConstants;
 import com.github.karsaii.core.extensions.namespaces.NullableFunctions;
-import com.github.karsaii.core.extensions.namespaces.predicates.AmountPredicatesFunctions;
+import com.github.karsaii.core.extensions.namespaces.predicates.AmountPredicates;
 import com.github.karsaii.core.namespaces.InvokeFunctions;
 import com.github.karsaii.core.records.reflection.InvokeParametersFieldDefaultsData;
 import com.github.karsaii.core.reflection.InvokerParameterizedData;
@@ -15,9 +15,9 @@ import com.github.karsaii.framework.selenium.namespaces.SeleniumExceptionHandler
 import com.github.karsaii.framework.selenium.namespaces.validators.ScriptExecutions;
 
 public abstract class SeleniumInvokeFunctionDefaults {
-    public static final InvokeParametersFieldDefaultsData<WebElement> SINGLE_PARAMETER = new InvokeParametersFieldDefaultsData<>(AmountPredicatesFunctions::isSingle, InvokeFunctions::invokeWithParameters);
-    public static final InvokeParametersFieldDefaultsData<SearchContext> SEARCH_CONTEXT_SINGLE_PARAMETER = new InvokeParametersFieldDefaultsData<>(AmountPredicatesFunctions::isSingle, InvokeFunctions::invokeWithParameters);
-    public static final InvokeParametersFieldDefaultsData<WebElement> PARAMETERS = new InvokeParametersFieldDefaultsData<>(AmountPredicatesFunctions::isNonZero, InvokeFunctions::invokeWithParameters);
+    public static final InvokeParametersFieldDefaultsData<WebElement> SINGLE_PARAMETER = new InvokeParametersFieldDefaultsData<>(AmountPredicates::isSingle, InvokeFunctions::invokeWithParameters);
+    public static final InvokeParametersFieldDefaultsData<SearchContext> SEARCH_CONTEXT_SINGLE_PARAMETER = new InvokeParametersFieldDefaultsData<>(AmountPredicates::isSingle, InvokeFunctions::invokeWithParameters);
+    public static final InvokeParametersFieldDefaultsData<WebElement> PARAMETERS = new InvokeParametersFieldDefaultsData<>(AmountPredicates::isNonZero, InvokeFunctions::invokeWithParameters);
 
     public static final ParameterizedInvokerDefaultsData<WebElement, Object> OBJECT_PARAMETERS = new ParameterizedInvokerDefaultsData<>(
         InvokerParameterizedData::new,

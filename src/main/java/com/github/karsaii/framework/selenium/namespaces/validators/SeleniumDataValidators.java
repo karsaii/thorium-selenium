@@ -10,17 +10,18 @@ import com.github.karsaii.framework.selenium.records.lazy.LazyElement;
 
 import java.util.function.Function;
 
-import static com.github.karsaii.framework.selenium.namespaces.ExecutionCore.ifDriver;
-import static com.github.karsaii.framework.selenium.namespaces.ExecutionCore.validChain;
+import static com.github.karsaii.core.namespaces.DataExecutionFunctions.ifDependency;
+import static com.github.karsaii.core.namespaces.DataExecutionFunctions.validChain;
+import static com.github.karsaii.framework.selenium.namespaces.factories.DriverFunctionFactory.getFunction;
 
 public interface SeleniumDataValidators {
     private static DriverFunction<Boolean> isConditionCore(LazyElement element, String nameof, Function<Data<WebElement>, Data<Boolean>> condition) {
-        return ifDriver(
+        return getFunction(ifDependency(
             nameof,
             FrameworkCoreFormatter.isNullLazyElementMessage(element),
             validChain(element.get(), condition, CoreDataConstants.DATA_PARAMETER_WAS_NULL),
             CoreDataConstants.DATA_PARAMETER_WAS_NULL
-        );
+        ));
     }
     static DriverFunction<Boolean> isNotNull(LazyElement element) {
         return isConditionCore(element, "isNotNull", WebElementValidators::isInitialized);

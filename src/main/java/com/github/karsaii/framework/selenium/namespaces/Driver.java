@@ -2,17 +2,17 @@ package com.github.karsaii.framework.selenium.namespaces;
 
 import com.github.karsaii.core.constants.CoreDataConstants;
 import com.github.karsaii.core.extensions.namespaces.factories.DecoratedListFactory;
-import com.github.karsaii.core.extensions.namespaces.predicates.BasicPredicateFunctions;
-import com.github.karsaii.core.extensions.namespaces.predicates.CollectionPredicateFunctions;
+import com.github.karsaii.core.extensions.namespaces.predicates.BasicPredicates;
+import com.github.karsaii.core.extensions.namespaces.predicates.CollectionPredicates;
+import com.github.karsaii.core.namespaces.BaseExecutionFunctions;
 import com.github.karsaii.core.namespaces.DataExecutionFunctions;
 import com.github.karsaii.framework.core.abstracts.AbstractLazyResult;
 import com.github.karsaii.framework.core.namespaces.Adjuster;
-import com.github.karsaii.framework.core.namespaces.FrameworkCoreUtilities;
 import com.github.karsaii.framework.core.namespaces.FrameworkFunctions;
 import com.github.karsaii.framework.core.namespaces.validators.FrameworkCoreFormatter;
+import com.github.karsaii.framework.core.records.GetByFilterFormatterData;
 import com.github.karsaii.framework.core.records.lazy.ExternalSelectorData;
 import com.github.karsaii.framework.selenium.constants.SeleniumInvokeConstants;
-import com.github.karsaii.core.namespaces.StringUtilities;
 import com.github.karsaii.core.namespaces.validators.DataValidators;
 import com.github.karsaii.core.namespaces.validators.MethodParametersDataValidators;
 import com.github.karsaii.core.namespaces.validators.CoreFormatter;
@@ -52,6 +52,7 @@ import com.github.karsaii.core.constants.CoreConstants;
 import com.github.karsaii.core.records.reflection.message.InvokeCommonMessageParametersData;
 import com.github.karsaii.core.reflection.message.ParameterizedMessageData;
 import com.github.karsaii.core.reflection.message.RegularMessageData;
+import com.github.karsaii.framework.selenium.records.GetElementByData;
 import com.github.karsaii.framework.selenium.records.GetWithDriverData;
 import com.github.karsaii.framework.selenium.records.lazy.filtered.LazyFilteredElementParameters;
 import org.apache.commons.lang3.StringUtils;
@@ -73,21 +74,18 @@ import com.github.karsaii.framework.selenium.constants.ExecuteCoreFunctionDataCo
 import com.github.karsaii.framework.selenium.constants.SeleniumGetOrderConstants;
 import com.github.karsaii.framework.selenium.constants.SeleniumCoreConstants;
 import com.github.karsaii.framework.selenium.constants.SeleniumMethodDefaults;
-import com.github.karsaii.framework.selenium.enums.ManyGetter;
 import com.github.karsaii.framework.selenium.enums.SingleGetter;
 import com.github.karsaii.framework.selenium.namespaces.lazy.LazyIndexedElementFactory;
 import com.github.karsaii.framework.selenium.namespaces.scripter.Execute;
 import com.github.karsaii.framework.selenium.namespaces.repositories.ElementRepository;
 import com.github.karsaii.framework.selenium.namespaces.repositories.FunctionRepository;
 import com.github.karsaii.framework.selenium.namespaces.repositories.LocatorRepository;
-import com.github.karsaii.framework.selenium.namespaces.element.validators.ElementGetterValidators;
 import com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilities;
 import com.github.karsaii.framework.selenium.namespaces.validators.ExecuteCoreValidators;
 import com.github.karsaii.framework.selenium.namespaces.validators.InvokeCoreValidator;
 import com.github.karsaii.framework.selenium.namespaces.element.validators.WebElementValidators;
 import com.github.karsaii.framework.selenium.records.element.is.ElementConditionParameters;
 import com.github.karsaii.framework.selenium.records.element.is.ElementStringValueParameters;
-import com.github.karsaii.framework.selenium.records.element.finder.ElementFilterParameters;
 import com.github.karsaii.framework.selenium.records.element.is.ElementParameterizedValueParameters;
 import com.github.karsaii.framework.selenium.records.scripter.ExecuteCoreData;
 import com.github.karsaii.framework.selenium.records.scripter.ExecuteCoreFunctionData;
@@ -118,12 +116,13 @@ import static com.github.karsaii.core.extensions.namespaces.CoreUtilities.areAny
 import static com.github.karsaii.core.extensions.namespaces.CoreUtilities.areNotNull;
 import static com.github.karsaii.core.extensions.namespaces.NullableFunctions.isNotNull;
 import static com.github.karsaii.core.extensions.namespaces.NullableFunctions.isNull;
-import static com.github.karsaii.core.namespaces.validators.DataValidators.isValidNonFalse;
-import static com.github.karsaii.core.namespaces.validators.DataValidators.isInvalidOrFalse;
+import static com.github.karsaii.core.namespaces.DataExecutionFunctions.ifDependency;
 import static com.github.karsaii.core.namespaces.DataFactoryFunctions.appendMessage;
 import static com.github.karsaii.core.namespaces.DataFactoryFunctions.prependMessage;
 import static com.github.karsaii.core.namespaces.DataFactoryFunctions.replaceMessage;
 import static com.github.karsaii.core.namespaces.DataFactoryFunctions.replaceName;
+import static com.github.karsaii.core.namespaces.predicates.DataPredicates.isInvalidOrFalse;
+import static com.github.karsaii.core.namespaces.predicates.DataPredicates.isValidNonFalse;
 import static com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilities.isInvalidLazyLocator;
 import static com.github.karsaii.framework.selenium.namespaces.validators.SeleniumFormatter.getElementsParametersMessage;
 import static com.github.karsaii.core.namespaces.validators.CoreFormatter.isBlankMessageWithName;
@@ -133,7 +132,6 @@ import static com.github.karsaii.core.namespaces.validators.CoreFormatter.isNull
 import static com.github.karsaii.core.namespaces.validators.CoreFormatter.isNullOrEmptyMessage;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static com.github.karsaii.framework.selenium.namespaces.ExecutionCore.conditionalChain;
 import static com.github.karsaii.framework.selenium.namespaces.ExecutionCore.ifData;
 import static com.github.karsaii.framework.selenium.namespaces.ExecutionCore.ifDriver;
 import static com.github.karsaii.framework.selenium.namespaces.ExecutionCore.ifDriverGuardData;
@@ -326,7 +324,7 @@ public interface Driver {
         final var nameof = isNotBlank(name) ? name : "invokeCore";
         final var errorMessage = InvokeCoreValidator.isInvalidInvokeCoreParametersMessage(data, defaults, messageHandler, handler, getter);
         final var negative = DataFactoryFunctions.getWithMessage((ReturnType)null, false, errorMessage);
-        return ifDriver(nameof, errorMessage, validChain(getter, invokeCore(data, defaults, messageHandler, handler), negative), negative);
+        return DriverFunctionFactory.getFunction(ifDependency(nameof, errorMessage, DataExecutionFunctions.validChain(getter, invokeCore(data, defaults, messageHandler, handler), negative), negative));
     }
 
     static Data<Integer> getWindowHandleAmountData(Data<StringSet> data) {
@@ -341,12 +339,14 @@ public interface Driver {
         return ifDriver(
             "getCountOfElements",
             isNotNull(getter),
-            FrameworkCoreFormatter.isValidTypedNonEmptyListMessage(WebElement.class),
+            SeleniumCoreConstants.WEBELEMENT_LIST_VALIDATOR,
             getter.andThen(SeleniumDataFactory::getUnwrapped),
             FrameworkFunctions.getCountOfElements("Element"),
             SeleniumDataConstants.NULL_INTEGER_NULL_DRIVER
         );
     }
+
+
 
     private static DriverFunction<String> getString(String property, Function<WebDriver, String> function) {
         return getCore(property, NullableFunctions::isNotNull, function, CoreFormatterConstants.EMPTY);
@@ -365,7 +365,7 @@ public interface Driver {
     }
 
     static DriverFunction<StringSet> getWindowHandles() {
-        final var getStringSetOfWindowHandles = conditionalChain(NullableFunctions::isNotNull, WebDriver::getWindowHandles, StringSet::new, CoreConstants.NULL_STRING_SET);
+        final var getStringSetOfWindowHandles = BaseExecutionFunctions.conditionalChain(NullableFunctions::isNotNull, WebDriver::getWindowHandles, StringSet::new, CoreConstants.NULL_STRING_SET);
         return getCore("WindowHandles", NullableFunctions::isNotNull, getStringSetOfWindowHandles, CoreConstants.NULL_STRING_SET);
     }
 
@@ -902,21 +902,28 @@ public interface Driver {
         return getElementsIf(getElementsParametersMessage(locators), driver -> getElements(driver, locators, Driver::getElements));
     }
 
+    static <T> Data<WebElement> getElementBy(GetElementByData<T, WebElementList> defaults, Data<WebElementList> data, T filter) {
+        final var errorMessage = defaults.validator.apply(data, filter);
+        if (isNotBlank(errorMessage)) {
+            return prependMessage(defaults.defaultValue, "getElementBy", errorMessage);
+        }
+
+        final var object = defaults.getter.apply(data, filter);
+        final var status = WebElementValidators.isNotNull(object);
+        final var message = defaults.formatter.apply(new GetByFilterFormatterData<>(filter, defaults.filterName, status, data.object.size(), data.message.toString()));
+        return DataFactoryFunctions.getWithNameAndMessage(object, status, defaults.nameof, message);
+    }
+
     static Data<WebElement> getElementByIndex(Data<WebElementList> data, int index) {
-        final var nameof = "getElementByIndex";
-        if (isInvalidOrFalse(data) || BasicPredicateFunctions.isNegative(index)) {
-            return prependMessage(SeleniumDataConstants.NULL_ELEMENT, nameof, "Data or index was null. Index: " + index + " Data: " + data.toString());
-        }
+        return getElementBy(DriverFunctionConstants.BY_CONTAINED_INTEGER_CONSTANTS, data, index);
+    }
 
-        final var object = data.object;
-        if (object.isNullOrEmpty()) {
-            return prependMessage(SeleniumDataConstants.NULL_ELEMENT, nameof, "List " + CoreFormatterConstants.WAS_NULL);
-        }
+    static Data<WebElement> getElementByContainedText(Data<WebElementList> data, String text) {
+        return getElementBy(DriverFunctionConstants.BY_CONTAINED_TEXT_CONSTANTS, data, text);
+    }
 
-        final var size = object.size();
-        final var status = (size > index);
-        final var message = "Element was" + (status ? "" : "n't") + " found by index(\"" + index + "\"), list size: " + size + CoreFormatterConstants.END_LINE + data.message;
-        return DataFactoryFunctions.getWithNameAndMessage(object.get(index), status, nameof, message);
+    static Function<Data<WebElementList>, Data<WebElement>> getElementByContainedText(String message) {
+        return data -> getElementByContainedText(data, message);
     }
 
     static Function<Data<WebElementList>, Data<WebElement>> getElementByIndex(int index) {
@@ -926,41 +933,14 @@ public interface Driver {
     static DriverFunction<WebElement> getElementByIndex(DriverFunction<WebElementList> getter, int index) {
         return ifDriver(
             "getElementByIndexFrom",
-            isNotNull(getter) && BasicPredicateFunctions.isNonNegative(index),
+            isNotNull(getter) && BasicPredicates.isNonNegative(index),
             validChain(getter, getElementByIndex(index), SeleniumDataConstants.NULL_ELEMENT),
             SeleniumDataConstants.NULL_ELEMENT
         );
     }
 
-    static Data<WebElement> getElementByContainedText(Data<WebElementList> data, String text) {
-        final var nameof = "getElementByContainedText";
-        final var errorMessage = ElementGetterValidators.isInvalidElementByTextParameters(data, text);
-        if (isNotBlank(errorMessage)) {
-            return prependMessage(SeleniumDataConstants.NULL_ELEMENT, nameof, errorMessage);
-        }
-
-        final var object = data.object;
-        if (object.isNullOrEmpty()) {
-            return prependMessage(SeleniumDataConstants.NULL_ELEMENT, nameof, "List " + CoreFormatterConstants.WAS_NULL);
-        }
-
-        final var length = object.size();
-        var current = SeleniumCoreConstants.STOCK_ELEMENT;
-        var index = 0;
-        for (; (index < length); ++index) {
-            current = object.get(index);
-            if (StringUtilities.contains(current.getText(), text)) {
-                break;
-            }
-        }
-
-        final var status = WebElementValidators.isNotNull(current) && (index < length);
-        final var message = "Element was" + (status ? "" : "n't") + " found by text(\"" + text + "\"), list size: " + length + CoreFormatterConstants.END_LINE + data.message;
-        return DataFactoryFunctions.getWithNameAndMessage(current, status, nameof, message);
-    }
-
-    static Function<Data<WebElementList>, Data<WebElement>> getElementByContainedText(String message) {
-        return data -> getElementByContainedText(data, message);
+    static DriverFunction<WebElement> getElementByIndex(By locator, int index) {
+        return getElementByIndex(getElements(locator), index);
     }
 
     static DriverFunction<WebElement> getElementByContainedText(DriverFunction<WebElementList> getter, String message) {
@@ -973,12 +953,7 @@ public interface Driver {
     }
 
     static DriverFunction<WebElement> getElementByContainedText(By locator, String message) {
-        return ifDriver(
-            "getElementByContainedText",
-            isNotNull(locator) && isNotBlank(message),
-            validChain(getElements(locator), getElementByContainedText(message), SeleniumDataConstants.NULL_ELEMENT),
-            SeleniumDataConstants.NULL_ELEMENT
-        );
+        return getElementByContainedText(getElements(locator), message);
     }
 
     static Data<WebElement> getElementFromSingle(Data<WebElementList> data) {
@@ -988,15 +963,6 @@ public interface Driver {
 
     static DriverFunction<WebElement> getElementFromSingle(DriverFunction<WebElementList> getter) {
         return ifDriver("getElementFromSingle", isNotNull(getter), validChain(getter, getElementByIndex(0), SeleniumDataConstants.NULL_ELEMENT), SeleniumDataConstants.NULL_ELEMENT);
-    }
-
-    static DriverFunction<WebElement> getElementByIndex(By locator, int index) {
-        return ifDriver(
-            "getElementByIndexFrom",
-            isNotNull(locator) && BasicPredicateFunctions.isNonNegative(index),
-            validChain(getElements(locator), getElementByIndex(index), SeleniumDataConstants.NULL_ELEMENT),
-            SeleniumDataConstants.NULL_ELEMENT
-        );
     }
 
     static DriverFunction<Integer> getCountOfElements(By locator) {
@@ -1018,7 +984,7 @@ public interface Driver {
 
         final var size = (
             data.status &&
-            CollectionPredicateFunctions.isNonEmptyAndOfType(object, WebElement.class) &&
+            CollectionPredicates.isNonEmptyAndOfType(object, WebElement.class) &&
             CoreUtilities.isNotEqual(SeleniumDataConstants.NULL_ELEMENT.object, object.first())
         ) ? object.size() : 0;
         final var status = size == expected;
@@ -1032,7 +998,7 @@ public interface Driver {
     static DriverFunction<WebElementList> getElementsAmount(DriverFunction<WebElementList> getter, LazyLocator locator, int expected) {
         return ifDriver(
             "getElementsAmount",
-            isNotNull(getter) && isInvalidLazyLocator(locator) && BasicPredicateFunctions.isNonNegative(expected),
+            isNotNull(getter) && isInvalidLazyLocator(locator) && BasicPredicates.isNonNegative(expected),
             validChain(getter, getElementsAmountCore(getLocator(locator).object, expected), SeleniumDataConstants.NULL_LIST),
             SeleniumDataConstants.NULL_LIST
         );
@@ -1042,7 +1008,7 @@ public interface Driver {
         final var lazyLocator = SeleniumLazyLocatorFactory.get(locator);
         return ifDriver(
             "getElementsAmount",
-            isNotNullLazyData(lazyLocator) && BasicPredicateFunctions.isNonNegative(expected),
+            isNotNullLazyData(lazyLocator) && BasicPredicates.isNonNegative(expected),
             getElementsAmount(getElements(lazyLocator), lazyLocator, expected),
             SeleniumDataConstants.NULL_LIST
         );
@@ -1051,7 +1017,7 @@ public interface Driver {
     static DriverFunction<WebElementList> getElementsAmount(LazyLocator locator, int expected) {
         return ifDriver(
             "getElementsAmount",
-            isNotNullLazyData(locator) && BasicPredicateFunctions.isNonNegative(expected),
+            isNotNullLazyData(locator) && BasicPredicates.isNonNegative(expected),
             getElementsAmount(getElements(locator), locator, expected),
             SeleniumDataConstants.NULL_LIST
         );
@@ -1261,7 +1227,7 @@ public interface Driver {
 
     static Function<Data<SearchContext>, Data<WebElementList>> getNestedElementsAmount(By locator, int count) {
         final var nameof = "getNestedElementsAmount";
-        return isNotNull(locator) && BasicPredicateFunctions.isNonNegative(count) ? (context -> {
+        return isNotNull(locator) && BasicPredicates.isNonNegative(count) ? (context -> {
             if (isNull(context)) {
                 return replaceMessage(SeleniumDataConstants.NULL_LIST, CoreFormatterConstants.PASSED_DATA_WAS_NULL);
             }
@@ -1442,7 +1408,7 @@ public interface Driver {
         return driver -> switchTo(
             target,
             driver.switchTo(),
-            BasicPredicateFunctions.isNonNegative(target),
+            BasicPredicates.isNonNegative(target),
             TargetLocator::frame,
             SeleniumFormatter::getSwitchToMessage,
             new SwitchResultMessageData<Integer>(target, "frame", "switchToFrame(int frameLocator): ")
@@ -1561,11 +1527,11 @@ public interface Driver {
     }
 
     static <T, U> DriverFunction<U> getWithLocator(GetWithDriverData<DecoratedList<T>, T, T, U> data) {
-        return DriverFunctionFactory.getFunction(DataExecutionFunctions.ifDependency("getWithLocator", areNotNull(data.locatorGetter, data.getter), data.getter.apply(data.locatorGetter.apply(data.locators)), data.guardData));
+        return DriverFunctionFactory.getFunction(ifDependency("getWithLocator", areNotNull(data.locatorGetter, data.getter), data.getter.apply(data.locatorGetter.apply(data.locators)), data.guardData));
     }
 
     static <T> DriverFunction<T> getWithLazyLocator(GetWithDriverData<LazyLocatorList, LazyLocator, By, T> data) {
-        return DriverFunctionFactory.getFunction(DataExecutionFunctions.ifDependency("getWithLazyLocator", areNotNull(data.locatorGetter, data.getter), data.getter.apply(getLocator(data.locatorGetter.apply(data.locators)).object), data.guardData));
+        return DriverFunctionFactory.getFunction(ifDependency("getWithLazyLocator", areNotNull(data.locatorGetter, data.getter), data.getter.apply(getLocator(data.locatorGetter.apply(data.locators)).object), data.guardData));
     }
 
     static <WE, BY, BYY extends By, W extends DecoratedList<BY>> DriverFunction<WE> getFromSingle(
@@ -1790,7 +1756,7 @@ public interface Driver {
     }
 
     static Data<Integer> getNextKey(DecoratedList<String> keys, int parameterIndex) {
-        return isNotNull(keys) && BasicPredicateFunctions.isNonNegative(parameterIndex) && keys.hasIndex(parameterIndex) ? (
+        return isNotNull(keys) && BasicPredicates.isNonNegative(parameterIndex) && keys.hasIndex(parameterIndex) ? (
             DataFactoryFunctions.getWithMessage(0, true, keys.get(parameterIndex))
         ) : replaceMessage(CoreDataConstants.NULL_INTEGER, "getNextKey", "The parameter map didn't contain an indexed com.github.karsaii.framework.core.selector-type it should have" + CoreFormatterConstants.END_LINE);
     }

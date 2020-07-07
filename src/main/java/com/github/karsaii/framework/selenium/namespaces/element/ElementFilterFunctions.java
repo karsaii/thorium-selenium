@@ -1,5 +1,6 @@
 package com.github.karsaii.framework.selenium.namespaces.element;
 
+import com.github.karsaii.core.namespaces.DataExecutionFunctions;
 import com.github.karsaii.core.records.Data;
 import com.github.karsaii.core.namespaces.validators.CoreFormatter;
 import com.github.karsaii.framework.core.abstracts.element.finder.BaseFilterParameters;
@@ -19,7 +20,6 @@ import java.util.Map;
 import java.util.function.Function;
 
 import static com.github.karsaii.core.namespaces.DataExecutionFunctions.ifDependency;
-import static com.github.karsaii.framework.selenium.namespaces.ExecutionCore.validChain;
 import static com.github.karsaii.framework.selenium.namespaces.element.validators.ElementFilterParametersValidators.isInvalidElementFilterParametersMessage;
 
 public interface ElementFilterFunctions {
@@ -27,7 +27,7 @@ public interface ElementFilterFunctions {
         return value -> ifDependency(
             nameof,
             isInvalidElementFilterParametersMessage(data) + valueGuard.apply(value),
-            validChain(data.getterMap.get(data.getter).apply(data.locators), filterFunction.apply(value), SeleniumDataConstants.NULL_ELEMENT),
+            DataExecutionFunctions.validChain(data.getterMap.get(data.getter).apply(data.locators), filterFunction.apply(value), SeleniumDataConstants.NULL_ELEMENT),
             SeleniumDataConstants.NULL_ELEMENT
         );
     }

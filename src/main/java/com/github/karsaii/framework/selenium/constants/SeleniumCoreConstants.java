@@ -2,6 +2,8 @@ package com.github.karsaii.framework.selenium.constants;
 
 import com.github.karsaii.core.constants.CoreDataConstants;
 import com.github.karsaii.core.extensions.DecoratedList;
+import com.github.karsaii.core.namespaces.validators.CoreFormatter;
+import com.github.karsaii.core.records.Data;
 import com.github.karsaii.framework.selenium.namespaces.factories.WebElementListFactory;
 import com.github.karsaii.framework.selenium.namespaces.lazy.LazyElementFactory;
 import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.WebElementList;
@@ -39,4 +41,6 @@ public abstract class SeleniumCoreConstants {
     public static final List<Class<?>> CLASSES_OF_GET_MECHANISMS = Arrays.asList(WebElementList.class, WebElement.class);
     public static final MethodSourceData DEFAULT_WEB_ELEMENT_METHOD_PARAMETERS = new MethodSourceData(CoreConstants.METHODS, SeleniumCoreConstants.WEB_ELEMENT_METHOD_LIST, CoreDataConstants.NULL_METHODDATA);
     public static final Function<Object, WebElement> WEB_ELEMENT_CASTER_FUNCTION = WebElement.class::cast;
+
+    public static final Function<Data<DecoratedList<?>>, String> WEBELEMENT_LIST_VALIDATOR = CoreFormatter.isValidTypedNonEmptyListMessage(WebElement.class);
 }

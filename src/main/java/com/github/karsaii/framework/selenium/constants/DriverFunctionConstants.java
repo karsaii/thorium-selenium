@@ -1,10 +1,15 @@
 package com.github.karsaii.framework.selenium.constants;
 
 import com.github.karsaii.core.constants.CoreDataConstants;
+import com.github.karsaii.core.namespaces.StringUtilities;
+import com.github.karsaii.core.records.Data;
 import com.github.karsaii.core.records.TypedEnumKeyData;
 import com.github.karsaii.core.extensions.boilers.StringSet;
+import com.github.karsaii.framework.core.namespaces.validators.FrameworkCoreFormatter;
+import com.github.karsaii.framework.selenium.namespaces.element.validators.ElementGetterValidators;
 import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.WebElementList;
 import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
+import com.github.karsaii.framework.selenium.records.GetElementByData;
 import org.openqa.selenium.WebElement;
 import com.github.karsaii.core.enums.TypeKey;
 import com.github.karsaii.framework.selenium.namespaces.factories.DriverFunctionFactory;
@@ -59,5 +64,42 @@ public abstract class DriverFunctionConstants {
                 entry(Boolean.class, TypeKey.BOOLEAN)
             )
         )
+    );
+
+    private static WebElement getByIndex(Data<WebElementList> data, int index) {
+        return data.object.get(index);
+    }
+
+    private static WebElement getByContainedText(Data<WebElementList> data, String text) {
+        final var list = data.object;
+        final var size = list.size();
+        var object = SeleniumCoreConstants.STOCK_ELEMENT;
+        var index = 0;
+        for (; (index < size); ++index) {
+            object = list.get(index);
+            if (StringUtilities.contains(object.getText(), text)) {
+                break;
+            }
+        }
+
+        return object;
+    }
+
+    public static final GetElementByData<String, WebElementList> BY_CONTAINED_TEXT_CONSTANTS = new GetElementByData<>(
+        "getElementByContainedText",
+        ElementGetterValidators::isInvalidElementByTextParameters,
+        DriverFunctionConstants::getByContainedText,
+        FrameworkCoreFormatter::getByFilterMessage,
+        SeleniumDataConstants.NULL_ELEMENT,
+        "Text"
+    );
+
+    public static final GetElementByData<Integer, WebElementList> BY_CONTAINED_INTEGER_CONSTANTS = new GetElementByData<>(
+        "getElementByIndex",
+        ElementGetterValidators::isInvalidElementByIndexParameters,
+        DriverFunctionConstants::getByIndex,
+        FrameworkCoreFormatter::getByFilterMessage,
+        SeleniumDataConstants.NULL_ELEMENT,
+        "Index"
     );
 }

@@ -1,11 +1,13 @@
 package com.github.karsaii.framework.selenium.namespaces.scripter;
 
 import com.github.karsaii.core.constants.CoreDataConstants;
-import com.github.karsaii.core.extensions.namespaces.ExecutorPredicates;
-import com.github.karsaii.core.namespaces.validators.DataValidators;
+import com.github.karsaii.core.extensions.namespaces.predicates.ExecutorPredicates;
+import com.github.karsaii.core.namespaces.DataExecutionFunctions;
+import com.github.karsaii.core.namespaces.predicates.DataPredicates;
 import com.github.karsaii.core.namespaces.validators.CoreFormatter;
 import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
 import com.github.karsaii.framework.selenium.constants.validators.SeleniumFormatterConstants;
+import com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilities;
 import com.github.karsaii.framework.selenium.namespaces.validators.SeleniumFormatter;
 import org.apache.commons.lang3.ArrayUtils;
 import com.github.karsaii.framework.selenium.constants.scripts.ClickFunctions;
@@ -14,8 +16,6 @@ import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.Drive
 import com.github.karsaii.core.extensions.namespaces.CoreUtilities;
 import com.github.karsaii.core.extensions.namespaces.NullableFunctions;
 import com.github.karsaii.core.namespaces.DataFactoryFunctions;
-import com.github.karsaii.core.namespaces.DataFunctions;
-import com.github.karsaii.core.namespaces.executor.Executor;
 import com.github.karsaii.core.records.Data;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -41,15 +41,14 @@ import static com.github.karsaii.core.extensions.namespaces.CoreUtilities.areNot
 import static com.github.karsaii.core.extensions.namespaces.NullableFunctions.isNotNull;
 import static com.github.karsaii.core.extensions.namespaces.NullableFunctions.isNull;
 import static com.github.karsaii.core.namespaces.DataFactoryFunctions.getWithDefaultExceptionData;
-import static com.github.karsaii.core.namespaces.validators.DataValidators.isInvalidOrFalse;
-import static com.github.karsaii.core.namespaces.validators.DataValidators.isValidNonFalse;
+import static com.github.karsaii.core.namespaces.predicates.DataPredicates.isInvalidOrFalse;
+import static com.github.karsaii.core.namespaces.predicates.DataPredicates.isValidNonFalse;
 import static com.github.karsaii.core.namespaces.DataFactoryFunctions.getArrayWithName;
 import static com.github.karsaii.core.namespaces.DataFactoryFunctions.replaceMessage;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static com.github.karsaii.framework.selenium.namespaces.ExecutionCore.ifDriver;
 import static com.github.karsaii.framework.selenium.namespaces.ExecutionCore.ifDriverFunction;
-import static com.github.karsaii.framework.selenium.namespaces.ExecutionCore.validChain;
 import static com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilities.isNotNullLazyElement;
 import static com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilities.isNotNullWebElement;
 
@@ -120,7 +119,7 @@ public interface Execute {
             "scrollIntoViewExecutor",
             isNotNull(getter),
             driver -> {
-                final var parameters = new ScriptParametersData<>(getter.apply(driver), DataValidators::isValidNonFalse, DataFunctions::unwrapToArray);
+                final var parameters = new ScriptParametersData<>(getter.apply(driver), DataPredicates::isValidNonFalse, SeleniumUtilities::unwrapToArray);
                 final var result = Driver.executeSingleParameter(ScrollIntoView.EXECUTE, ScriptExecuteFunctions.handleDataParameter(parameters)).apply(driver);
                 return getWithDefaultExceptionData(isNotNull(result.object), result.status, result.message);
             },
@@ -132,7 +131,7 @@ public interface Execute {
         return ifDriver(
             "setScrollIntoView",
             driver -> {
-                final var result = SeleniumExecutor.conditionalSequence(ExecutorPredicates::isFalse, isScrollIntoViewExistsData(), Driver.execute(ScrollIntoView.SET_FUNCTIONS)).apply(driver);
+                final var result = SeleniumExecutor.conditionalSequence(ExecutorPredicates::isFalseStatus, isScrollIntoViewExistsData(), Driver.execute(ScrollIntoView.SET_FUNCTIONS)).apply(driver);
                 final var status = isValidNonFalse(result);
                 return DataFactoryFunctions.getBoolean(status, SeleniumFormatter.getScrollIntoViewMessage(result.message.getMessage(), status));
             },
@@ -158,7 +157,7 @@ public interface Execute {
 
     static <T> Data<Object[]> handleDataParameterDefault(Data<T> parameter) {
         return DataFactoryFunctions.getWithMessage(
-            ScriptExecuteFunctions.handleDataParameter(new ScriptParametersData<>(parameter, DataValidators::isValidNonFalse, DataFunctions::unwrapToArray)),
+            ScriptExecuteFunctions.handleDataParameter(new ScriptParametersData<>(parameter, DataPredicates::isValidNonFalse, SeleniumUtilities::unwrapToArray)),
             false,
             ""
         );
@@ -169,8 +168,8 @@ public interface Execute {
             "getStyle",
             isNotNull(data),
             driver -> {
-                final var steps = validChain(data.get(), Execute::handleDataParameterDefault, CoreDataConstants.NULL_PARAMETER_ARRAY);
-                final var parameter = SeleniumExecutor.conditionalSequence(Driver.isElementPresent(data), steps, Object[].class).apply(driver);
+                final var steps = DataExecutionFunctions.validChain(data.get(), Execute::handleDataParameterDefault, CoreDataConstants.NULL_PARAMETER_ARRAY);
+                final var parameter = SeleniumExecutor.conditionalSequence(Driver.isElementPresent(data), DriverFunctionFactory.getFunction(steps), Object[].class).apply(driver);
 
                 return isValidNonFalse(parameter) ? Driver.executeSingleParameter(GetStyle.GET_STYLES_IN_JSON, parameter.object).apply(driver) : CoreDataConstants.NULL_OBJECT;
             },
@@ -291,7 +290,7 @@ public interface Execute {
                     return CoreDataConstants.NULL_BOOLEAN;
                 }
 
-                final var parametersData = DataFunctions.unwrapToArray(element);
+                final var parametersData = SeleniumUtilities.unwrapToArray(element);
                 if (isNull(parametersData)) {
                     return CoreDataConstants.NULL_BOOLEAN;
                 }

@@ -7,7 +7,7 @@ import com.github.karsaii.core.records.Data;
 
 import java.util.function.Predicate;
 
-import static com.github.karsaii.core.namespaces.validators.DataValidators.isValidNonFalse;
+import static com.github.karsaii.core.namespaces.predicates.DataPredicates.isValidNonFalse;
 
 public interface SeleniumDataFunctions {
     private static <T> boolean isOfTypeNonEmpty(Data<WebElementList> listData, Class<T> clazz) {
