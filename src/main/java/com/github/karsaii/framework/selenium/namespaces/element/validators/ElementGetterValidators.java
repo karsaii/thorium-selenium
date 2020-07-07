@@ -1,5 +1,6 @@
 package com.github.karsaii.framework.selenium.namespaces.element.validators;
 
+import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
 import com.github.karsaii.core.records.Data;
 import com.github.karsaii.core.namespaces.validators.CoreFormatter;
 import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.WebElementList;
@@ -33,7 +34,7 @@ public interface ElementGetterValidators {
             "isInvalidElementByIndexParameters: ",
             (
                 CoreFormatter.getValidNonFalseAndValidContainedMessage(data, getContainsIndexMessage(index)) +
-                CoreFormatter.isMoreThanExpected(index, 0, "Index")
+                (CoreFormatter.isMoreThanExpected(index, 0, "Index").status ? CoreFormatterConstants.EMPTY : "Index wasn't more than 0" + CoreFormatterConstants.END_LINE)
             )
         );
     }
