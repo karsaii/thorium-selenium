@@ -22,7 +22,7 @@ public interface ElementFilterParametersValidators {
             message += "List was empty" + CoreFormatterConstants.END_LINE;
         }
 
-        return isNotBlank(message) ? "isNullLazyLocatorListMessage: " + CoreFormatterConstants.PARAMETER_ISSUES_LINE + message : CoreFormatterConstants.EMPTY;
+        return CoreFormatter.getNamedErrorMessageOrEmpty("isNullLazyLocatorListMessage: ", message);
     }
 
     private static <T> String isInvalidElementFilterParametersMessageCore(BaseFilterParameters<WebDriver, ManyGetter, WebElementList> data) {
@@ -35,6 +35,6 @@ public interface ElementFilterParametersValidators {
             message += isInvalidElementFilterParametersMessageCore(data);
         }
 
-        return isNotBlank(message) ? "isInvalidElementIndexFilterParametersMessage: " + message : CoreFormatterConstants.EMPTY;
+        return CoreFormatter.getNamedErrorMessageOrEmpty("isInvalidElementIndexFilterParametersMessage: ", message);
     }
 }

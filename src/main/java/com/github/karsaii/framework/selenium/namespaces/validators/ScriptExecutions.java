@@ -17,6 +17,7 @@ import java.util.Objects;
 
 import static com.github.karsaii.core.extensions.namespaces.CoreUtilities.areNotNull;
 import static com.github.karsaii.core.extensions.namespaces.NullableFunctions.isNotNull;
+import static com.github.karsaii.core.namespaces.validators.CoreFormatter.getNamedErrorMessageOrEmpty;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
@@ -51,7 +52,7 @@ public interface ScriptExecutions {
             );
         }
 
-        return isNotBlank(message) ? "isInvalidCastDataMessage: " + CoreFormatterConstants.PARAMETER_ISSUES_LINE + message : CoreFormatterConstants.EMPTY;
+        return getNamedErrorMessageOrEmpty("isInvalidCastDataMessage: ", message);
     }
 
     static <T> String isInvalidVoidCastDataMessage(BasicCastData<T> data) {
@@ -61,7 +62,7 @@ public interface ScriptExecutions {
             message += CoreFormatter.isNullMessageWithName(data.caster, baseName + "Caster");
         }
 
-        return isNotBlank(message) ? "isInvalidCastDataMessage: " + CoreFormatterConstants.PARAMETER_ISSUES_LINE + message : CoreFormatterConstants.EMPTY;
+        return getNamedErrorMessageOrEmpty("isInvalidCastDataMessage: ", message);
     }
 
     static <T, U, V> boolean isValidExecutorResultFunctionsData(ExecutorResultFunctionsData<T, U, V> data) {
@@ -90,7 +91,7 @@ public interface ScriptExecutions {
             );
         }
 
-        return isNotBlank(message) ? "isInvalidInvokerDefaultsMessage: " + CoreFormatterConstants.PARAMETER_ISSUES_LINE + message : CoreFormatterConstants.EMPTY;
+        return getNamedErrorMessageOrEmpty("isInvalidInvokerDefaultsMessage: ", message);
     }
 
 

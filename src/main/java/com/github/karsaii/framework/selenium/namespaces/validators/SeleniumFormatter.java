@@ -130,7 +130,7 @@ public interface SeleniumFormatter {
     }
 
     static String getSendKeysErrorMessage(String message) {
-        return isNotBlank(message) ? "getSendKeysErrorMessage: " + CoreFormatterConstants.PARAMETER_ISSUES_LINE + message + "Not sending" + CoreFormatterConstants.END_LINE : CoreFormatterConstants.EMPTY;
+        return getNamedErrorMessageOrEmpty("getSendKeysErrorMessage: ", message + "Not sending" + CoreFormatterConstants.END_LINE);
     }
 
     static String getSendKeysNotSendingMessage(By locator, String input, SingleGetter getter) {
@@ -247,7 +247,7 @@ public interface SeleniumFormatter {
             );
         }
 
-        return isNotBlank(message) ? "getElementAttributeMessage: " + CoreFormatterConstants.PARAMETER_ISSUES_LINE + message : CoreFormatterConstants.EMPTY;
+        return getNamedErrorMessageOrEmpty("getElementAttributeMessage: ", message);
     }
 
     static String isNullWebElementMessage(WebElement element) {
@@ -271,7 +271,7 @@ public interface SeleniumFormatter {
             );
         }
 
-        return isNotBlank(message) ? "isNullWebElementMessage: " + CoreFormatterConstants.PARAMETER_ISSUES_LINE + message + CoreFormatterConstants.END_LINE : CoreFormatterConstants.EMPTY;
+        return getNamedErrorMessageOrEmpty("isNullWebElementMessage: ", message);
     }
 
     static String getElementsParametersMessage(LazyLocatorList locators, Function<LazyLocator, DriverFunction<WebElementList>> getter) {
