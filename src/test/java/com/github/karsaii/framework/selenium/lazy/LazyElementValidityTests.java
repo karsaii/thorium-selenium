@@ -41,7 +41,7 @@ public class LazyElementValidityTests {
     public static Stream<Arguments> elementProvider() {
         return Stream.of(
             Arguments.of("Basic valid Lazy Element - a name, a lazy locator", LazyElementFactory.getWithFilterParameters("Whatever", new LazyLocator("X", "id")), blank, true, CoreFormatterConstants.EMPTY),
-            Arguments.of("Basic invalid Lazy Element - all nulls", LazyElementFactory.getWith(null, null, null), notBlank, true, "isNullLazyElementMessage:  There were parameter issue(s):\nElement  name parameter was blank, empty or null.\nElement  parameters parameter was null.\n")
+            Arguments.of("Basic invalid Lazy Element - all nulls", LazyElementFactory.getWith(null, null, null), notBlank, true, "isNullLazyElementMessage: There were parameter issue(s):\nElement  name parameter was blank, empty or null.\nElement  parameters parameter was null.\n")
         );
     }
 

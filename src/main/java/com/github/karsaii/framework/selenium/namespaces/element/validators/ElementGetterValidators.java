@@ -1,16 +1,17 @@
 package com.github.karsaii.framework.selenium.namespaces.element.validators;
 
-import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
 import com.github.karsaii.core.records.Data;
 import com.github.karsaii.core.namespaces.validators.CoreFormatter;
 import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.WebElementList;
 
 import java.util.function.Function;
 
+import static com.github.karsaii.core.namespaces.validators.CoreFormatter.getNamedErrorMessageOrEmpty;
+
 public interface ElementGetterValidators {
     private static String isInvalidElementList(Data<WebElementList> data) {
-        return  CoreFormatter.getNamedErrorMessageOrEmpty(
-            "isInvalidElementList: ",
+        return getNamedErrorMessageOrEmpty(
+            "isInvalidElementList",
             CoreFormatter.getValidNonFalseAndValidContainedMessage(data, CoreFormatter::isNullOrEmptyListMessage)
         );
     }
@@ -20,8 +21,8 @@ public interface ElementGetterValidators {
     }
 
     static String isInvalidElementByTextParameters(Data<WebElementList> data, String text) {
-        return CoreFormatter.getNamedErrorMessageOrEmpty(
-            "isInvalidElementByTextParameters: ",
+        return getNamedErrorMessageOrEmpty(
+            "isInvalidElementByTextParameters",
             (
                 CoreFormatter.getValidNonFalseAndValidContainedMessage(data, CoreFormatter::isNullOrEmptyListMessage) +
                 CoreFormatter.isBlankMessageWithName(text, "Text")
@@ -30,11 +31,11 @@ public interface ElementGetterValidators {
     }
 
     static String isInvalidElementByIndexParameters(Data<WebElementList> data, int index) {
-        return CoreFormatter.getNamedErrorMessageOrEmpty(
-            "isInvalidElementByIndexParameters: ",
+        return getNamedErrorMessageOrEmpty(
+            "isInvalidElementByIndexParameters",
             (
                 CoreFormatter.getValidNonFalseAndValidContainedMessage(data, getContainsIndexMessage(index)) +
-                (CoreFormatter.isMoreThanExpected(index, 0, "Index").status ? CoreFormatterConstants.EMPTY : "Index wasn't more than 0" + CoreFormatterConstants.END_LINE)
+                CoreFormatter.isMoreThanExpectedMessage(index, -1, "Index")
             )
         );
     }
