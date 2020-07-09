@@ -4,6 +4,7 @@ import com.github.karsaii.core.constants.CoreDataConstants;
 import com.github.karsaii.core.extensions.namespaces.predicates.BasicPredicates;
 import com.github.karsaii.core.namespaces.StringUtilities;
 import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
+import com.github.karsaii.core.namespaces.validators.CoreFormatter;
 import com.github.karsaii.framework.selenium.constants.validators.SeleniumFormatterConstants;
 import com.github.karsaii.framework.selenium.namespaces.validators.SeleniumFormatter;
 import com.github.karsaii.framework.selenium.constants.ExpectedConditionConstants;
@@ -16,6 +17,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import com.github.karsaii.framework.selenium.records.lazy.LazyElement;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -29,6 +32,7 @@ import static com.github.karsaii.core.namespaces.DataFactoryFunctions.replaceMes
 import static com.github.karsaii.core.namespaces.DataFactoryFunctions.replaceName;
 
 import static com.github.karsaii.framework.selenium.namespaces.ExecutionCore.ifDriver;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public interface ExpectedConditions {
     private static Data<Boolean> isValuesDataCore(Data<String> data, String expected, String descriptor, String conditionDescriptor) {
@@ -152,6 +156,10 @@ public interface ExpectedConditions {
 
     static DriverFunction<Boolean> isUrlContainsData(String expected) {
         return isUrlData(StringUtils::contains, expected, "contain");
+    }
+
+    static DriverFunction<Boolean> isUrlContains(String url, String query) {
+        return isNotBlank(query) ? SeleniumExecutor.execute(CoreFormatter::getExecutionEndMessageAggregate, isUrlContainsData(url), isUrlContainsData(query)) : isUrlContainsData(url);
     }
 
     static DriverFunction<Boolean> isUrlEqualsIgnoreCaseData(String expected) {

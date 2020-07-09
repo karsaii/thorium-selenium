@@ -6,6 +6,7 @@ import com.github.karsaii.core.extensions.namespaces.predicates.BasicPredicates;
 import com.github.karsaii.core.extensions.namespaces.predicates.CollectionPredicates;
 import com.github.karsaii.core.namespaces.BaseExecutionFunctions;
 import com.github.karsaii.core.namespaces.DataExecutionFunctions;
+import com.github.karsaii.core.namespaces.StringUtilities;
 import com.github.karsaii.framework.core.abstracts.AbstractLazyResult;
 import com.github.karsaii.framework.core.namespaces.Adjuster;
 import com.github.karsaii.framework.core.namespaces.FrameworkFunctions;
@@ -102,6 +103,7 @@ import com.github.karsaii.framework.core.records.lazy.LazyLocator;
 import com.github.karsaii.framework.selenium.records.scripter.ExecutorData;
 import com.github.karsaii.framework.selenium.records.scripter.ExecutorParametersFieldData;
 import com.github.karsaii.framework.selenium.namespaces.validators.ScriptExecutions;
+import org.openqa.selenium.remote.RemoteWebElement;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -123,6 +125,7 @@ import static com.github.karsaii.core.namespaces.DataFactoryFunctions.replaceMes
 import static com.github.karsaii.core.namespaces.DataFactoryFunctions.replaceName;
 import static com.github.karsaii.core.namespaces.predicates.DataPredicates.isInvalidOrFalse;
 import static com.github.karsaii.core.namespaces.predicates.DataPredicates.isValidNonFalse;
+import static com.github.karsaii.core.namespaces.validators.CoreFormatter.isNullMessageWithName;
 import static com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilities.isInvalidLazyLocator;
 import static com.github.karsaii.framework.selenium.namespaces.validators.SeleniumFormatter.getElementsParametersMessage;
 import static com.github.karsaii.core.namespaces.validators.CoreFormatter.isBlankMessageWithName;
@@ -1871,10 +1874,14 @@ public interface Driver {
         return data;
     }
 
-    private static Data<Boolean> navigateCore(WebDriver driver, String url) {
+    private static Data<Boolean> navigateCore(WebDriver driver, String url, String query) {
+        final var queryFragment = StringUtilities.startsWithCaseInsensitive(query, "?") ? query : "?" + query;
+        var path = StringUtilities.startsWithCaseInsensitive(url, "http") && StringUtilities.contains(url, "://") ? url : "http://" + url;
+        path = StringUtilities.endsWithCaseInsensitive(path, "/") ? path + queryFragment : path + "/" + queryFragment;
+
         var data = CoreDataConstants.NULL_BOOLEAN;
         try {
-            driver.get(url);
+            driver.get(path);
             data = DataFactoryFunctions.getBoolean(true, "Driver navigated successfully to \"" + url + "\"" + CoreFormatterConstants.END_LINE);
         } catch (NullPointerException ex) {
             final var exMessage = ex.getMessage();
@@ -1884,15 +1891,19 @@ public interface Driver {
         return data;
     }
 
-    private static DriverFunction<Boolean> navigateCore(String url) {
-        return driver -> navigateCore(driver, url);
+    private static DriverFunction<Boolean> navigateCore(String url, String query) {
+        return driver -> navigateCore(driver, url, query);
     }
 
     static DriverFunction<Boolean> quitDriver() {
         return ifDriver("quitDriver", Driver::quitDriverCore, SeleniumDataConstants.DRIVER_WAS_NULL);
     }
 
+    static DriverFunction<Boolean> navigate(String url, String query) {
+        return ifDriver("navigate", isBlankMessageWithName(url, "Url") + isNullMessageWithName(query, "Query Fragment"), navigateCore(url, query), SeleniumDataConstants.DRIVER_WAS_NULL);
+    }
+
     static DriverFunction<Boolean> navigate(String url) {
-        return ifDriver("navigate", isBlankMessageWithName(url, "url"), navigateCore(url), SeleniumDataConstants.DRIVER_WAS_NULL);
+        return navigate(url, CoreFormatterConstants.EMPTY);
     }
 }

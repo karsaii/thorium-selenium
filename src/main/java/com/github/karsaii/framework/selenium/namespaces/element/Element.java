@@ -30,6 +30,7 @@ import java.util.function.Function;
 
 import static com.github.karsaii.core.extensions.namespaces.CoreUtilities.areNotNull;
 
+import static com.github.karsaii.core.namespaces.DataExecutionFunctions.ifDependency;
 import static com.github.karsaii.core.namespaces.predicates.DataPredicates.isValidNonFalse;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static com.github.karsaii.framework.selenium.namespaces.ExecutionCore.ifDriver;

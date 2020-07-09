@@ -1,19 +1,22 @@
 package com.github.karsaii.framework.selenium.enums;
 
+import com.github.karsaii.framework.selenium.constants.SelectorStrategyNameConstants;
+import com.github.karsaii.framework.selenium.constants.validators.SeleniumFormatterConstants;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public enum SeleniumSelectorStrategy {
-    ID("id"),
-    CSS_SELECTOR("cssSelector"),
-    CLASS("class"),
-    XPATH("xpath"),
-    TAG_NAME("tagName"),
-    NAME("name"),
-    PARTIAL_LINK_TEXT("partialLinkText"),
-    LINK_TEXT("linkText"),
-    NONE("none"),
-    DEFAULT("id");
+    ID(SelectorStrategyNameConstants.ID),
+    CSS_SELECTOR(SelectorStrategyNameConstants.CSS_SELECTOR),
+    CLASS(SelectorStrategyNameConstants.CLASS),
+    XPATH(SelectorStrategyNameConstants.XPATH),
+    TAG_NAME(SelectorStrategyNameConstants.TAG_NAME),
+    NAME(SelectorStrategyNameConstants.NAME),
+    PARTIAL_LINK_TEXT(SelectorStrategyNameConstants.PARTIAL_LINK_TEXT),
+    LINK_TEXT(SelectorStrategyNameConstants.LINK_TEXT),
+    NONE(SeleniumFormatterConstants.NONE),
+    DEFAULT(SelectorStrategyNameConstants.ID);
 
     private static final Map<String, SeleniumSelectorStrategy> VALUES = new HashMap<>();
     private static final Map<Integer, SeleniumSelectorStrategy> INDICES = new HashMap<>();

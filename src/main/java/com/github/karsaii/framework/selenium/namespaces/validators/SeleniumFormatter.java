@@ -74,7 +74,7 @@ public interface SeleniumFormatter {
             );
         }
 
-        return getNamedErrorMessageOrEmpty("isValidElementFormatData: ", message);
+        return getNamedErrorMessageOrEmpty("isValidElementFormatData", message);
     }
 
     static String isValidElementValueParametersMessage(ElementValueParameters<?, ?> parameters) {
@@ -88,7 +88,7 @@ public interface SeleniumFormatter {
             );
         }
 
-        return getNamedErrorMessageOrEmpty("isValidElementValueParametersMessage: ", message);
+        return getNamedErrorMessageOrEmpty("isValidElementValueParametersMessage", message);
     }
 
     static String isValidElementParameterizedValueParametersMessage(ElementParameterizedValueParameters<?> parameters) {
@@ -102,7 +102,7 @@ public interface SeleniumFormatter {
             );
         }
 
-        return getNamedErrorMessageOrEmpty("isValidElementParameterizedValueParametersMessage: ", message);
+        return getNamedErrorMessageOrEmpty("isValidElementParameterizedValueParametersMessage", message);
     }
 
     static String getScrollIntoViewMessage(String message, boolean status) {
@@ -130,7 +130,11 @@ public interface SeleniumFormatter {
     }
 
     static String getSendKeysErrorMessage(String message) {
-        return getNamedErrorMessageOrEmpty("getSendKeysErrorMessage: ", message + "Not sending" + CoreFormatterConstants.END_LINE);
+        var lMessage = message;
+        if (isNotBlank(message)) {
+            lMessage += "Not sending" + CoreFormatterConstants.END_LINE;
+        }
+        return getNamedErrorMessageOrEmpty("getSendKeysErrorMessage", lMessage);
     }
 
     static String getSendKeysNotSendingMessage(By locator, String input, SingleGetter getter) {
@@ -146,7 +150,7 @@ public interface SeleniumFormatter {
     }
 
     static String getShadowRootElementMessage(String message, boolean status) {
-        return message + " Root com.github.karsaii.framework.selenium.element " + CoreFormatter.getOptionMessage(status) + "found" + CoreFormatterConstants.END_LINE;
+        return message + " Root element " + CoreFormatter.getOptionMessage(status) + "found" + CoreFormatterConstants.END_LINE;
     }
 
     static String getElementsAmountMessage(By locator, boolean status, int expectedSize, int size) {
@@ -174,12 +178,12 @@ public interface SeleniumFormatter {
 
     static String isElementFunctionMessage(LazyElement element, ElementValueParameters<?, ?> parameters) {
         final var message = FrameworkCoreFormatter.isNullLazyElementMessage(element) + isValidElementValueParametersMessage(parameters);
-        return getNamedErrorMessageOrEmpty("isElementFunctionMessage: ", message);
+        return getNamedErrorMessageOrEmpty("isElementFunctionMessage", message);
     }
 
     static String isElementFunctionMessage(LazyElement element, ElementParameterizedValueParameters<?> parameters) {
         final var message = FrameworkCoreFormatter.isNullLazyElementMessage(element) + isValidElementParameterizedValueParametersMessage(parameters);
-        return getNamedErrorMessageOrEmpty("isElementFunctionMessage: ", message);
+        return getNamedErrorMessageOrEmpty("isElementFunctionMessage", message);
     }
 
     static <T> String getManyGetterErrorMessage(Map<ManyGetter, Function<LazyLocatorList, Function<WebDriver, Data<T>>>> getterMap, ManyGetter key) {
@@ -247,7 +251,7 @@ public interface SeleniumFormatter {
             );
         }
 
-        return getNamedErrorMessageOrEmpty("getElementAttributeMessage: ", message);
+        return getNamedErrorMessageOrEmpty("getElementAttributeMessage", message);
     }
 
     static String isNullWebElementMessage(WebElement element) {
@@ -259,7 +263,7 @@ public interface SeleniumFormatter {
             );
         }
 
-        return getNamedErrorMessageOrEmpty("isNullWebElementMessage: ", message);
+        return getNamedErrorMessageOrEmpty("isNullWebElementMessage", message);
     }
 
     static String isNullWebElementDataMessage(Data<WebElement> element) {
@@ -271,19 +275,19 @@ public interface SeleniumFormatter {
             );
         }
 
-        return getNamedErrorMessageOrEmpty("isNullWebElementMessage: ", message);
+        return getNamedErrorMessageOrEmpty("isNullWebElementMessage", message);
     }
 
     static String getElementsParametersMessage(LazyLocatorList locators, Function<LazyLocator, DriverFunction<WebElementList>> getter) {
-        return getNamedErrorMessageOrEmpty("getElementsParametersMessage: ", CoreFormatter.isNullOrEmptyMessageWithName(locators, "Lazy Locators List") + CoreFormatter.isNullMessageWithName(getter, "Getter"));
+        return getNamedErrorMessageOrEmpty("getElementsParametersMessage", CoreFormatter.isNullOrEmptyMessageWithName(locators, "Lazy Locators List") + CoreFormatter.isNullMessageWithName(getter, "Getter"));
     }
 
     static String getElementsParametersMessage(LazyLocatorList locators) {
-        return getNamedErrorMessageOrEmpty("getElementsParametersMessage: ", CoreFormatter.isNullOrEmptyMessageWithName(locators, "Lazy Locators List"));
+        return getNamedErrorMessageOrEmpty("getElementsParametersMessage", CoreFormatter.isNullOrEmptyMessageWithName(locators, "Lazy Locators List"));
     }
 
     static String getRepositoryNullMessage(Map<String, CachedLazyElementData> repository) {
-        return getNamedErrorMessageOrEmpty("getRepositoryNullMessage: ", CoreFormatter.isNullMessageWithName(repository, "Element repository"));
+        return getNamedErrorMessageOrEmpty("getRepositoryNullMessage", CoreFormatter.isNullMessageWithName(repository, "Element repository"));
     }
 
     static String getCacheElementDefaultsDataInvalidMessage(CacheElementDefaultsData defaults) {
@@ -296,7 +300,7 @@ public interface SeleniumFormatter {
             );
         }
 
-        return getNamedErrorMessageOrEmpty("getCacheElementDefaultsDataInvalidMessage: ", message);
+        return getNamedErrorMessageOrEmpty("getCacheElementDefaultsDataInvalidMessage", message);
     }
 
     static String getCachedLazyElementDataInvalidMessage(CachedLazyElementData data) {
@@ -305,7 +309,7 @@ public interface SeleniumFormatter {
             message += FrameworkCoreFormatter.isNullLazyElementMessage(data.element) + CoreFormatter.isNullMessageWithName(data.typeKeys, "Type keys");
         }
 
-        return getNamedErrorMessageOrEmpty("getCachedLazyElementDataInvalidMessage: ", message);
+        return getNamedErrorMessageOrEmpty("getCachedLazyElementDataInvalidMessage", message);
     }
 
     static String getCacheElementParametersErrorMessage(CacheElementDefaultsData defaults, CachedLazyElementData data) {
@@ -314,11 +318,11 @@ public interface SeleniumFormatter {
             message += getAlreadyCachedMessage(defaults.repository, data.element.name);
         }
 
-        return getNamedErrorMessageOrEmpty("getCacheElementParametersErrorMessage: ", message);
+        return getNamedErrorMessageOrEmpty("getCacheElementParametersErrorMessage", message);
     }
 
     private static String getCachedCommonMessage(Map<String, CachedLazyElementData> repository, String name) {
-        return getNamedErrorMessageOrEmpty("getCachedCommonMessage: ", getRepositoryNullMessage(repository) + isBlankMessageWithName(name, "Name of item"));
+        return getNamedErrorMessageOrEmpty("getCachedCommonMessage", getRepositoryNullMessage(repository) + isBlankMessageWithName(name, "Name of item"));
     }
 
     static String getAlreadyCachedMessage(Map<String, CachedLazyElementData> repository, String name) {
@@ -327,7 +331,7 @@ public interface SeleniumFormatter {
             message += SeleniumFormatterConstants.LAZY_ELEMENT + " with name(\"" + name + "\") was already cached" + CoreFormatterConstants.END_LINE;
         }
 
-        return getNamedErrorMessageOrEmpty("getAlreadyCachedMessage: ", message);
+        return getNamedErrorMessageOrEmpty("getAlreadyCachedMessage", message);
     }
 
     static String getNotCachedMessage(Map<String, CachedLazyElementData> repository, String name) {
@@ -336,6 +340,6 @@ public interface SeleniumFormatter {
             message += SeleniumFormatterConstants.LAZY_ELEMENT + " with name(\"" + name + "\") wasn't cached" + CoreFormatterConstants.END_LINE;
         }
 
-        return getNamedErrorMessageOrEmpty("getNotCachedMessage: ", message);
+        return getNamedErrorMessageOrEmpty("getNotCachedMessage", message);
     }
 }

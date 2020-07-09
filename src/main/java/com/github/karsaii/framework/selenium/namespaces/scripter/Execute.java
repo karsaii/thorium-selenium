@@ -6,6 +6,7 @@ import com.github.karsaii.core.namespaces.DataExecutionFunctions;
 import com.github.karsaii.core.namespaces.predicates.DataPredicates;
 import com.github.karsaii.core.namespaces.validators.CoreFormatter;
 import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
+import com.github.karsaii.framework.selenium.constants.ScriptExecutorConstants;
 import com.github.karsaii.framework.selenium.constants.validators.SeleniumFormatterConstants;
 import com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilities;
 import com.github.karsaii.framework.selenium.namespaces.validators.SeleniumFormatter;
@@ -273,11 +274,11 @@ public interface Execute {
     }
 
     static DriverFunction<String> setId(Data<WebElement> element, String value) {
-        return setAttribute(element, SeleniumFormatterConstants.PRIMARY_STRATEGY, value);
+        return setAttribute(element, ScriptExecutorConstants.PRIMARY_STRATEGY, value);
     }
 
     static DriverFunction<String> setId(LazyElement element, String value) {
-        return setAttribute(element, SeleniumFormatterConstants.PRIMARY_STRATEGY, value);
+        return setAttribute(element, ScriptExecutorConstants.PRIMARY_STRATEGY, value);
     }
 
     static DriverFunction<Boolean> clickEventDispatcher(Data<WebElement> element) {

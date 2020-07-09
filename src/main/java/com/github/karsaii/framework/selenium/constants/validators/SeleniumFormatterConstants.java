@@ -1,6 +1,7 @@
 package com.github.karsaii.framework.selenium.constants.validators;
 
 import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
+import com.github.karsaii.framework.selenium.enums.SeleniumSelectorStrategy;
 import org.openqa.selenium.Keys;
 
 public abstract class SeleniumFormatterConstants {
@@ -31,7 +32,6 @@ public abstract class SeleniumFormatterConstants {
     public static final String ELEMENTS = "Elements";
     public static final String IDS = "IDs";
     public static final String WINDOWS = "windows";
-    public static final String PRIMARY_STRATEGY = "id";
     public static final String ELEMENT_TEXT = CoreFormatterConstants.ELEMENT + "text";
     public static final String ELEMENT_ATTRIBUTE = CoreFormatterConstants.ELEMENT + "attribute";
     public static final String ELEMENT_ATTRIBUTE_VALUE = ELEMENT_ATTRIBUTE + " value";
@@ -49,4 +49,5 @@ public abstract class SeleniumFormatterConstants {
     public static final String FIND_ELEMENTS_SUCCESSFUL = "Find elements execution successful" + CoreFormatterConstants.END_LINE;
     public static final String FIND_ELEMENTS_EXCEPTION = "Exception occurred during finding elements" + CoreFormatterConstants.END_LINE;
     public static final String SELECT_ALL = Keys.chord(Keys.CONTROL, "a", Keys.BACK_SPACE);
+    public static final String NONE = "none";
 }
