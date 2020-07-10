@@ -12,12 +12,18 @@ import com.github.karsaii.framework.core.namespaces.FrameworkCoreUtilities;
 import com.github.karsaii.framework.core.namespaces.repositories.CoreElementRepository;
 import com.github.karsaii.framework.core.namespaces.validators.FrameworkCoreFormatter;
 import com.github.karsaii.framework.selenium.constants.CacheElementDefaults;
+import com.github.karsaii.framework.selenium.constants.ElementRepositoryFunctionConstants;
+import com.github.karsaii.framework.selenium.constants.SeleniumCoreConstants;
 import com.github.karsaii.framework.selenium.constants.validators.SeleniumFormatterConstants;
 import com.github.karsaii.core.namespaces.validators.CoreFormatter;
 import com.github.karsaii.framework.core.selector.records.SelectorKeySpecificityData;
+import com.github.karsaii.framework.selenium.namespaces.element.validators.WebElementValidators;
+import com.github.karsaii.framework.selenium.namespaces.lazy.LazyElementFactory;
+import com.github.karsaii.framework.selenium.namespaces.validators.GetCachedElementDataValidators;
 import com.github.karsaii.framework.selenium.namespaces.validators.SeleniumFormatter;
 import com.github.karsaii.framework.selenium.records.CacheElementDefaultsData;
 import com.github.karsaii.framework.selenium.records.ExternalElementData;
+import com.github.karsaii.framework.selenium.records.GetCachedElementData;
 import com.github.karsaii.framework.selenium.records.lazy.filtered.LazyFilteredElementParameters;
 import org.openqa.selenium.WebElement;
 import selectorSpecificity.Specificity;
@@ -35,6 +41,7 @@ import com.github.karsaii.framework.selenium.records.lazy.CachedLazyElementData;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 import static com.github.karsaii.core.extensions.namespaces.CoreUtilities.areAnyNull;
 import static com.github.karsaii.core.namespaces.DataFactoryFunctions.appendMessage;
@@ -43,6 +50,7 @@ import static com.github.karsaii.core.namespaces.predicates.DataPredicates.isVal
 import static com.github.karsaii.core.namespaces.DataFactoryFunctions.prependMessage;
 import static com.github.karsaii.core.namespaces.DataFactoryFunctions.replaceMessage;
 
+import static com.github.karsaii.core.namespaces.predicates.DataPredicates.isValidNonFalseAndValidContained;
 import static com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilities.isNotNullWebElement;
 import static com.github.karsaii.framework.selenium.namespaces.validators.SeleniumFormatter.getNotCachedMessage;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -74,7 +82,7 @@ public interface ElementRepository {
 
     static Data<Boolean> containsElement(Map<String, CachedLazyElementData> elementRepository, String name, Data<Boolean> defaultValue) {
         final var nameof = "containsElement";
-        final var errorMessage = ElementRepositoryValidators.isInvalidContainsElementMessage(elementRepository, name, defaultValue);
+        final var errorMessage = ElementRepositoryValidators.isInvalidContainsElementMessage(elementRepository, name);
         if (isNotBlank(errorMessage)) {
             return replaceMessage(defaultValue, nameof, errorMessage);
         }
@@ -87,59 +95,57 @@ public interface ElementRepository {
     }
 
     static Data<Boolean> containsElement(String name, Data<Boolean> defaultValue) {
-        return containsElement(RepositoryConstants.elements, name, defaultValue);
+        return containsElement(RepositoryConstants.ELEMENTS, name, defaultValue);
     }
 
     static Data<Boolean> containsElement(String name) {
-        return containsElement(RepositoryConstants.elements, name, CoreDataConstants.NULL_BOOLEAN);
+        return containsElement(RepositoryConstants.ELEMENTS, name, CoreDataConstants.NULL_BOOLEAN);
     }
 
-    static Data<CachedLazyElementData> getElement(Map<String, CachedLazyElementData> elementRepository, String name, Data<CachedLazyElementData> defaultValue) {
-        final var nameof = "getElement";
-        final var errorMessage = ElementRepositoryValidators.isInvalidContainsElementMessage(elementRepository, name, defaultValue);
+    static Data<CachedLazyElementData> getElement(GetCachedElementData data, String elementName) {
+        final var guardName = "getElement";
+        var errorMessage = GetCachedElementDataValidators.getValidCachedElementDataMessage(data);
         if (isNotBlank(errorMessage)) {
-            return replaceMessage(defaultValue, nameof, errorMessage);
+            return DataFactoryFunctions.getInvalidWithNameAndMessage(SeleniumCoreConstants.NULL_CACHED_LAZY_ELEMENT_DATA, guardName, errorMessage);
         }
 
-        final var defaultObject = defaultValue.object;
-        final var object = elementRepository.getOrDefault(name, defaultObject);
-        final var status = CoreUtilities.isNotEqual(object, defaultObject);
-        final var message = SeleniumFormatterConstants.LAZY_ELEMENT + CoreFormatter.getOptionMessage(status) + " found by name(\"" + name + "\")" + CoreFormatterConstants.END_LINE;
+        final var nameof = data.nameof;
+        errorMessage = data.validator.apply(data.repository, elementName);
+        if (isNotBlank(errorMessage)) {
+            return DataFactoryFunctions.getInvalidWithNameAndMessage(data.defaultValue, nameof, errorMessage);
+        }
 
+        final var object = data.getter.apply(elementName, data.defaultValue);
+        final var status = CoreUtilities.isNotEqual(object, data.defaultValue);
+        final var message = data.formatter.apply(status, elementName);
         return DataFactoryFunctions.getWithNameAndMessage(object, status, nameof, message);
     }
 
-    static Data<CachedLazyElementData> getElement(String name, Data<CachedLazyElementData> defaultValue) {
-        return getElement(RepositoryConstants.elements, name, defaultValue);
-    }
-
-    static Data<CachedLazyElementData> getElement(Map<String, CachedLazyElementData> elementRepository, String name) {
-        return getElement(elementRepository, name, SeleniumDataConstants.NULL_CACHED_LAZY_ELEMENT);
-    }
-
     static Data<CachedLazyElementData> getElement(String name) {
-        return getElement(RepositoryConstants.elements, name);
+        return getElement(ElementRepositoryFunctionConstants.GET_ELEMENT_DEFAULTS, name);
     }
 
-    static <T> String cacheIfAbsent(AbstractLazyResult<LazyFilteredElementParameters> element, Map<String, DecoratedList<SelectorKeySpecificityData>> typeKeys) {
+    static <T> Data<Boolean> cacheIfAbsent(AbstractLazyResult<LazyFilteredElementParameters> element, Map<String, DecoratedList<SelectorKeySpecificityData>> typeKeys) {
         final var cached = ElementRepository.containsElement(element.name);
-
-        var message = "";
-        if (isValidNonFalse(cached) && !cached.object) {
-            final var cachedElement = new LazyElement(element.name, SeleniumUtilities.getParametersCopy(element.parameters), element.validator);
-            message = ElementRepository.cacheElement(cachedElement, typeKeys).message.toString();
-        }
-
-        return message;
+        final Predicate<Boolean> isFalse = CoreUtilities::isFalse;
+        final var status = isValidNonFalseAndValidContained(cached, isFalse);
+        return status ? ElementRepository.cacheElement(LazyElementFactory.getWith(element), typeKeys) : cached;
     }
 
     static Map<String, DecoratedList<SelectorKeySpecificityData>> getInitializedTypeKeysMap() {
         return CoreElementRepository.getInitializedTypeKeysMap(ElementStrategyMapConstants.STRATEGY_MAP_KEY_SET, String.class);
     }
 
-    static <T> Data<CachedLazyElementData> getIfContains(AbstractLazyResult<T> element) {
-        final var name = element.name;
+    static <T> Data<CachedLazyElementData> getIfContains(String name) {
+        if (isBlank(name)) {
+            return appendMessage(SeleniumDataConstants.ELEMENT_WAS_NOT_CACHED, "Passed name was blank, no caching possible on that" + CoreFormatterConstants.END_LINE);
+        }
+
         return isValidNonFalse(ElementRepository.containsElement(name)) ? ElementRepository.getElement(name) : SeleniumDataConstants.ELEMENT_WAS_NOT_CACHED;
+    }
+
+    static <T> Data<CachedLazyElementData> getIfContains(AbstractLazyResult<T> element) {
+        return getIfContains(element.name);
     }
 
     static Data<Boolean> updateTypeKeys(LazyLocatorList locators, Map<String, DecoratedList<SelectorKeySpecificityData>> typeKeys, List<String> types, String key) {
@@ -186,21 +192,23 @@ public interface ElementRepository {
     }
 
     static Data<WebElement> cacheValidLazyElement(AbstractLazyResult<LazyFilteredElementParameters> element, Data<ExternalElementData> regular, Data<ExternalElementData> external) {
-        final var nameof = "cacheValidLazyElement";
-        if (isNotBlank(FrameworkCoreFormatter.isNullLazyElementMessage(element)) || areAnyNull(regular, external)) {
-            return replaceMessage(SeleniumDataConstants.NULL_ELEMENT, nameof, CoreFormatterConstants.PARAMETER_ISSUES + CoreFormatterConstants.WAS_NULL);
+        final var errorMessage = SeleniumFormatter.getCacheElementValidParametersMessage(element, regular, external);
+        if (isNotBlank(errorMessage)) {
+            return replaceMessage(SeleniumDataConstants.NULL_ELEMENT, "cacheValidLazyElement", errorMessage);
         }
 
         final var regularStatus = isValidNonFalse(regular);
         final var externalStatus = isValidNonFalse(external);
-        if (!(regularStatus || externalStatus)) {
+        final var bothInvalid = !(regularStatus || externalStatus);
+        if (bothInvalid) {
             return SeleniumDataConstants.NULL_ELEMENT;
         }
 
         final var externalElement = (externalStatus ? external : regular).object;
         final var currentElement = externalElement.found;
-        return isNotNullWebElement(currentElement) ? (
-            appendMessage(currentElement, ElementRepository.cacheIfAbsent(element, FrameworkCoreUtilities.getKeysCopy(externalElement.typeKeys)))
-        ) : prependMessage(currentElement, "All approaches were tried" + CoreFormatterConstants.END_LINE);
+        final var message = WebElementValidators.isNotNullWebElement(currentElement) ? (
+            ElementRepository.cacheIfAbsent(element, FrameworkCoreUtilities.getKeysCopy(externalElement.typeKeys)).message.toString()
+        ) : "All approaches were tried" + CoreFormatterConstants.END_LINE;
+        return prependMessage(currentElement, message);
     }
 }

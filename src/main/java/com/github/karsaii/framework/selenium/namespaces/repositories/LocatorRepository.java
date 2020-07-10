@@ -4,6 +4,7 @@ import com.github.karsaii.core.constants.CoreDataConstants;
 import com.github.karsaii.core.namespaces.DataFactoryFunctions;
 import com.github.karsaii.core.records.Data;
 import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
+import com.github.karsaii.framework.selenium.constants.ElementRepositoryFunctionConstants;
 import com.github.karsaii.framework.selenium.constants.validators.SeleniumFormatterConstants;
 import com.github.karsaii.core.namespaces.validators.CoreFormatter;
 import org.openqa.selenium.By;
@@ -20,9 +21,10 @@ import static com.github.karsaii.core.namespaces.DataFactoryFunctions.replaceMes
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public interface LocatorRepository {
+
     static Data<LazyElement> getIfContains(Map<By, String> locatorRepository, Map<String, CachedLazyElementData> elementRepository, By locator, SingleGetter getter) {
         final var nameof = "getIfContains";
-        final var element = locatorRepository.containsKey(locator) ? ElementRepository.getElement(elementRepository, locatorRepository.get(locator)).object.element : LazyElementFactory.getWithFilterParameters(locator, getter);
+        final var element = locatorRepository.containsKey(locator) ? ElementRepository.getElement(locatorRepository.get(locator)).object.element : LazyElementFactory.getWithFilterParameters(locator, getter);
         final var result = cacheLocator(locatorRepository, locator, element.name, CoreDataConstants.NULL_BOOLEAN);
         final var status = result.object;
         return status ?
@@ -35,11 +37,11 @@ public interface LocatorRepository {
     }
 
     static Data<LazyElement> getIfContains(By locator, SingleGetter getter) {
-        return getIfContains(RepositoryConstants.locatorElements, RepositoryConstants.elements, locator, getter);
+        return getIfContains(RepositoryConstants.LOCATOR_ELEMENTS, RepositoryConstants.ELEMENTS, locator, getter);
     }
 
     static Data<LazyElement> getIfContains(By locator) {
-        return getIfContains(RepositoryConstants.locatorElements, RepositoryConstants.elements, locator, SingleGetter.DEFAULT);
+        return getIfContains(RepositoryConstants.LOCATOR_ELEMENTS, RepositoryConstants.ELEMENTS, locator, SingleGetter.DEFAULT);
     }
 
     static Data<Boolean> cacheLocator(Map<By, String> locatorRepository, By locator, String name, Data<Boolean> defaultValue) {
@@ -63,10 +65,10 @@ public interface LocatorRepository {
     }
 
     static Data<Boolean> cacheLocator(By locator, String name, Data<Boolean> defaultValue) {
-        return cacheLocator(RepositoryConstants.locatorElements, locator, name, defaultValue);
+        return cacheLocator(RepositoryConstants.LOCATOR_ELEMENTS, locator, name, defaultValue);
     }
 
     static Data<Boolean> cacheLocator(By locator, String name) {
-        return cacheLocator(RepositoryConstants.locatorElements, locator, name, CoreDataConstants.NULL_BOOLEAN);
+        return cacheLocator(RepositoryConstants.LOCATOR_ELEMENTS, locator, name, CoreDataConstants.NULL_BOOLEAN);
     }
 }

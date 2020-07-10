@@ -4,6 +4,7 @@ import com.github.karsaii.framework.core.namespaces.factory.LazyLocatorListFacto
 import com.github.karsaii.framework.selenium.namespaces.element.ElementFilterFunctions;
 import com.github.karsaii.framework.core.namespaces.extensions.boilers.LazyLocatorList;
 import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.WebElementList;
+import com.github.karsaii.framework.selenium.namespaces.factories.ElementFilterDataFactory;
 import com.github.karsaii.framework.selenium.records.lazy.filtered.ElementFilterData;
 import com.github.karsaii.framework.selenium.records.lazy.filtered.LazyFilteredElementParameters;
 import com.github.karsaii.framework.core.records.lazy.LazyLocator;
@@ -19,14 +20,6 @@ public interface LazyIndexedElementFactory {
         return new LazyFilteredElementParameters(data, data.isFiltered ? WebElement.class : WebElementList.class, probability, lazyLocators, getter);
     }
 
-    static LazyFilteredElementParameters getWithFilterParametersAndLocatorList(boolean isFiltered, String message, double probability, LazyLocatorList lazyLocators, String getter) {
-        return getWithFilterDataAndLocatorList(new ElementFilterData<String>(isFiltered, ElementFilterFunctions::getContainedTextElement, message), probability, lazyLocators, getter);
-    }
-
-    static LazyFilteredElementParameters getWithFilterParametersAndLocatorList(boolean isFiltered, int index, double probability, LazyLocatorList lazyLocators, String getter) {
-        return getWithFilterDataAndLocatorList(new ElementFilterData<>(isFiltered, ElementFilterFunctions::getIndexedElement, index), probability, lazyLocators, getter);
-    }
-
     static LazyFilteredElementParameters getWithFilterDataAndLocatorList(ElementFilterData<?> data, double probability, LazyLocatorList lazyLocators) {
         return getWithFilterDataAndLocatorList(data, probability, lazyLocators, GETTER);
     }
@@ -36,23 +29,33 @@ public interface LazyIndexedElementFactory {
     }
 
     static LazyFilteredElementParameters getWithFilterDataAndLocatorList(ElementFilterData<?> data, LazyLocatorList lazyLocators) {
-        return getWithFilterDataAndLocatorList(data, PROBABILITY, lazyLocators, GETTER);
-    }
-
-    static LazyFilteredElementParameters getWithFilterDataAndLocator(ElementFilterData<?> data, double probability, LazyLocator lazyLocator) {
-        return getWithFilterDataAndLocatorList(data, probability, LazyLocatorListFactory.getWithSingleItem(lazyLocator), GETTER);
+        return getWithFilterDataAndLocatorList(data, lazyLocators, GETTER);
     }
 
     static LazyFilteredElementParameters getWithFilterDataAndLocator(ElementFilterData<?> data, double probability, LazyLocator lazyLocator, String getter) {
         return getWithFilterDataAndLocatorList(data, probability, LazyLocatorListFactory.getWithSingleItem(lazyLocator), getter);
     }
 
+    static LazyFilteredElementParameters getWithFilterDataAndLocator(ElementFilterData<?> data, double probability, LazyLocator lazyLocator) {
+        return getWithFilterDataAndLocator(data, probability, lazyLocator, GETTER);
+    }
+
     static LazyFilteredElementParameters getWithFilterDataAndLocator(ElementFilterData<?> data, LazyLocator lazyLocator, String getter) {
-        return getWithFilterDataAndLocatorList(data, LazyLocatorListFactory.getWithSingleItem(lazyLocator), getter);
+        return getWithFilterDataAndLocator(data, PROBABILITY, lazyLocator, getter);
     }
 
     static LazyFilteredElementParameters getWithFilterDataAndLocator(ElementFilterData<?> data, LazyLocator lazyLocator) {
-        return getWithFilterDataAndLocatorList(data, LazyLocatorListFactory.getWithSingleItem(lazyLocator), GETTER);
+        return getWithFilterDataAndLocator(data, lazyLocator, GETTER);
+    }
+
+    static LazyFilteredElementParameters getWithFilterParametersAndLocatorList(boolean isFiltered, String message, double probability, LazyLocatorList lazyLocators, String getter) {
+        final var filterData = ElementFilterDataFactory.getWithDefaultStringHandler(isFiltered, message);
+        return getWithFilterDataAndLocatorList(filterData, probability, lazyLocators, getter);
+    }
+
+    static LazyFilteredElementParameters getWithFilterParametersAndLocatorList(boolean isFiltered, int index, double probability, LazyLocatorList lazyLocators, String getter) {
+        final var filterData = ElementFilterDataFactory.getWithDefaultIndexHandler(isFiltered, index);
+        return getWithFilterDataAndLocatorList(filterData, probability, lazyLocators, getter);
     }
 
     static LazyFilteredElementParameters getWithFilterParametersAndLocatorList(boolean isFiltered, int index, double probability, LazyLocatorList lazyLocators) {
@@ -92,27 +95,27 @@ public interface LazyIndexedElementFactory {
     }
 
     static LazyFilteredElementParameters getWithFilterParametersAndLocator(boolean isFiltered, int index, LazyLocator lazyLocator, String getter) {
-        return getWithFilterParametersAndLocatorList(isFiltered, index, PROBABILITY, LazyLocatorListFactory.getWithSingleItem(lazyLocator), getter);
-    }
-
-    static LazyFilteredElementParameters getWithFilterParametersAndLocator(boolean isFiltered, LazyLocator lazyLocator, String getter) {
-        return getWithFilterParametersAndLocatorList(isFiltered, FIRST_INDEX, PROBABILITY, LazyLocatorListFactory.getWithSingleItem(lazyLocator), getter);
+        return getWithFilterParametersAndLocator(isFiltered, index, PROBABILITY, lazyLocator, getter);
     }
 
     static LazyFilteredElementParameters getWithFilterParametersAndLocator(boolean isFiltered, int index, double probability, LazyLocator lazyLocator) {
-        return getWithFilterParametersAndLocatorList(isFiltered, index, probability, LazyLocatorListFactory.getWithSingleItem(lazyLocator), GETTER);
-    }
-
-    static LazyFilteredElementParameters getWithFilterParametersAndLocator(boolean isFiltered, int index, LazyLocator lazyLocator) {
-        return getWithFilterParametersAndLocatorList(isFiltered, index, PROBABILITY, LazyLocatorListFactory.getWithSingleItem(lazyLocator), GETTER);
-    }
-
-    static LazyFilteredElementParameters getWithFilterParametersAndLocator(int index, double probability, LazyLocator lazyLocator, String getter) {
-        return getWithFilterParametersAndLocatorList(index, probability, LazyLocatorListFactory.getWithSingleItem(lazyLocator), getter);
+        return getWithFilterParametersAndLocator(isFiltered, index, probability, lazyLocator, GETTER);
     }
 
     static LazyFilteredElementParameters getWithFilterParametersAndLocator(boolean isFiltered, double probability, LazyLocator lazyLocator, String getter) {
-        return getWithFilterParametersAndLocatorList(isFiltered, probability, LazyLocatorListFactory.getWithSingleItem(lazyLocator), getter);
+        return getWithFilterParametersAndLocator(isFiltered, FIRST_INDEX, probability, lazyLocator, getter);
+    }
+
+    static LazyFilteredElementParameters getWithFilterParametersAndLocator(int index, double probability, LazyLocator lazyLocator, String getter) {
+        return getWithFilterParametersAndLocator(true, index, probability, lazyLocator, getter);
+    }
+
+    static LazyFilteredElementParameters getWithFilterParametersAndLocator(boolean isFiltered, LazyLocator lazyLocator, String getter) {
+        return getWithFilterParametersAndLocator(isFiltered, FIRST_INDEX, lazyLocator, getter);
+    }
+
+    static LazyFilteredElementParameters getWithFilterParametersAndLocator(boolean isFiltered, int index, LazyLocator lazyLocator) {
+        return getWithFilterParametersAndLocator(isFiltered, index, lazyLocator, GETTER);
     }
 
     static LazyFilteredElementParameters getWithFilterParametersAndLocator(int index, double probability, LazyLocator lazyLocator) {
@@ -160,19 +163,19 @@ public interface LazyIndexedElementFactory {
     }
 
     static LazyFilteredElementParameters getWithFilterParametersAndLocator(boolean isFiltered, String message, LazyLocator lazyLocator, String getter) {
-        return getWithFilterParametersAndLocatorList(isFiltered, message, PROBABILITY, LazyLocatorListFactory.getWithSingleItem(lazyLocator), getter);
+        return getWithFilterParametersAndLocator(isFiltered, message, PROBABILITY, lazyLocator, getter);
     }
 
     static LazyFilteredElementParameters getWithFilterParametersAndLocator(boolean isFiltered, String message, double probability, LazyLocator lazyLocator) {
-        return getWithFilterParametersAndLocatorList(isFiltered, message, probability, LazyLocatorListFactory.getWithSingleItem(lazyLocator), GETTER);
+        return getWithFilterParametersAndLocator(isFiltered, message, probability, lazyLocator, GETTER);
     }
 
     static LazyFilteredElementParameters getWithFilterParametersAndLocator(boolean isFiltered, String message, LazyLocator lazyLocator) {
-        return getWithFilterParametersAndLocatorList(isFiltered, message, PROBABILITY, LazyLocatorListFactory.getWithSingleItem(lazyLocator), GETTER);
+        return getWithFilterParametersAndLocator(isFiltered, message, lazyLocator, GETTER);
     }
 
     static LazyFilteredElementParameters getWithFilterParametersAndLocator(String message, double probability, LazyLocator lazyLocator, String getter) {
-        return getWithFilterParametersAndLocatorList(message, probability, LazyLocatorListFactory.getWithSingleItem(lazyLocator), getter);
+        return getWithFilterParametersAndLocator(true, message, probability, lazyLocator, getter);
     }
 
     static LazyFilteredElementParameters getWithFilterParametersAndLocator(String message, double probability, LazyLocator lazyLocator) {

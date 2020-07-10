@@ -15,6 +15,8 @@ import com.github.karsaii.framework.selenium.records.lazy.CachedLazyElementData;
 
 import java.util.function.Function;
 
+import static com.github.karsaii.core.namespaces.DataFactoryFunctions.replaceMessage;
+
 public abstract class SeleniumDataConstants {
     public static final Data<By> NULL_BY = DataFactoryFunctions.getWithNameAndMessage(By.cssSelector(CoreFormatterConstants.EMPTY), false, "nullBy", "Null By Data.");
     public static final Data<WebElement> NULL_ELEMENT = DataFactoryFunctions.getWithNameAndMessage(SeleniumCoreConstants.STOCK_ELEMENT, false, "defaultNullWebElementData", "Internal null element" + CoreFormatterConstants.END_LINE);
@@ -35,4 +37,5 @@ public abstract class SeleniumDataConstants {
     public static final Data<Boolean> DRIVER_WAS_NULL = DataFactoryFunctions.getInvalidBooleanWithNameAndMessage("driverWasNull", SeleniumFormatterConstants.DRIVER_WAS_NULL);
     public static final Data<Integer> NULL_INTEGER_NULL_DRIVER = DataFactoryFunctions.getWithNameAndMessage(0, false, "nullIntegerNullDriver", SeleniumFormatterConstants.DRIVER_WAS_NULL);
     public static final Data<Integer> NO_ELEMENTS_FOUND = DataFactoryFunctions.getWithNameAndMessage(0, false, "noElementsFound", SeleniumFormatterConstants.ELEMENT_LIST_EMPTY_OR_NULL);
+    public static final Data<Integer> TYPE_NOT_IN_CACHE_MAP_DATA = replaceMessage(CoreDataConstants.NULL_INTEGER, "typeNotInCacheData", SeleniumFormatterConstants.TYPE_NOT_IN_CACHE_MAP);
 }

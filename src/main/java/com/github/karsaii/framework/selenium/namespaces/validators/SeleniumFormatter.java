@@ -6,11 +6,14 @@ import com.github.karsaii.core.namespaces.DataFactoryFunctions;
 import com.github.karsaii.core.namespaces.validators.CoreFormatter;
 import com.github.karsaii.core.records.Data;
 import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
+import com.github.karsaii.framework.core.abstracts.AbstractLazyResult;
 import com.github.karsaii.framework.core.namespaces.validators.FrameworkCoreFormatter;
 import com.github.karsaii.framework.core.selector.records.SelectorKeySpecificityData;
 import com.github.karsaii.framework.selenium.constants.validators.SeleniumFormatterConstants;
 import com.github.karsaii.framework.selenium.records.CacheElementDefaultsData;
+import com.github.karsaii.framework.selenium.records.ExternalElementData;
 import com.github.karsaii.framework.selenium.records.lazy.CachedLazyElementData;
+import com.github.karsaii.framework.selenium.records.lazy.filtered.LazyFilteredElementParameters;
 import org.openqa.selenium.By;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebDriver;
@@ -341,5 +344,17 @@ public interface SeleniumFormatter {
         }
 
         return getNamedErrorMessageOrEmpty("getNotCachedMessage", message);
+    }
+
+    static String getElementFoundInCacheMessage(boolean status, String name) {
+        return SeleniumFormatterConstants.LAZY_ELEMENT + CoreFormatter.getOptionMessage(status) + " found by name(\"" + name + "\")" + CoreFormatterConstants.END_LINE;
+    }
+
+    static String getCacheElementValidParametersMessage(AbstractLazyResult<LazyFilteredElementParameters> element, Data<ExternalElementData> regular, Data<ExternalElementData> external) {
+        return  getNamedErrorMessageOrEmpty("getNotCachedMessage",
+            FrameworkCoreFormatter.isNullLazyElementMessage(element) +
+            CoreFormatter.isNullMessageWithName(regular, "Regular external element data") +
+            CoreFormatter.isNullMessageWithName(external, "External element data")
+        );
     }
 }
