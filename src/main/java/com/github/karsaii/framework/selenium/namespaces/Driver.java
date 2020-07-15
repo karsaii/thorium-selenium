@@ -6,21 +6,26 @@ import com.github.karsaii.core.extensions.namespaces.factories.DecoratedListFact
 import com.github.karsaii.core.extensions.namespaces.predicates.BasicPredicates;
 import com.github.karsaii.core.extensions.namespaces.predicates.CollectionPredicates;
 import com.github.karsaii.core.extensions.namespaces.predicates.SizablePredicates;
+import com.github.karsaii.core.implementations.reflection.message.ParameterizedMessageData;
+import com.github.karsaii.core.implementations.reflection.message.RegularMessageData;
 import com.github.karsaii.core.namespaces.BaseExecutionFunctions;
 import com.github.karsaii.core.namespaces.DataExecutionFunctions;
 import com.github.karsaii.core.namespaces.StringUtilities;
 import com.github.karsaii.framework.core.abstracts.AbstractLazyResult;
+import com.github.karsaii.framework.core.abstracts.lazy.filtered.BaseFilterData;
 import com.github.karsaii.framework.core.namespaces.Adjuster;
 import com.github.karsaii.framework.core.namespaces.FrameworkFunctions;
 import com.github.karsaii.framework.core.namespaces.validators.FrameworkCoreFormatter;
 import com.github.karsaii.framework.core.records.GetByFilterFormatterData;
 import com.github.karsaii.framework.core.records.lazy.ExternalSelectorData;
+import com.github.karsaii.framework.selenium.constants.RepositoryConstants;
 import com.github.karsaii.framework.selenium.constants.SeleniumInvokeConstants;
 import com.github.karsaii.core.namespaces.validators.DataValidators;
 import com.github.karsaii.core.namespaces.validators.MethodParametersDataValidators;
 import com.github.karsaii.core.namespaces.validators.CoreFormatter;
 import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
 import com.github.karsaii.framework.selenium.constants.validators.SeleniumFormatterConstants;
+import com.github.karsaii.framework.selenium.enums.ManyGetter;
 import com.github.karsaii.framework.selenium.namespaces.factories.DriverFunctionFactory;
 import com.github.karsaii.framework.selenium.namespaces.factories.ElementFilterParametersFactory;
 import com.github.karsaii.framework.selenium.namespaces.factories.LazyElementWithOptionsDataFactory;
@@ -54,10 +59,10 @@ import com.github.karsaii.core.records.reflection.InvokerParameterizedParameters
 import com.github.karsaii.core.abstracts.reflection.BaseInvokerDefaultsData;
 import com.github.karsaii.core.constants.CoreConstants;
 import com.github.karsaii.core.records.reflection.message.InvokeCommonMessageParametersData;
-import com.github.karsaii.core.reflection.message.ParameterizedMessageData;
-import com.github.karsaii.core.reflection.message.RegularMessageData;
 import com.github.karsaii.framework.selenium.records.GetElementByData;
 import com.github.karsaii.framework.selenium.records.GetWithDriverData;
+import com.github.karsaii.framework.selenium.records.element.finder.ElementFilterParameters;
+import com.github.karsaii.framework.selenium.records.lazy.CachedLookupKeysData;
 import com.github.karsaii.framework.selenium.records.lazy.filtered.LazyFilteredElementParameters;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
@@ -79,7 +84,7 @@ import com.github.karsaii.framework.selenium.constants.SeleniumGetOrderConstants
 import com.github.karsaii.framework.selenium.constants.SeleniumCoreConstants;
 import com.github.karsaii.framework.selenium.constants.SeleniumMethodDefaults;
 import com.github.karsaii.framework.selenium.enums.SingleGetter;
-import com.github.karsaii.framework.selenium.namespaces.lazy.LazyIndexedElementFactory;
+import com.github.karsaii.framework.selenium.namespaces.lazy.LazyFilteredElementParametersFactory;
 import com.github.karsaii.framework.selenium.namespaces.scripter.Execute;
 import com.github.karsaii.framework.selenium.namespaces.repositories.ElementRepository;
 import com.github.karsaii.framework.selenium.namespaces.repositories.FunctionRepository;
@@ -106,7 +111,6 @@ import com.github.karsaii.framework.core.records.lazy.LazyLocator;
 import com.github.karsaii.framework.selenium.records.scripter.ExecutorData;
 import com.github.karsaii.framework.selenium.records.scripter.ExecutorParametersFieldData;
 import com.github.karsaii.framework.selenium.namespaces.validators.ScriptExecutions;
-import org.openqa.selenium.remote.RemoteWebElement;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -130,13 +134,13 @@ import static com.github.karsaii.core.namespaces.predicates.DataPredicates.isInv
 import static com.github.karsaii.core.namespaces.predicates.DataPredicates.isValidNonFalse;
 import static com.github.karsaii.core.namespaces.validators.CoreFormatter.getValidNonFalseAndValidContainedMessage;
 import static com.github.karsaii.core.namespaces.validators.CoreFormatter.isNullMessageWithName;
-import static com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilities.isInvalidLazyLocator;
+import static com.github.karsaii.core.namespaces.validators.CoreFormatter.isNullOrEmptyListMessageWithName;
+import static com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilities.isValidLazyLocator;
 import static com.github.karsaii.framework.selenium.namespaces.validators.SeleniumFormatter.getElementsParametersMessage;
 import static com.github.karsaii.core.namespaces.validators.CoreFormatter.isBlankMessageWithName;
 import static com.github.karsaii.core.namespaces.validators.CoreFormatter.isInvalidOrFalseMessage;
 import static com.github.karsaii.core.namespaces.validators.CoreFormatter.isNegativeMessage;
 import static com.github.karsaii.core.namespaces.validators.CoreFormatter.isNullMessage;
-import static com.github.karsaii.core.namespaces.validators.CoreFormatter.isNullOrEmptyMessage;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static com.github.karsaii.framework.selenium.namespaces.ExecutionCore.ifData;
@@ -1007,7 +1011,7 @@ public interface Driver {
     static DriverFunction<WebElementList> getElementsAmount(DriverFunction<WebElementList> getter, LazyLocator locator, int expected) {
         return ifDriver(
             "getElementsAmount",
-            isNotNull(getter) && isInvalidLazyLocator(locator) && BasicPredicates.isNonNegative(expected),
+            isNotNull(getter) && isValidLazyLocator(locator) && BasicPredicates.isNonNegative(expected),
             validChain(getter, getElementsAmountCore(getLocator(locator).object, expected), SeleniumDataConstants.NULL_LIST),
             SeleniumDataConstants.NULL_LIST
         );
@@ -1696,7 +1700,6 @@ public interface Driver {
             nameof,
             FrameworkCoreFormatter.getExternalSelectorDataErrorMessage(element, externalData, nameof),
             driver -> {
-                final var types = new ArrayList<>(typeKeys.keySet());
                 LazyLocator locator;
                 var selector = externalData.defaultSelector;
                 var parameterKey = "";
@@ -1707,7 +1710,7 @@ public interface Driver {
                 final var length = externalData.limit;
                 var index = 0;
                 var message = replaceMessage(CoreDataConstants.NULL_STRING, nameof, "");
-                var lep = LazyIndexedElementFactory.getWithFilterParametersAndLocator(false, 0, SeleniumLazyLocatorFactory.getWithDefaults());
+                var lep = LazyFilteredElementParametersFactory.getWithFilterParametersAndLocator(false, 0, SeleniumLazyLocatorFactory.getWithDefaults());
                 var getSelector = externalData.getSelector;
                 for(; index < length; ++index) {
                     switchToDefaultContent().apply(driver);
@@ -1723,7 +1726,7 @@ public interface Driver {
 
                     locator = SeleniumLazyLocatorFactory.get(selector.object, selectorType);
                     parameterKey = FrameworkCoreFormatter.getUniqueGeneratedName(selectorType, SeleniumCoreConstants.ATOMIC_COUNT);
-                    lep = LazyIndexedElementFactory.getWithFilterParametersAndLocator(false, 0, locator);
+                    lep = LazyFilteredElementParametersFactory.getWithFilterParametersAndLocator(false, 0, locator);
                     currentElement = ElementFilterFunctions.getElement(lep.lazyLocators, ElementFinderConstants.singleGetterMap, SingleGetter.DEFAULT).apply(driver);
                     if (isNullWebElement(currentElement)) {
                         break;
@@ -1733,7 +1736,7 @@ public interface Driver {
                 }
 
                 element.parameters.putIfAbsent(parameterKey, lep);
-                final var update = ElementRepository.updateTypeKeys(lep.lazyLocators, typeKeys, types, parameterKey);
+                final var update = ElementRepository.updateTypeKeys(element.name, lep.lazyLocators, typeKeys, parameterKey);
                 return isNotNullWebElement(currentElement) ? (
                     DataFactoryFunctions.getWithNameAndMessage(new ExternalElementData(typeKeys, currentElement), true, nameof, "External function yielded an com.github.karsaii.framework.selenium.element" + CoreFormatterConstants.END_LINE)
                 ) : replaceMessage(defaultValue, nameof, "All(\"" + length + "\") approaches were tried" + CoreFormatterConstants.END_LINE + currentElement.message.toString());
@@ -1742,31 +1745,65 @@ public interface Driver {
         );
     }
 
-    static <T> Data<Integer> getNextCachedKey(Map<String, T> parameterMap, Iterator<String> getOrder, Map<String, DecoratedList<SelectorKeySpecificityData>> typeKeys, int parameterIndex) {
-        final var nameof = "getNextCachedKey";
-        var type = typeKeys.getOrDefault(getOrder.next(), null);
-        if (isNull(type)) {
-            return replaceMessage(CoreDataConstants.NULL_INTEGER, nameof, "Type" + CoreFormatterConstants.WAS_NULL);
-        }
-
-        var index = parameterIndex;
-        if (!type.hasIndex(index)) {
-            if (!getOrder.hasNext()) {
-                return replaceMessage(CoreDataConstants.NULL_INTEGER, nameof, "GetOrder doesn't have more entries(\"" + getOrder.toString() + "\")" + CoreFormatterConstants.END_LINE);
-            }
-
-            type = typeKeys.get(getOrder.next());
+    private static <T> Data<CachedLookupKeysData> getNextCachedKeyCore(DecoratedList<String> selectorTypes, CachedLookupKeysData data) {
+        final var element = RepositoryConstants.ELEMENTS.get(data.name);
+        final var selectorKeys = element.typeKeys;
+        var selectorType = isNotBlank(data.entryName) ? data.entryName : selectorTypes.first();
+        var selectorList = selectorKeys.get(selectorType);
+        var index = BasicPredicates.isNonNegative(data.index) ? data.index : 0;
+        var key = "";
+        if (selectorList.hasIndex(index)) {
+            key = selectorList.get(index).selectorKey;
+        } else {
             index = 0;
+            final var selectorLength = selectorTypes.size();
+            var selectorIndex = selectorTypes.indexOf(selectorType) + 1;
+            for(; isBlank(key) && (selectorIndex < selectorLength); ++selectorIndex) {
+                selectorList = selectorKeys.get(selectorTypes.get(selectorIndex));
+                if (selectorList.isNullOrEmpty()) {
+                    continue;
+                }
+
+                key = selectorList.get(index).selectorKey;
+            }
         }
-        final var key = type.get(index).selectorKey;
-        final var status = isNotNull(key) && parameterMap.containsKey(key);
-        return status ? DataFactoryFunctions.getWithNameAndMessage(index, true, nameof, key) : replaceName(SeleniumDataConstants.TYPE_NOT_IN_CACHE_MAP_DATA, nameof);
+
+        final var status = isNotBlank(key);
+        return DataFactoryFunctions.getWithNameAndMessage(
+            new CachedLookupKeysData(data.name, selectorType, key, index),
+            status,
+            "getNextCachedKey",
+            (status ? "Found" : "Didn't find") + " next lookup key(\"" + key + "\")"
+        );
     }
 
-    static Data<Integer> getNextKey(DecoratedList<String> keys, int parameterIndex) {
+    private static <T> Function<CachedLookupKeysData, Data<CachedLookupKeysData>> getNextCachedKeyCore(DecoratedList<String> selectorTypes) {
+        return data -> getNextCachedKeyCore(selectorTypes, data);
+    }
+
+    static <T> Function<CachedLookupKeysData, Data<CachedLookupKeysData>> getNextCachedKey(DecoratedList<String> selectorTypes) {
+        final var errorMessage = isNullOrEmptyListMessageWithName(selectorTypes, "Selector Types list");
+        return isBlank(errorMessage) ? getNextCachedKeyCore(selectorTypes) : index -> replaceMessage(SeleniumDataConstants.NULL_CACHED_DATA, "getNextCachedKey", errorMessage);
+    }
+
+    private static Data<CachedLookupKeysData> getNextKeyCore(DecoratedList<String> elementKeys, CachedLookupKeysData data) {
         final var nameof = "getNextKey";
-        final var status = isNotNull(keys) && BasicPredicates.isNonNegative(parameterIndex) && keys.hasIndex(parameterIndex);
-        return status ? DataFactoryFunctions.getWithNameAndMessage(0, true, nameof, keys.get(parameterIndex)) : replaceName(SeleniumDataConstants.TYPE_NOT_IN_CACHE_MAP_DATA, nameof);
+        final var status = isBlank(isNullOrEmptyListMessageWithName(elementKeys, "Element keys list")) && isNotNull(data);
+        return status ? DataFactoryFunctions.getWithNameAndMessage(new CachedLookupKeysData(data.name, "", elementKeys.get(data.index), 0), true, nameof, "Had key.") : replaceName(SeleniumDataConstants.NULL_CACHED_DATA, nameof);
+    }
+
+    private static Function<CachedLookupKeysData, Data<CachedLookupKeysData>> getNextKeyCore(DecoratedList<String> elementKeys) {
+        return data -> getNextKeyCore(elementKeys, data);
+    }
+
+    static Function<CachedLookupKeysData, Data<CachedLookupKeysData>> getNextKey(DecoratedList<String> elementKeys) {
+        return data -> isNotNull(elementKeys) && isNotNull(data) ? getNextKeyCore(elementKeys).apply(data) : DataFactoryFunctions.replaceMessage(SeleniumDataConstants.NULL_CACHED_DATA, "getNextKey", "Index or key issue" + CoreFormatterConstants.END_LINE);
+    }
+
+    static <T> DriverFunction<WebElement> getCurrentLazyElement(BaseFilterData<WebDriver, ManyGetter, T, ElementFilterParameters, WebElementList, WebElement> data, LazyLocatorList locators, String getter) {
+        return data.isFiltered ? (
+                DriverFunctionFactory.getFunction(data.apply(ElementFilterParametersFactory.getWithManyGetterAndDefaultGetterMap(locators, getter)))
+        ) : ElementFilterFunctions.getElement(locators, ElementFinderConstants.singleGetterMap, SingleGetter.getValueOf(getter));
     }
 
     static <T> DriverFunction<WebElement> getLazyElement(LazyElementWithOptionsData data) {
@@ -1775,17 +1812,14 @@ public interface Driver {
             nameof,
             FrameworkCoreFormatter.getLazyResultWithOptionsMessage(data, nameof),
             driver -> {
-                final var getOrder = data.getOrder.iterator();
                 final var dataElement = data.element;
                 final var name = dataElement.name;
                 final var getResult = ElementRepository.getIfContains(name);
                 final var isCached = getResult.status;
-                final var localElement = isCached ? getResult.object.element : dataElement;
+                final var parameterMap = (isCached ? getResult.object.element : dataElement).parameters;
                 final var typeKeys = isCached ? getResult.object.typeKeys : ElementRepository.getInitializedTypeKeysMap();
-                final var parameterMap = localElement.parameters;
-                final var parameterKeys = DecoratedListFactory.getWith(parameterMap.keySet());
-                final var types = DecoratedListFactory.getWith(typeKeys.keySet());
-                var message = CoreDataConstants.NULL_STRING;
+                final var keyGetter = isCached ? getNextCachedKey(data.getOrder) : getNextKey(DecoratedListFactory.getWith(parameterMap.keySet()));
+                var message = new StringBuilder();
                 var parameterIndex = 0;
                 var index = 0;
                 var switchData = CoreDataConstants.NULL_BOOLEAN;
@@ -1797,43 +1831,37 @@ public interface Driver {
                         return replaceMessage(current, nameof, switchData.message.toString());
                     }
 
-                    var keyData = isCached ? getNextCachedKey(parameterMap, getOrder, typeKeys, parameterIndex) : getNextKey(parameterKeys, parameterIndex);
+                    var keyData = keyGetter.apply(new CachedLookupKeysData(name, "", "", parameterIndex));
                     if (isInvalidOrFalse(keyData)) {
                         return replaceMessage(current, nameof, "Parameter key wasn't found in " + (isCached ? "cached" : "") + " keys" + CoreFormatterConstants.END_LINE);
                     }
 
-                    final var key = keyData.message.message;
+                    final var key = keyData.object.strategy;
                     var parameters = parameterMap.get(key);
                     if (isNull(parameters) || parameters.lazyLocators.isNullOrEmpty()) {
                         continue;
                     }
 
                     var locators = parameters.lazyLocators;
-                    var update = ElementRepository.updateTypeKeys(name, locators, typeKeys, types, key);
+                    var update = ElementRepository.updateTypeKeys(name, locators, typeKeys, key);
                     if (isInvalidOrFalse(update)) {
                         continue;
                     }
 
-                    var getter = parameters.getter;
-                    var indexData = parameters.elementFilterData;
-                    current = (
-                        indexData.isFiltered ? (
-                            indexData.apply(ElementFilterParametersFactory.getWithManyGetterAndDefaultGetterMap(locators, getter))
-                        ) : ElementFilterFunctions.getElement(locators, ElementFinderConstants.singleGetterMap, SingleGetter.getValueOf(getter))
-                    ).apply(driver);
-                    message = appendMessage(message, current.message.toString());
-                    message = appendMessage(message, Adjuster.adjustProbability(parameters, typeKeys, key, isValidNonFalse(current), data.probabilityData).message.toString());
-                    parameterIndex = isCached ? keyData.object : parameterIndex;
+                    current = getCurrentLazyElement(parameters.elementFilterData, locators, parameters.getter).apply(driver);
+                    message.append(current.message.toString());
+                    message.append(Adjuster.adjustProbability(parameters, typeKeys, key, isValidNonFalse(current), data.probabilityData).message.toString());
+                    parameterIndex = isCached ? keyData.object.index : parameterIndex;
                 }
 
-                if (SeleniumUtilities.isNullWebElement(current)) {
+                if (isNullWebElement(current)) {
                     current = SeleniumDataConstants.NULL_ELEMENT;
                 }
 
                 final var externalData = data.externalData;
                 return ElementRepository.cacheValidLazyElement(
                     dataElement,
-                    DataFactoryFunctions.getWithMessage(new ExternalElementData(typeKeys, current), isValidNonFalse(current), message.message.toString()),
+                    DataFactoryFunctions.getWithMessage(new ExternalElementData(typeKeys, current), isValidNonFalse(current), message.toString()),
                     isBlank(FrameworkCoreFormatter.getExternalSelectorDataMessage(externalData)) ? getLazyElementByExternal(dataElement, externalData, typeKeys).apply(driver) : SeleniumDataConstants.NULL_EXTERNAL_ELEMENT
                 );
             },

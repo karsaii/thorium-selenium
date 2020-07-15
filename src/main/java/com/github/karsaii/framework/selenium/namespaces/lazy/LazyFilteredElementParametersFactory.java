@@ -1,7 +1,6 @@
 package com.github.karsaii.framework.selenium.namespaces.lazy;
 
 import com.github.karsaii.framework.core.namespaces.factory.LazyLocatorListFactory;
-import com.github.karsaii.framework.selenium.namespaces.element.ElementFilterFunctions;
 import com.github.karsaii.framework.core.namespaces.extensions.boilers.LazyLocatorList;
 import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.WebElementList;
 import com.github.karsaii.framework.selenium.namespaces.factories.ElementFilterDataFactory;
@@ -14,8 +13,7 @@ import static com.github.karsaii.framework.core.constants.lazy.CommonLazyIndexed
 import static com.github.karsaii.framework.core.constants.lazy.CommonLazyIndexedFactoryConstants.PROBABILITY;
 import static com.github.karsaii.framework.selenium.constants.LazyIndexedElementFactoryConstants.GETTER;
 
-
-public interface LazyIndexedElementFactory {
+public interface LazyFilteredElementParametersFactory {
     static LazyFilteredElementParameters getWithFilterDataAndLocatorList(ElementFilterData<?> data, double probability, LazyLocatorList lazyLocators, String getter) {
         return new LazyFilteredElementParameters(data, data.isFiltered ? WebElement.class : WebElementList.class, probability, lazyLocators, getter);
     }

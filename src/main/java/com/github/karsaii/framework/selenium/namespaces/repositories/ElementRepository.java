@@ -4,6 +4,7 @@ import com.github.karsaii.core.constants.CoreDataConstants;
 import com.github.karsaii.core.extensions.DecoratedList;
 import com.github.karsaii.core.extensions.namespaces.CoreUtilities;
 import com.github.karsaii.core.extensions.namespaces.NullableFunctions;
+import com.github.karsaii.core.extensions.namespaces.factories.DecoratedListFactory;
 import com.github.karsaii.core.namespaces.DataFactoryFunctions;
 import com.github.karsaii.core.records.Data;
 import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
@@ -148,13 +149,13 @@ public interface ElementRepository {
         return getIfContains(element.name);
     }
 
-    static Data<Boolean> updateTypeKeys(LazyLocatorList locators, Map<String, DecoratedList<SelectorKeySpecificityData>> typeKeys, List<String> types, String key) {
+    static Data<Boolean> updateTypeKeys(LazyLocatorList locators, Map<String, DecoratedList<SelectorKeySpecificityData>> typeKeys, String key) {
         final var nameof = "updateTypeKeys";
         if (NullableFunctions.isNull(key)) {
             return replaceMessage(CoreDataConstants.NULL_BOOLEAN, nameof, "Strategy passed" + CoreFormatterConstants.WAS_NULL);
         }
 
-        final var typeKey = types.stream().filter(key::contains).findFirst();
+        final var typeKey = DecoratedListFactory.getWith(typeKeys.keySet()).stream().filter(key::startsWith).findFirst();
         if (typeKey.isEmpty()) {
             return replaceMessage(CoreDataConstants.NULL_BOOLEAN, nameof, "Types didn't contain type key(\"" + typeKey + "\")" + CoreFormatterConstants.END_LINE);
         }
@@ -170,14 +171,14 @@ public interface ElementRepository {
         return DataFactoryFunctions.getBoolean(status, message);
     }
 
-    static Data<Boolean> updateTypeKeys(String name, LazyLocatorList locators, Map<String, DecoratedList<SelectorKeySpecificityData>> typeKeys, List<String> types, String key) {
+    static Data<Boolean> updateTypeKeys(String name, LazyLocatorList locators, Map<String, DecoratedList<SelectorKeySpecificityData>> typeKeys, String key) {
         final var nameof = "updateTypeKeys";
         final var cached = containsElement(name);
         if (isInvalidOrFalse(cached)) {
             return prependMessage(cached, nameof, "There were parameter issues" + CoreFormatterConstants.END_LINE);
         }
 
-        return !cached.object ? (updateTypeKeys(locators, typeKeys, types, key)) : DataFactoryFunctions.getBoolean(true, nameof, "Element(\"" + name + "\") was already cached" + CoreFormatterConstants.END_LINE);
+        return !cached.object ? (updateTypeKeys(locators, typeKeys, key)) : DataFactoryFunctions.getBoolean(true, nameof, "Element(\"" + name + "\") was already cached" + CoreFormatterConstants.END_LINE);
     }
 
     static SelectorKeySpecificityData getSpecificityForSelector(LazyLocatorList list, String key) {

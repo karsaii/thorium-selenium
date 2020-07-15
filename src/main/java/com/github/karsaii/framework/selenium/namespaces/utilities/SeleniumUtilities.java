@@ -1,7 +1,6 @@
 package com.github.karsaii.framework.selenium.namespaces.utilities;
 
 import com.github.karsaii.core.constants.CoreConstants;
-import com.github.karsaii.core.extensions.interfaces.functional.TriFunction;
 import com.github.karsaii.core.extensions.namespaces.EmptiableFunctions;
 import com.github.karsaii.core.extensions.namespaces.predicates.BasicPredicates;
 import com.github.karsaii.core.namespaces.DataFactoryFunctions;
@@ -19,7 +18,7 @@ import com.github.karsaii.framework.selenium.abstracts.AbstractWaitParameters;
 import com.github.karsaii.framework.selenium.constants.SeleniumDataConstants;
 import com.github.karsaii.framework.selenium.constants.ElementStrategyMapConstants;
 import com.github.karsaii.framework.selenium.enums.SeleniumSelectorStrategy;
-import com.github.karsaii.framework.selenium.namespaces.lazy.LazyIndexedElementFactory;
+import com.github.karsaii.framework.selenium.namespaces.lazy.LazyFilteredElementParametersFactory;
 import com.github.karsaii.framework.selenium.records.element.ElementWaitParameters;
 import com.github.karsaii.framework.selenium.records.lazy.filtered.ElementFilterData;
 import com.github.karsaii.framework.core.namespaces.extensions.boilers.LazyLocatorList;
@@ -43,13 +42,16 @@ import static com.github.karsaii.core.extensions.namespaces.CoreUtilities.isEqua
 import static com.github.karsaii.core.extensions.namespaces.NullableFunctions.isNull;
 
 import static com.github.karsaii.core.namespaces.predicates.DataPredicates.isValidNonFalse;
-import static java.util.Map.entry;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public interface SeleniumUtilities {
     static boolean isInvalidLazyLocator(LazyLocator data) {
         return isNull(data) || isBlank(data.locator) || isNull(data.strategy);
+    }
+
+    static boolean isValidLazyLocator(LazyLocator data) {
+        return !isInvalidLazyLocator(data);
     }
 
     static boolean areNullLazyData(LazyLocator... data) {
@@ -141,16 +143,6 @@ public interface SeleniumUtilities {
         return LazyLocatorListFactory.getWithSingleItem(SeleniumLazyLocatorFactory.get(locator));
     }
 
-    static <T> Map.Entry<String, T> getEntry(TriFunction<Boolean, LazyLocator, String, T> constructor, By locator, String getter, boolean isIndexed) {
-        final var lazyLocator = SeleniumLazyLocatorFactory.get(locator);
-        return entry(lazyLocator.strategy, constructor.apply(isIndexed, lazyLocator, getter));
-    }
-
-    static <T, V> Map.Entry<String, LazyFilteredElementParameters> getEntryIndexed(TriFunction<ElementFilterData, LazyLocator, String, LazyFilteredElementParameters> constructor, ElementFilterData<?> elementFilterData, By locator, String getter) {
-        final var lazyLocator = SeleniumLazyLocatorFactory.get(locator);
-        return entry(lazyLocator.strategy, constructor.apply(elementFilterData, lazyLocator, getter));
-    }
-
     static Data<By> getLocator(Map<SeleniumSelectorStrategy, Function<String, By>> strategyMap, LazyLocator data) {
         final var errorMessage = SeleniumLazyLocatorValidators.isInvalidLazyLocator(data);
         if (isNotBlank(errorMessage)) {
@@ -174,7 +166,7 @@ public interface SeleniumUtilities {
         LazyFilteredElementParameters lep;
         while(keys.hasNext() && values.hasNext()) {
             lep = values.next();
-            map.putIfAbsent(keys.next(), LazyIndexedElementFactory.getWithFilterDataAndLocatorList((ElementFilterData<?>) lep.elementFilterData, lep.probability, lep.lazyLocators, lep.getter));
+            map.putIfAbsent(keys.next(), LazyFilteredElementParametersFactory.getWithFilterDataAndLocatorList((ElementFilterData<?>) lep.elementFilterData, lep.probability, lep.lazyLocators, lep.getter));
         }
 
         return map;

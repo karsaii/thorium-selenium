@@ -8,6 +8,7 @@ import com.github.karsaii.framework.selenium.namespaces.factories.WebElementList
 import com.github.karsaii.framework.selenium.namespaces.lazy.LazyElementFactory;
 import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.WebElementList;
 import com.github.karsaii.core.records.MethodSourceData;
+import com.github.karsaii.framework.selenium.records.lazy.CachedLookupKeysData;
 import org.openqa.selenium.WebElement;
 import com.github.karsaii.framework.core.selector.records.SelectorKeySpecificityData;
 import com.github.karsaii.core.constants.CoreConstants;
@@ -36,6 +37,7 @@ public abstract class SeleniumCoreConstants {
     public static final LazyElement NULL_LAZY_ELEMENT = LazyElementFactory.getWithInvalidData("Null Lazy Element " + getIncrementalUUID(ATOMIC_COUNT));
     public static final Map<String, DecoratedList<SelectorKeySpecificityData>> NULL_CACHED_KEYS = ElementRepository.getInitializedTypeKeysMap();
     public static final CachedLazyElementData NULL_CACHED_LAZY_ELEMENT_DATA = new CachedLazyElementData(NULL_LAZY_ELEMENT, NULL_CACHED_KEYS);
+    public static final CachedLookupKeysData INITIAL_UNCACHED_DATA = new CachedLookupKeysData("", "", "", 0);
     public static final ExternalElementData NULL_EXTERNAL_ELEMENT_DATA = new ExternalElementData(NULL_CACHED_KEYS, SeleniumDataConstants.NULL_ELEMENT);
 
     public static final List<Class<?>> CLASSES_OF_GET_MECHANISMS = Arrays.asList(WebElementList.class, WebElement.class);

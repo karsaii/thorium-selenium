@@ -2,8 +2,8 @@ package com.github.karsaii.framework.selenium.namespaces.factories;
 
 import com.github.karsaii.core.extensions.DecoratedList;
 import com.github.karsaii.framework.core.constants.AdjusterConstants;
+import com.github.karsaii.framework.core.namespaces.factory.InternalSelectorDataFactory;
 import com.github.karsaii.framework.selenium.constants.SeleniumGetOrderConstants;
-import com.github.karsaii.framework.core.constants.SelectorDataConstants;
 import com.github.karsaii.framework.selenium.constants.SeleniumCoreConstants;
 import com.github.karsaii.framework.selenium.records.ExternalSeleniumSelectorData;
 import com.github.karsaii.framework.core.records.InternalSelectorData;
@@ -22,6 +22,15 @@ public interface LazyElementWithOptionsDataFactory {
        return new LazyElementWithOptionsData(element, internalData, externalData, getOrder, probabilityData);
     }
 
+    static LazyElementWithOptionsData getWithComputedInternalSelectorData(
+        LazyElement element,
+        ExternalSeleniumSelectorData externalData,
+        DecoratedList<String> getOrder,
+        ProbabilityData probabilityData
+    ) {
+       return new LazyElementWithOptionsData(element, InternalSelectorDataFactory.getWithDefaultRange(element.parameters.size()), externalData, getOrder, probabilityData);
+    }
+
     static LazyElementWithOptionsData getWithDefaultProbabilityData(LazyElement element, InternalSelectorData internalData, ExternalSeleniumSelectorData externalData, DecoratedList<String> getOrder) {
         return get(element, internalData, externalData, getOrder, AdjusterConstants.PROBABILITY_DATA);
     }
@@ -35,15 +44,15 @@ public interface LazyElementWithOptionsDataFactory {
     }
 
     static LazyElementWithOptionsData getWithDefaultInternalSelectorDataGetOrderAndProbabilityData(LazyElement element, ExternalSeleniumSelectorData externalData) {
-        return getWithDefaultGetOrderAndProbabilityData(element, SelectorDataConstants.INTERNAL_SELECTOR_DATA, externalData);
+        return getWithComputedInternalSelectorData(element, externalData, SeleniumGetOrderConstants.DEFAULT, AdjusterConstants.PROBABILITY_DATA);
     }
 
     static LazyElementWithOptionsData getWithDefaultInternalSelectorDataAndGetOrder(LazyElement element, ExternalSeleniumSelectorData externalData, DecoratedList<String> getOrder) {
-        return getWithDefaultProbabilityData(element, SelectorDataConstants.INTERNAL_SELECTOR_DATA, externalData, getOrder);
+        return getWithComputedInternalSelectorData(element, externalData, getOrder, AdjusterConstants.PROBABILITY_DATA);
     }
 
     static LazyElementWithOptionsData getWithDefaultInternalSelectorDataAndProbabilityData(LazyElement element, ExternalSeleniumSelectorData externalData, ProbabilityData probabilityData) {
-        return getWithDefaultGetOrder(element, SelectorDataConstants.INTERNAL_SELECTOR_DATA, externalData, probabilityData);
+        return getWithComputedInternalSelectorData(element, externalData, SeleniumGetOrderConstants.DEFAULT, probabilityData);
     }
 
     static LazyElementWithOptionsData getWithSpecificLazyElement(LazyElement element) {

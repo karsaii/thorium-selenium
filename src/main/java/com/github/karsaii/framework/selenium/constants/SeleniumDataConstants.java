@@ -6,6 +6,7 @@ import com.github.karsaii.framework.selenium.constants.validators.SeleniumFormat
 import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.WebElementList;
 import com.github.karsaii.core.namespaces.DataFactoryFunctions;
 import com.github.karsaii.core.records.Data;
+import com.github.karsaii.framework.selenium.records.lazy.CachedLookupKeysData;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -38,4 +39,7 @@ public abstract class SeleniumDataConstants {
     public static final Data<Integer> NULL_INTEGER_NULL_DRIVER = DataFactoryFunctions.getWithNameAndMessage(0, false, "nullIntegerNullDriver", SeleniumFormatterConstants.DRIVER_WAS_NULL);
     public static final Data<Integer> NO_ELEMENTS_FOUND = DataFactoryFunctions.getWithNameAndMessage(0, false, "noElementsFound", SeleniumFormatterConstants.ELEMENT_LIST_EMPTY_OR_NULL);
     public static final Data<Integer> TYPE_NOT_IN_CACHE_MAP_DATA = replaceMessage(CoreDataConstants.NULL_INTEGER, "typeNotInCacheData", SeleniumFormatterConstants.TYPE_NOT_IN_CACHE_MAP);
+
+    public static final Data<CachedLookupKeysData> INITIAL_UNCACHED_DATA = DataFactoryFunctions.getWithNameAndMessage(SeleniumCoreConstants.INITIAL_UNCACHED_DATA, false, "initialUncachedData", "Element is uncached");
+    public static final Data<CachedLookupKeysData> NULL_CACHED_DATA = replaceMessage(INITIAL_UNCACHED_DATA, "nullCachedData", "Invalid cache keys" + CoreFormatterConstants.END_LINE);
 }

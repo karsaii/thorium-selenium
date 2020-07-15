@@ -16,7 +16,8 @@ public class HomepageTests {
         final var result = SeleniumExecutor.execute(
             "Go to Homepage",
             DriverWaits.navigateAndWait(System.getProperty("page"), 300, 3000),
-            Element.inputWhenClickable(HomepageConstants.DESTINATION_FIELD, "XYZ")
+            Element.waitClickable(HomepageConstants.DESTINATION_FIELD_COMPLEX, 300, 10000),
+            Element.sendKeys(HomepageConstants.DESTINATION_FIELD_COMPLEX, "XYZ")
         ).apply(FFDriverFunctions.get());
         Assertions.assertTrue(result.status, result.message.toString());
     }

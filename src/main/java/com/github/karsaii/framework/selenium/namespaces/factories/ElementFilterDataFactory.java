@@ -11,9 +11,9 @@ import java.util.function.Function;
 
 public interface ElementFilterDataFactory {
     static <T> ElementFilterData<T> getWith(
-            boolean isFiltered,
-            Function<ElementFilterParameters, Function<T, Function<WebDriver, Data<WebElement>>>> handler,
-            T filterParameter
+        boolean isFiltered,
+        Function<ElementFilterParameters, Function<T, Function<WebDriver, Data<WebElement>>>> handler,
+        T filterParameter
     ) {
         return new ElementFilterData<>(isFiltered, handler, filterParameter);
     }
