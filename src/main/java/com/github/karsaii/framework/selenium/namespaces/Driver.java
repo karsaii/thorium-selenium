@@ -1,6 +1,7 @@
 package com.github.karsaii.framework.selenium.namespaces;
 
 import com.github.karsaii.core.constants.CoreDataConstants;
+import com.github.karsaii.core.extensions.interfaces.functional.TriFunction;
 import com.github.karsaii.core.extensions.namespaces.SizableFunctions;
 import com.github.karsaii.core.extensions.namespaces.factories.DecoratedListFactory;
 import com.github.karsaii.core.extensions.namespaces.predicates.BasicPredicates;
@@ -118,6 +119,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -1746,11 +1748,10 @@ public interface Driver {
     }
 
     private static <T> Data<CachedLookupKeysData> getNextCachedKeyCore(DecoratedList<String> selectorTypes, CachedLookupKeysData data) {
-        final var element = RepositoryConstants.ELEMENTS.get(data.name);
-        final var selectorKeys = element.typeKeys;
+        final var selectorKeys = RepositoryConstants.ELEMENTS.get(data.name).typeKeys;
         var selectorType = isNotBlank(data.entryName) ? data.entryName : selectorTypes.first();
         var selectorList = selectorKeys.get(selectorType);
-        var index = BasicPredicates.isNonNegative(data.index) ? data.index : 0;
+        var index = data.index;
         var key = "";
         if (selectorList.hasIndex(index)) {
             key = selectorList.get(index).selectorKey;
@@ -1806,6 +1807,14 @@ public interface Driver {
         ) : ElementFilterFunctions.getElement(locators, ElementFinderConstants.singleGetterMap, SingleGetter.getValueOf(getter));
     }
 
+    static boolean lazyExitConditionCore(Data<WebElement> element, int index, int attempts) {
+        return isNullWebElement(element) && BasicPredicates.isSmallerThan(index, attempts);
+    }
+
+    static BiPredicate<Data<WebElement>, Integer> lazyExitCondition(int attempts) {
+        return (element, value) -> lazyExitConditionCore(element, value, attempts);
+    }
+
     static <T> DriverFunction<WebElement> getLazyElement(LazyElementWithOptionsData data) {
         final var nameof = "getLazyElement";
         return ifDriver(
@@ -1817,21 +1826,24 @@ public interface Driver {
                 final var getResult = ElementRepository.getIfContains(name);
                 final var isCached = getResult.status;
                 final var parameterMap = (isCached ? getResult.object.element : dataElement).parameters;
-                final var typeKeys = isCached ? getResult.object.typeKeys : ElementRepository.getInitializedTypeKeysMap();
                 final var keyGetter = isCached ? getNextCachedKey(data.getOrder) : getNextKey(DecoratedListFactory.getWith(parameterMap.keySet()));
+                final var typeKeys = isCached ? getResult.object.typeKeys : ElementRepository.getInitializedTypeKeysMap();
+                final TriFunction<Data<WebElement>, Integer, Integer, Boolean> exitCondition = Driver::lazyExitConditionCore;
                 var message = new StringBuilder();
                 var parameterIndex = 0;
                 var index = 0;
                 var switchData = CoreDataConstants.NULL_BOOLEAN;
                 var current = SeleniumDataConstants.NULL_ELEMENT;
                 final var length = data.internalData.limit;
-                for (; isNullWebElement(current) && (index < length); ++index, ++parameterIndex) {
+                var cacheKeyData = new CachedLookupKeysData(name, "", "", parameterIndex);
+                while (exitCondition.apply(current, index++, length)) {
                     switchData = switchToDefaultContent().apply(driver);
                     if (isInvalidOrFalse(switchData)) {
                         return replaceMessage(current, nameof, switchData.message.toString());
                     }
 
-                    var keyData = keyGetter.apply(new CachedLookupKeysData(name, "", "", parameterIndex));
+
+                    var keyData = keyGetter.apply(cacheKeyData);
                     if (isInvalidOrFalse(keyData)) {
                         return replaceMessage(current, nameof, "Parameter key wasn't found in " + (isCached ? "cached" : "") + " keys" + CoreFormatterConstants.END_LINE);
                     }
@@ -1852,6 +1864,8 @@ public interface Driver {
                     message.append(current.message.toString());
                     message.append(Adjuster.adjustProbability(parameters, typeKeys, key, isValidNonFalse(current), data.probabilityData).message.toString());
                     parameterIndex = isCached ? keyData.object.index : parameterIndex;
+                    ++parameterIndex;
+                    cacheKeyData = new CachedLookupKeysData(name, keyData.object.entryName, keyData.object.strategy, parameterIndex);
                 }
 
                 if (isNullWebElement(current)) {

@@ -2,6 +2,7 @@ package com.github.karsaii.framework.selenium.namespaces.lazy;
 
 import com.github.karsaii.core.extensions.namespaces.CoreUtilities;
 import com.github.karsaii.framework.core.abstracts.AbstractLazyResult;
+import com.github.karsaii.framework.core.namespaces.extensions.boilers.LazyLocatorList;
 import com.github.karsaii.framework.selenium.namespaces.factories.SeleniumLazyLocatorFactory;
 import com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilities;
 import org.openqa.selenium.By;
@@ -15,33 +16,35 @@ import com.github.karsaii.framework.core.records.lazy.LazyLocator;
 import com.github.karsaii.framework.selenium.namespaces.element.validators.ElementParameters;
 import com.github.karsaii.framework.core.namespaces.validators.Invalids;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public interface LazyElementFactory {
-    static <T> LazyElement getWith(String name, Map<String, LazyFilteredElementParameters> parameters, Predicate<LazyFilteredElementParameters> validator) {
+    static LazyElement getWith(String name, Map<String, LazyFilteredElementParameters> parameters, Predicate<LazyFilteredElementParameters> validator) {
         return new LazyElement(name, parameters, validator);
     }
-
 
     static LazyElement getWith(AbstractLazyResult<LazyFilteredElementParameters> element) {
         return getWith(element.name, SeleniumUtilities.getParametersCopy(element.parameters), element.validator);
     }
 
-    static <T> LazyElement getWithInvalidAlwaysFalseValidator(String name, Map<String, LazyFilteredElementParameters> parameters) {
+    static LazyElement getWithInvalidAlwaysFalseValidator(String name, Map<String, LazyFilteredElementParameters> parameters) {
         return getWith(name, parameters, Invalids::defaultFalseValidator);
     }
 
-    static <T> LazyElement getWithInvalidData(String name) {
+    static LazyElement getWithInvalidData(String name) {
         return getWithInvalidAlwaysFalseValidator(name, new HashMap<>());
     }
 
-    static <T> LazyElement getWithDefaultValidator(String name, Map<String, LazyFilteredElementParameters> parameters) {
+    static LazyElement getWithDefaultValidator(String name, Map<String, LazyFilteredElementParameters> parameters) {
         return getWith(name, parameters, ElementParameters::isValidLazyFilteredElement);
     }
 
-    static <T> LazyElement getWithDefaultNameAndValidator(Map<String, LazyFilteredElementParameters> parameters) {
+    static LazyElement getWithDefaultNameAndValidator(Map<String, LazyFilteredElementParameters> parameters) {
         return getWithDefaultValidator(CoreUtilities.getIncrementalUUID(SeleniumCoreConstants.ATOMIC_COUNT), parameters);
     }
 
@@ -97,6 +100,19 @@ public interface LazyElementFactory {
 
     static LazyElement getWithFilterParameters(String name, LazyLocator locator) {
         return getWithFilterParameters(name, true, 0, locator, SingleGetter.DEFAULT.getName());
+    }
+
+    static LazyElement getWithFilterParameters(String name, LazyLocatorList locators) {
+        final var parameterList = new ArrayList<LazyFilteredElementParameters>();
+        final var keyList = new ArrayList<String>();
+        for(var locator : locators) {
+            parameterList.add(LazyFilteredElementParametersFactory.getWithFilterParametersAndLocator(true, 0, locator, SingleGetter.DEFAULT.getName()));
+            keyList.add(locator.strategy + "-" + SeleniumCoreConstants.ELEMENT_ATOMIC_COUNT.getAndIncrement() + "-generated");
+        }
+
+        final var map = LazyElementParameterMapFactory.getWith(IntStream.range(0, keyList.size()).boxed().collect(Collectors.toMap(keyList::get, parameterList::get)));
+
+        return getWithDefaultNameAndValidator(map);
     }
 
     static LazyElement getWithFilterParameters(By locator) {

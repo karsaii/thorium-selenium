@@ -34,6 +34,7 @@ public abstract class SeleniumCoreConstants {
     public static final List<Method> WEB_ELEMENT_METHOD_LIST = Arrays.asList(WEBELEMENT_METHODS);
 
     public static AtomicInteger ATOMIC_COUNT = new AtomicInteger();
+    public static AtomicInteger ELEMENT_ATOMIC_COUNT = new AtomicInteger();
     public static final LazyElement NULL_LAZY_ELEMENT = LazyElementFactory.getWithInvalidData("Null Lazy Element " + getIncrementalUUID(ATOMIC_COUNT));
     public static final Map<String, DecoratedList<SelectorKeySpecificityData>> NULL_CACHED_KEYS = ElementRepository.getInitializedTypeKeysMap();
     public static final CachedLazyElementData NULL_CACHED_LAZY_ELEMENT_DATA = new CachedLazyElementData(NULL_LAZY_ELEMENT, NULL_CACHED_KEYS);
