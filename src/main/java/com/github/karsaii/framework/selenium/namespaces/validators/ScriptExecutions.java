@@ -70,8 +70,12 @@ public interface ScriptExecutions {
     }
 
     static <T, U, V, W> boolean isValidConstructorData(ExecutorData<T, U, V, W> data) {
+        final var dataNotNull = isNotNull(data);
+        if (!dataNotNull) {
+            return false;
+        }
+
         return (
-            isNotNull(data) &&
             areNotNull(data.constructor, data.getter, data.guard) &&
             isValidCastData(data.castData) &&
             isValidExecutorResultFunctionsData(data.resultHandlers)

@@ -4,6 +4,7 @@ import com.github.karsaii.framework.selenium.namespaces.Driver;
 import com.github.karsaii.framework.selenium.namespaces.DriverWaits;
 import com.github.karsaii.framework.selenium.namespaces.SeleniumExecutor;
 import com.github.karsaii.framework.selenium.namespaces.element.Element;
+import com.github.karsaii.framework.selenium.namespaces.scripter.displayed.DisplayedFunctions;
 import examples.travelpage.constants.HomepageConstants;
 import examples.travelpage.namespaces.FFDriverFunctions;
 import org.junit.jupiter.api.AfterAll;
@@ -16,7 +17,8 @@ public class HomepageTests {
         final var result = SeleniumExecutor.execute(
             "Go to Homepage",
             DriverWaits.navigateAndWait(System.getProperty("page"), 300, 3000),
-            Element.inputWhenClickable(HomepageConstants.DESTINATION_FIELD_COMPLEX, "XYZ")
+            Element.inputWhenClickable(HomepageConstants.DESTINATION_FIELD_COMPLEX, "XYZ"),
+            DisplayedFunctions.isDisplayed(HomepageConstants.DESTINATION_FIELD_COMPLEX)
         ).apply(FFDriverFunctions.get());
         Assertions.assertTrue(result.status, result.message.toString());
     }

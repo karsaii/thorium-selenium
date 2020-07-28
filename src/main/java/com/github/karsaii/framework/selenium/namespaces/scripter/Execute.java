@@ -1,5 +1,6 @@
 package com.github.karsaii.framework.selenium.namespaces.scripter;
 
+import com.github.karsaii.core.constants.CoreConstants;
 import com.github.karsaii.core.constants.CoreDataConstants;
 import com.github.karsaii.core.extensions.namespaces.predicates.ExecutorPredicates;
 import com.github.karsaii.core.namespaces.DataExecutionFunctions;
@@ -7,6 +8,7 @@ import com.github.karsaii.core.namespaces.predicates.DataPredicates;
 import com.github.karsaii.core.namespaces.validators.CoreFormatter;
 import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
 import com.github.karsaii.framework.selenium.constants.ScriptExecutorConstants;
+import com.github.karsaii.framework.selenium.constants.scripts.Displayed;
 import com.github.karsaii.framework.selenium.constants.validators.SeleniumFormatterConstants;
 import com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilities;
 import com.github.karsaii.framework.selenium.namespaces.validators.SeleniumFormatter;
@@ -159,8 +161,8 @@ public interface Execute {
     static <T> Data<Object[]> handleDataParameterDefault(Data<T> parameter) {
         return DataFactoryFunctions.getWithMessage(
             ScriptExecuteFunctions.handleDataParameter(new ScriptParametersData<>(parameter, DataPredicates::isValidNonFalse, SeleniumUtilities::unwrapToArray)),
-            false,
-            ""
+            true,
+            "Handle Data parameter default message"
         );
     }
 
@@ -312,4 +314,8 @@ public interface Execute {
     static DriverFunction<Boolean> clickEventDispatcher(LazyElement element) {
         return ifDriver("clickEventDispatcher", isNotNullLazyElement(element), clickEventDispatcher(element.get()), CoreDataConstants.NULL_BOOLEAN);
     }
+
+
+
+
 }

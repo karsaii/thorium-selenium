@@ -64,6 +64,7 @@ import com.github.karsaii.framework.selenium.records.GetElementByData;
 import com.github.karsaii.framework.selenium.records.GetWithDriverData;
 import com.github.karsaii.framework.selenium.records.element.finder.ElementFilterParameters;
 import com.github.karsaii.framework.selenium.records.lazy.CachedLookupKeysData;
+import com.github.karsaii.framework.selenium.records.lazy.filtered.GetCurrentLazyData;
 import com.github.karsaii.framework.selenium.records.lazy.filtered.LazyFilteredElementParameters;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
@@ -295,7 +296,7 @@ public interface Driver {
         final var nameof = isNotBlank(name) ? name : "executeCore";
         return ifDriver(
             nameof,
-            isBlank(script) || !(isFunctionDataNotNull && ScriptExecutions.isValidConstructorData(data)),
+            isNotBlank(script) && isFunctionDataNotNull && ScriptExecutions.isValidConstructorData(data),
             driver -> executeCore(driver, data, functionData.handler, script),
             negative
         );
@@ -1815,70 +1816,77 @@ public interface Driver {
         return (element, value) -> lazyExitConditionCore(element, value, attempts);
     }
 
+    static Data<WebElement> getLazyElementCore(WebDriver driver, LazyElementWithOptionsData data) {
+        final var nameof = "getLazyElementCore";
+        final var dataElement = data.element;
+        final var name = dataElement.name;
+        final var getResult = ElementRepository.getIfContains(name);
+        final var isCached = getResult.status;
+        final var parameterMap = (isCached ? getResult.object.element : dataElement).parameters;
+        final var keyGetter = isCached ? getNextCachedKey(data.getOrder) : getNextKey(DecoratedListFactory.getWith(parameterMap.keySet()));
+        final var typeKeys = isCached ? getResult.object.typeKeys : ElementRepository.getInitializedTypeKeysMap();
+        final TriFunction<Data<WebElement>, Integer, Integer, Boolean> exitCondition = Driver::lazyExitConditionCore;
+        var message = new StringBuilder();
+        var parameterIndex = 0;
+        var index = 0;
+        var switchData = CoreDataConstants.NULL_BOOLEAN;
+        var current = SeleniumDataConstants.NULL_ELEMENT;
+        final var length = data.internalData.limit;
+        var cacheKeyData = new CachedLookupKeysData(name, "", "", parameterIndex);
+        while (exitCondition.apply(current, index++, length)) {
+            switchData = switchToDefaultContent().apply(driver);
+            if (isInvalidOrFalse(switchData)) {
+                return replaceMessage(current, nameof, switchData.message.toString());
+            }
+
+
+            var keyData = keyGetter.apply(cacheKeyData);
+            if (isInvalidOrFalse(keyData)) {
+                return replaceMessage(current, nameof, "Parameter key wasn't found in " + (isCached ? "cached" : "") + " keys" + CoreFormatterConstants.END_LINE);
+            }
+
+            final var key = keyData.object.strategy;
+            var parameters = parameterMap.get(key);
+            if (isNull(parameters) || parameters.lazyLocators.isNullOrEmpty()) {
+                continue;
+            }
+
+            var locators = parameters.lazyLocators;
+            var update = ElementRepository.updateTypeKeys(name, locators, typeKeys, key);
+            if (isInvalidOrFalse(update)) {
+                continue;
+            }
+
+            current = getCurrentLazyElement(parameters.elementFilterData, locators, parameters.getter).apply(driver);
+            message.append(current.message.toString());
+            message.append(Adjuster.adjustProbability(parameters, typeKeys, key, isValidNonFalse(current), data.probabilityData).message.toString());
+            parameterIndex = isCached ? keyData.object.index : parameterIndex;
+            ++parameterIndex;
+            cacheKeyData = new CachedLookupKeysData(name, keyData.object.entryName, keyData.object.strategy, parameterIndex);
+        }
+
+        if (isNullWebElement(current)) {
+            current = SeleniumDataConstants.NULL_ELEMENT;
+        }
+
+        final var externalData = data.externalData;
+        return ElementRepository.cacheValidLazyElement(
+                dataElement,
+                DataFactoryFunctions.getWithMessage(new ExternalElementData(typeKeys, current), isValidNonFalse(current), message.toString()),
+                isBlank(FrameworkCoreFormatter.getExternalSelectorDataMessage(externalData)) ? getLazyElementByExternal(dataElement, externalData, typeKeys).apply(driver) : SeleniumDataConstants.NULL_EXTERNAL_ELEMENT
+        );
+    }
+
+    private static Function<WebDriver, Data<WebElement>> getLazyElementCore(LazyElementWithOptionsData data) {
+        return driver -> getLazyElementCore(driver, data);
+    }
+
     static <T> DriverFunction<WebElement> getLazyElement(LazyElementWithOptionsData data) {
         final var nameof = "getLazyElement";
         return ifDriver(
             nameof,
             FrameworkCoreFormatter.getLazyResultWithOptionsMessage(data, nameof),
-            driver -> {
-                final var dataElement = data.element;
-                final var name = dataElement.name;
-                final var getResult = ElementRepository.getIfContains(name);
-                final var isCached = getResult.status;
-                final var parameterMap = (isCached ? getResult.object.element : dataElement).parameters;
-                final var keyGetter = isCached ? getNextCachedKey(data.getOrder) : getNextKey(DecoratedListFactory.getWith(parameterMap.keySet()));
-                final var typeKeys = isCached ? getResult.object.typeKeys : ElementRepository.getInitializedTypeKeysMap();
-                final TriFunction<Data<WebElement>, Integer, Integer, Boolean> exitCondition = Driver::lazyExitConditionCore;
-                var message = new StringBuilder();
-                var parameterIndex = 0;
-                var index = 0;
-                var switchData = CoreDataConstants.NULL_BOOLEAN;
-                var current = SeleniumDataConstants.NULL_ELEMENT;
-                final var length = data.internalData.limit;
-                var cacheKeyData = new CachedLookupKeysData(name, "", "", parameterIndex);
-                while (exitCondition.apply(current, index++, length)) {
-                    switchData = switchToDefaultContent().apply(driver);
-                    if (isInvalidOrFalse(switchData)) {
-                        return replaceMessage(current, nameof, switchData.message.toString());
-                    }
-
-
-                    var keyData = keyGetter.apply(cacheKeyData);
-                    if (isInvalidOrFalse(keyData)) {
-                        return replaceMessage(current, nameof, "Parameter key wasn't found in " + (isCached ? "cached" : "") + " keys" + CoreFormatterConstants.END_LINE);
-                    }
-
-                    final var key = keyData.object.strategy;
-                    var parameters = parameterMap.get(key);
-                    if (isNull(parameters) || parameters.lazyLocators.isNullOrEmpty()) {
-                        continue;
-                    }
-
-                    var locators = parameters.lazyLocators;
-                    var update = ElementRepository.updateTypeKeys(name, locators, typeKeys, key);
-                    if (isInvalidOrFalse(update)) {
-                        continue;
-                    }
-
-                    current = getCurrentLazyElement(parameters.elementFilterData, locators, parameters.getter).apply(driver);
-                    message.append(current.message.toString());
-                    message.append(Adjuster.adjustProbability(parameters, typeKeys, key, isValidNonFalse(current), data.probabilityData).message.toString());
-                    parameterIndex = isCached ? keyData.object.index : parameterIndex;
-                    ++parameterIndex;
-                    cacheKeyData = new CachedLookupKeysData(name, keyData.object.entryName, keyData.object.strategy, parameterIndex);
-                }
-
-                if (isNullWebElement(current)) {
-                    current = SeleniumDataConstants.NULL_ELEMENT;
-                }
-
-                final var externalData = data.externalData;
-                return ElementRepository.cacheValidLazyElement(
-                    dataElement,
-                    DataFactoryFunctions.getWithMessage(new ExternalElementData(typeKeys, current), isValidNonFalse(current), message.toString()),
-                    isBlank(FrameworkCoreFormatter.getExternalSelectorDataMessage(externalData)) ? getLazyElementByExternal(dataElement, externalData, typeKeys).apply(driver) : SeleniumDataConstants.NULL_EXTERNAL_ELEMENT
-                );
-            },
+            DriverFunctionFactory.getFunction(getLazyElementCore(data)),
             SeleniumDataConstants.NULL_ELEMENT
         );
     }
