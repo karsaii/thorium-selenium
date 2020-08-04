@@ -2,10 +2,8 @@ package com.github.karsaii.framework.selenium.namespaces;
 
 import com.github.karsaii.core.constants.CoreDataConstants;
 import com.github.karsaii.core.extensions.interfaces.functional.TriFunction;
-import com.github.karsaii.core.extensions.namespaces.SizableFunctions;
 import com.github.karsaii.core.extensions.namespaces.factories.DecoratedListFactory;
 import com.github.karsaii.core.extensions.namespaces.predicates.BasicPredicates;
-import com.github.karsaii.core.extensions.namespaces.predicates.CollectionPredicates;
 import com.github.karsaii.core.extensions.namespaces.predicates.SizablePredicates;
 import com.github.karsaii.core.implementations.reflection.message.ParameterizedMessageData;
 import com.github.karsaii.core.implementations.reflection.message.RegularMessageData;
@@ -27,6 +25,7 @@ import com.github.karsaii.core.namespaces.validators.CoreFormatter;
 import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
 import com.github.karsaii.framework.selenium.constants.validators.SeleniumFormatterConstants;
 import com.github.karsaii.framework.selenium.enums.ManyGetter;
+import com.github.karsaii.framework.selenium.namespaces.element.validators.WebElementListValidators;
 import com.github.karsaii.framework.selenium.namespaces.factories.DriverFunctionFactory;
 import com.github.karsaii.framework.selenium.namespaces.factories.ElementFilterParametersFactory;
 import com.github.karsaii.framework.selenium.namespaces.factories.LazyElementWithOptionsDataFactory;
@@ -114,8 +113,6 @@ import com.github.karsaii.framework.selenium.records.scripter.ExecutorData;
 import com.github.karsaii.framework.selenium.records.scripter.ExecutorParametersFieldData;
 import com.github.karsaii.framework.selenium.namespaces.validators.ScriptExecutions;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -126,6 +123,7 @@ import java.util.function.Predicate;
 
 import static com.github.karsaii.core.extensions.namespaces.CoreUtilities.areAnyNull;
 import static com.github.karsaii.core.extensions.namespaces.CoreUtilities.areNotNull;
+import static com.github.karsaii.core.extensions.namespaces.CoreUtilities.isNonException;
 import static com.github.karsaii.core.extensions.namespaces.NullableFunctions.isNotNull;
 import static com.github.karsaii.core.extensions.namespaces.NullableFunctions.isNull;
 import static com.github.karsaii.core.namespaces.DataExecutionFunctions.ifDependency;
@@ -359,8 +357,6 @@ public interface Driver {
             SeleniumDataConstants.NULL_INTEGER_NULL_DRIVER
         );
     }
-
-
 
     private static DriverFunction<String> getString(String property, Function<WebDriver, String> function) {
         return getCore(property, NullableFunctions::isNotNull, function, CoreFormatterConstants.EMPTY);
@@ -998,11 +994,7 @@ public interface Driver {
         }
 
         final var object = data.object;
-        final var size = (
-            data.status &&
-            CollectionPredicates.isNonEmptyAndOfType(object, WebElement.class) &&
-            CoreUtilities.isNotEqual(SeleniumDataConstants.NULL_ELEMENT.object, object.first())
-        ) ? object.size() : 0;
+        final var size = WebElementListValidators.isValid(data) ? object.size() : 0;
         final var status = SizablePredicates.isSizeEqualTo(size, expected);
         return DataFactoryFunctions.getWithNameAndMessage(object, status, nameof, SeleniumFormatter.getElementsAmountMessage(locator, status, expected, size), data.exception);
     }
@@ -1741,7 +1733,7 @@ public interface Driver {
                 element.parameters.putIfAbsent(parameterKey, lep);
                 final var update = ElementRepository.updateTypeKeys(element.name, lep.lazyLocators, typeKeys, parameterKey);
                 return isNotNullWebElement(currentElement) ? (
-                    DataFactoryFunctions.getWithNameAndMessage(new ExternalElementData(typeKeys, currentElement), true, nameof, "External function yielded an com.github.karsaii.framework.selenium.element" + CoreFormatterConstants.END_LINE)
+                    DataFactoryFunctions.getWithNameAndMessage(new ExternalElementData(typeKeys, currentElement), true, nameof, "External function element" + CoreFormatterConstants.END_LINE)
                 ) : replaceMessage(defaultValue, nameof, "All(\"" + length + "\") approaches were tried" + CoreFormatterConstants.END_LINE + currentElement.message.toString());
             },
             defaultValue
@@ -1912,33 +1904,50 @@ public interface Driver {
     }
 
     private static Data<Boolean> quitDriverCore(WebDriver driver) {
-        var data = CoreDataConstants.NULL_BOOLEAN;
+        var exception = CoreConstants.EXCEPTION;
         try {
             driver.quit();
-            data = DataFactoryFunctions.getBoolean(true, "Driver quit successfully" + CoreFormatterConstants.END_LINE);
         } catch (NullPointerException ex) {
-            final var exMessage = ex.getMessage();
-            data = DataFactoryFunctions.getBoolean(false, "Exception occurred while closing Driver. Exception:" + ex.getClass() + " Message: " +  exMessage, ex, exMessage);
+            exception = ex;
         }
 
-        return data;
+        final var status = isNonException(exception);
+        final var message = (
+            status ? "Driver quit successfully" + CoreFormatterConstants.END_LINE
+                    : "Exception occurred while closing Driver. Exception:" + exception.getClass() + " Message: " + exception.getMessage()
+        );
+        return DataFactoryFunctions.getBoolean(status, message, exception);
+    }
+
+    private static String handleUrl(String url, String query) {
+        final var queryFragment = isNotBlank(query) ? StringUtilities.startsWithCaseInsensitive(query, "?") ? query : "?" + query : CoreFormatterConstants.EMPTY;
+        var path = StringUtilities.startsWithCaseInsensitive(url, "http") && StringUtilities.contains(url, "://") ? url : "http://" + url;
+        if (!StringUtilities.endsWithCaseInsensitive(path, "/")) {
+            path += "/";
+        }
+
+        if (isNotBlank(queryFragment)) {
+            path += queryFragment;
+        }
+
+        return path;
     }
 
     private static Data<Boolean> navigateCore(WebDriver driver, String url, String query) {
-        final var queryFragment = StringUtilities.startsWithCaseInsensitive(query, "?") ? query : "?" + query;
-        var path = StringUtilities.startsWithCaseInsensitive(url, "http") && StringUtilities.contains(url, "://") ? url : "http://" + url;
-        path = StringUtilities.endsWithCaseInsensitive(path, "/") ? path + queryFragment : path + "/" + queryFragment;
-
-        var data = CoreDataConstants.NULL_BOOLEAN;
+        var exception = CoreConstants.EXCEPTION;
         try {
-            driver.get(path);
-            data = DataFactoryFunctions.getBoolean(true, "Driver navigated successfully to \"" + url + "\"" + CoreFormatterConstants.END_LINE);
+            driver.get(handleUrl(url, query));
         } catch (NullPointerException ex) {
-            final var exMessage = ex.getMessage();
-            data = DataFactoryFunctions.getBoolean(false, "Exception occurred while navigating to \"" + url + "\". Exception:" + ex.getClass() + " Message: " +  exMessage, ex, exMessage);
+            exception = ex;
         }
 
-        return data;
+        final var status = isNonException(exception);
+        final var message = (
+            status ? "Driver navigated successfully to \"" + url + "\"" + CoreFormatterConstants.END_LINE
+                    : "Exception occurred while navigating to \"" + url + "\". Exception:" + exception.getClass() + " Message: " +  exception.getMessage()
+        );
+
+        return DataFactoryFunctions.getBoolean(status, message, exception);
     }
 
     private static DriverFunction<Boolean> navigateCore(String url, String query) {
