@@ -5,7 +5,7 @@ import com.github.karsaii.core.extensions.namespaces.CoreUtilities;
 import com.github.karsaii.core.namespaces.DataFactoryFunctions;
 import com.github.karsaii.core.namespaces.predicates.DataPredicates;
 import com.github.karsaii.core.records.Data;
-import com.github.karsaii.framework.selenium.constants.scripts.Displayed;
+import com.github.karsaii.framework.selenium.constants.scripts.element.Displayed;
 import com.github.karsaii.framework.selenium.constants.validators.SeleniumFormatterConstants;
 import com.github.karsaii.framework.selenium.namespaces.SeleniumExecutor;
 import com.github.karsaii.framework.selenium.namespaces.element.Element;
@@ -17,7 +17,7 @@ import org.openqa.selenium.WebDriver;
 
 import java.util.function.Function;
 
-import static com.github.karsaii.framework.selenium.constants.scripts.Displayed.IS_ELEMENT_DISPLAYED;
+import static com.github.karsaii.framework.selenium.constants.scripts.element.Displayed.IS_ELEMENT_DISPLAYED;
 
 public interface DevtoolsDriverFunctions {
     static DriverFunction<Boolean> clearConsole(LazyElement console) {

@@ -1,4 +1,4 @@
-package com.github.karsaii.framework.selenium.constants.scripts;
+package com.github.karsaii.framework.selenium.constants.scripts.general;
 
 public abstract class GeneralSnippets {
     public static final String STRICT = "'use strict';";

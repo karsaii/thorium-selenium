@@ -1,7 +1,6 @@
 package com.github.karsaii.framework.selenium.namespaces;
 
 import com.github.karsaii.core.constants.CoreDataConstants;
-import com.github.karsaii.core.extensions.interfaces.functional.TriFunction;
 import com.github.karsaii.core.extensions.namespaces.factories.DecoratedListFactory;
 import com.github.karsaii.core.extensions.namespaces.predicates.BasicPredicates;
 import com.github.karsaii.core.extensions.namespaces.predicates.SizablePredicates;
@@ -9,9 +8,7 @@ import com.github.karsaii.core.implementations.reflection.message.ParameterizedM
 import com.github.karsaii.core.implementations.reflection.message.RegularMessageData;
 import com.github.karsaii.core.namespaces.BaseExecutionFunctions;
 import com.github.karsaii.core.namespaces.DataExecutionFunctions;
-import com.github.karsaii.core.namespaces.StringUtilities;
 import com.github.karsaii.framework.core.abstracts.AbstractLazyResult;
-import com.github.karsaii.framework.core.abstracts.lazy.filtered.BaseFilterData;
 import com.github.karsaii.framework.core.namespaces.Adjuster;
 import com.github.karsaii.framework.core.namespaces.FrameworkFunctions;
 import com.github.karsaii.framework.core.namespaces.validators.FrameworkCoreFormatter;
@@ -23,18 +20,18 @@ import com.github.karsaii.core.namespaces.validators.DataValidators;
 import com.github.karsaii.core.namespaces.validators.MethodParametersDataValidators;
 import com.github.karsaii.core.namespaces.validators.CoreFormatter;
 import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
+import com.github.karsaii.framework.selenium.constants.lazy.GetLazyElementConstants;
 import com.github.karsaii.framework.selenium.constants.validators.SeleniumFormatterConstants;
-import com.github.karsaii.framework.selenium.enums.ManyGetter;
 import com.github.karsaii.framework.selenium.namespaces.element.validators.WebElementListValidators;
 import com.github.karsaii.framework.selenium.namespaces.factories.DriverFunctionFactory;
-import com.github.karsaii.framework.selenium.namespaces.factories.ElementFilterParametersFactory;
 import com.github.karsaii.framework.selenium.namespaces.factories.LazyElementWithOptionsDataFactory;
 import com.github.karsaii.framework.selenium.namespaces.factories.SeleniumDataFactory;
 import com.github.karsaii.framework.selenium.namespaces.factories.SeleniumLazyLocatorFactory;
 import com.github.karsaii.framework.selenium.namespaces.factories.WebElementListFactory;
+import com.github.karsaii.framework.selenium.namespaces.utilities.URLUtilities;
 import com.github.karsaii.framework.selenium.namespaces.validators.GetElementByDataValidators;
 import com.github.karsaii.framework.selenium.namespaces.validators.SeleniumFormatter;
-import com.github.karsaii.framework.selenium.abstracts.AbstractElementFunctionParameters;
+import com.github.karsaii.framework.selenium.abstracts.regular.AbstractElementFunctionParameters;
 import com.github.karsaii.framework.selenium.constants.ElementFunctionConstants;
 import com.github.karsaii.framework.selenium.constants.SeleniumInvokeFunctionDefaults;
 import com.github.karsaii.core.extensions.DecoratedList;
@@ -61,9 +58,8 @@ import com.github.karsaii.core.constants.CoreConstants;
 import com.github.karsaii.core.records.reflection.message.InvokeCommonMessageParametersData;
 import com.github.karsaii.framework.selenium.records.GetElementByData;
 import com.github.karsaii.framework.selenium.records.GetWithDriverData;
-import com.github.karsaii.framework.selenium.records.element.finder.ElementFilterParameters;
 import com.github.karsaii.framework.selenium.records.lazy.CachedLookupKeysData;
-import com.github.karsaii.framework.selenium.records.lazy.filtered.GetCurrentLazyData;
+import com.github.karsaii.framework.selenium.records.lazy.GetLazyElementData;
 import com.github.karsaii.framework.selenium.records.lazy.filtered.LazyFilteredElementParameters;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
@@ -94,9 +90,9 @@ import com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilit
 import com.github.karsaii.framework.selenium.namespaces.validators.ExecuteCoreValidators;
 import com.github.karsaii.framework.selenium.namespaces.validators.InvokeCoreValidator;
 import com.github.karsaii.framework.selenium.namespaces.element.validators.WebElementValidators;
-import com.github.karsaii.framework.selenium.records.element.is.ElementConditionParameters;
-import com.github.karsaii.framework.selenium.records.element.is.ElementStringValueParameters;
-import com.github.karsaii.framework.selenium.records.element.is.ElementParameterizedValueParameters;
+import com.github.karsaii.framework.selenium.records.element.is.regular.ElementConditionParameters;
+import com.github.karsaii.framework.selenium.records.element.is.regular.ElementStringValueParameters;
+import com.github.karsaii.framework.selenium.records.element.is.regular.ElementParameterizedValueParameters;
 import com.github.karsaii.framework.selenium.records.scripter.ExecuteCoreData;
 import com.github.karsaii.framework.selenium.records.scripter.ExecuteCoreFunctionData;
 import com.github.karsaii.framework.selenium.records.ExternalElementData;
@@ -117,7 +113,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiFunction;
-import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -620,7 +615,7 @@ public interface Driver {
     private static DriverFunction<String> getElementValue(LazyElement element, String value, ElementParameterizedValueParameters<String> parameters) {
         final var negative = CoreDataConstants.NULL_STRING;
         final var errorMessage = SeleniumFormatter.isElementFunctionMessage(element, parameters) + CoreFormatter.isNullMessageWithName(value, "Value");
-        if (isBlank(errorMessage)) {
+        if (isNotBlank(errorMessage)) {
             return DriverFunctionFactory.get(replaceMessage(negative, "getElementValue", errorMessage));
         }
 
@@ -1794,21 +1789,7 @@ public interface Driver {
         return data -> isNotNull(elementKeys) && isNotNull(data) ? getNextKeyCore(elementKeys).apply(data) : DataFactoryFunctions.replaceMessage(SeleniumDataConstants.NULL_CACHED_DATA, "getNextKey", "Index or key issue" + CoreFormatterConstants.END_LINE);
     }
 
-    static <T> DriverFunction<WebElement> getCurrentLazyElement(BaseFilterData<WebDriver, ManyGetter, T, ElementFilterParameters, WebElementList, WebElement> data, LazyLocatorList locators, String getter) {
-        return data.isFiltered ? (
-                DriverFunctionFactory.getFunction(data.apply(ElementFilterParametersFactory.getWithManyGetterAndDefaultGetterMap(locators, getter)))
-        ) : ElementFilterFunctions.getElement(locators, ElementFinderConstants.singleGetterMap, SingleGetter.getValueOf(getter));
-    }
-
-    static boolean lazyExitConditionCore(Data<WebElement> element, int index, int attempts) {
-        return isNullWebElement(element) && BasicPredicates.isSmallerThan(index, attempts);
-    }
-
-    static BiPredicate<Data<WebElement>, Integer> lazyExitCondition(int attempts) {
-        return (element, value) -> lazyExitConditionCore(element, value, attempts);
-    }
-
-    static Data<WebElement> getLazyElementCore(WebDriver driver, LazyElementWithOptionsData data) {
+    static Data<WebElement> getLazyElementCore(WebDriver driver, LazyElementWithOptionsData data, GetLazyElementData<WebElement, WebElementList> defaults) {
         final var nameof = "getLazyElementCore";
         final var dataElement = data.element;
         final var name = dataElement.name;
@@ -1817,20 +1798,19 @@ public interface Driver {
         final var parameterMap = (isCached ? getResult.object.element : dataElement).parameters;
         final var keyGetter = isCached ? getNextCachedKey(data.getOrder) : getNextKey(DecoratedListFactory.getWith(parameterMap.keySet()));
         final var typeKeys = isCached ? getResult.object.typeKeys : ElementRepository.getInitializedTypeKeysMap();
-        final TriFunction<Data<WebElement>, Integer, Integer, Boolean> exitCondition = Driver::lazyExitConditionCore;
+        final var exitCondition = defaults.exitCondition;
         var message = new StringBuilder();
         var parameterIndex = 0;
         var index = 0;
         var switchData = CoreDataConstants.NULL_BOOLEAN;
-        var current = SeleniumDataConstants.NULL_ELEMENT;
+        var current = defaults.defaultValue;
         final var length = data.internalData.limit;
-        var cacheKeyData = new CachedLookupKeysData(name, "", "", parameterIndex);
+        var cacheKeyData = new CachedLookupKeysData(name, "", "", 0);
         while (exitCondition.apply(current, index++, length)) {
             switchData = switchToDefaultContent().apply(driver);
             if (isInvalidOrFalse(switchData)) {
                 return replaceMessage(current, nameof, switchData.message.toString());
             }
-
 
             var keyData = keyGetter.apply(cacheKeyData);
             if (isInvalidOrFalse(keyData)) {
@@ -1849,28 +1829,26 @@ public interface Driver {
                 continue;
             }
 
-            current = getCurrentLazyElement(parameters.elementFilterData, locators, parameters.getter).apply(driver);
+            current = defaults.getter.apply(parameters.elementFilterData, locators, parameters.getter).apply(driver);
             message.append(current.message.toString());
             message.append(Adjuster.adjustProbability(parameters, typeKeys, key, isValidNonFalse(current), data.probabilityData).message.toString());
-            parameterIndex = isCached ? keyData.object.index : parameterIndex;
-            ++parameterIndex;
-            cacheKeyData = new CachedLookupKeysData(name, keyData.object.entryName, keyData.object.strategy, parameterIndex);
+            cacheKeyData = new CachedLookupKeysData(name, keyData.object.entryName, keyData.object.strategy, isCached ? keyData.object.index : ++parameterIndex);
         }
 
-        if (isNullWebElement(current)) {
-            current = SeleniumDataConstants.NULL_ELEMENT;
+        if (defaults.invalidator.test(current)) {
+            current = defaults.defaultValue;
         }
 
         final var externalData = data.externalData;
-        return ElementRepository.cacheValidLazyElement(
-                dataElement,
-                DataFactoryFunctions.getWithMessage(new ExternalElementData(typeKeys, current), isValidNonFalse(current), message.toString()),
-                isBlank(FrameworkCoreFormatter.getExternalSelectorDataMessage(externalData)) ? getLazyElementByExternal(dataElement, externalData, typeKeys).apply(driver) : SeleniumDataConstants.NULL_EXTERNAL_ELEMENT
+        return defaults.cacheFunction.apply(
+            dataElement,
+            DataFactoryFunctions.getWithMessage(new ExternalElementData(typeKeys, current), isValidNonFalse(current), message.toString()),
+            isBlank(FrameworkCoreFormatter.getExternalSelectorDataMessage(externalData)) ? getLazyElementByExternal(dataElement, externalData, typeKeys).apply(driver) : SeleniumDataConstants.NULL_EXTERNAL_ELEMENT
         );
     }
 
     private static Function<WebDriver, Data<WebElement>> getLazyElementCore(LazyElementWithOptionsData data) {
-        return driver -> getLazyElementCore(driver, data);
+        return driver -> getLazyElementCore(driver, data, GetLazyElementConstants.REGULAR_LAZY_CONSTANTS);
     }
 
     static <T> DriverFunction<WebElement> getLazyElement(LazyElementWithOptionsData data) {
@@ -1919,24 +1897,11 @@ public interface Driver {
         return DataFactoryFunctions.getBoolean(status, message, exception);
     }
 
-    private static String handleUrl(String url, String query) {
-        final var queryFragment = isNotBlank(query) ? StringUtilities.startsWithCaseInsensitive(query, "?") ? query : "?" + query : CoreFormatterConstants.EMPTY;
-        var path = StringUtilities.startsWithCaseInsensitive(url, "http") && StringUtilities.contains(url, "://") ? url : "http://" + url;
-        if (!StringUtilities.endsWithCaseInsensitive(path, "/")) {
-            path += "/";
-        }
-
-        if (isNotBlank(queryFragment)) {
-            path += queryFragment;
-        }
-
-        return path;
-    }
-
     private static Data<Boolean> navigateCore(WebDriver driver, String url, String query) {
+        final var target = URLUtilities.handle(url, query);
         var exception = CoreConstants.EXCEPTION;
         try {
-            driver.get(handleUrl(url, query));
+            driver.get(target);
         } catch (NullPointerException ex) {
             exception = ex;
         }

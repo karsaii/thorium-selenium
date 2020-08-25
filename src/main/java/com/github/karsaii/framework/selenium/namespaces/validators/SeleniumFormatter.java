@@ -1,6 +1,5 @@
 package com.github.karsaii.framework.selenium.namespaces.validators;
 
-import com.github.karsaii.core.extensions.DecoratedList;
 import com.github.karsaii.core.extensions.namespaces.CoreUtilities;
 import com.github.karsaii.core.namespaces.DataFactoryFunctions;
 import com.github.karsaii.core.namespaces.validators.CoreFormatter;
@@ -8,7 +7,6 @@ import com.github.karsaii.core.records.Data;
 import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
 import com.github.karsaii.framework.core.abstracts.AbstractLazyResult;
 import com.github.karsaii.framework.core.namespaces.validators.FrameworkCoreFormatter;
-import com.github.karsaii.framework.core.selector.records.SelectorKeySpecificityData;
 import com.github.karsaii.framework.selenium.constants.validators.SeleniumFormatterConstants;
 import com.github.karsaii.framework.selenium.records.CacheElementDefaultsData;
 import com.github.karsaii.framework.selenium.records.ExternalElementData;
@@ -18,7 +16,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import com.github.karsaii.framework.selenium.abstracts.ElementValueParameters;
+import com.github.karsaii.framework.selenium.abstracts.regular.AbstractElementValueParameters;
 import com.github.karsaii.framework.selenium.constants.SeleniumCoreConstants;
 import com.github.karsaii.framework.selenium.constants.SeleniumDataConstants;
 import com.github.karsaii.framework.selenium.enums.ManyGetter;
@@ -28,7 +26,7 @@ import com.github.karsaii.framework.core.namespaces.extensions.boilers.LazyLocat
 import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.WebElementList;
 import com.github.karsaii.framework.selenium.records.SwitchResultMessageData;
 import com.github.karsaii.framework.selenium.records.element.is.ElementFormatData;
-import com.github.karsaii.framework.selenium.records.element.is.ElementParameterizedValueParameters;
+import com.github.karsaii.framework.selenium.records.element.is.regular.ElementParameterizedValueParameters;
 import com.github.karsaii.framework.selenium.records.lazy.LazyElement;
 import com.github.karsaii.framework.core.records.lazy.LazyLocator;
 
@@ -80,7 +78,7 @@ public interface SeleniumFormatter {
         return getNamedErrorMessageOrEmpty("isValidElementFormatData", message);
     }
 
-    static String isValidElementValueParametersMessage(ElementValueParameters<?, ?> parameters) {
+    static String isValidElementValueParametersMessage(AbstractElementValueParameters<?, ?> parameters) {
         final var baseName = "Element Value Parameters";
         var message = CoreFormatter.isNullMessageWithName(parameters, baseName);
         if (isBlank(message)) {
@@ -179,7 +177,7 @@ public interface SeleniumFormatter {
         return message + CoreFormatterConstants.END_LINE;
     }
 
-    static String isElementFunctionMessage(LazyElement element, ElementValueParameters<?, ?> parameters) {
+    static String isElementFunctionMessage(LazyElement element, AbstractElementValueParameters<?, ?> parameters) {
         final var message = FrameworkCoreFormatter.isNullLazyElementMessage(element) + isValidElementValueParametersMessage(parameters);
         return getNamedErrorMessageOrEmpty("isElementFunctionMessage", message);
     }

@@ -1,4 +1,4 @@
-package com.github.karsaii.framework.selenium.abstracts;
+package com.github.karsaii.framework.selenium.abstracts.regular;
 
 import com.github.karsaii.core.extensions.interfaces.functional.TriFunction;
 import com.github.karsaii.core.records.Data;

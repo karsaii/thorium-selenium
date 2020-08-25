@@ -1,4 +1,4 @@
-package com.github.karsaii.framework.selenium.constants.scripts;
+package com.github.karsaii.framework.selenium.constants.scripts.general;
 
 public abstract class GetStyle {
     public static final String GET_STYLES_IN_JSON =  "var getStyleProperties = function getStylePropertiesFunction(node) {" +

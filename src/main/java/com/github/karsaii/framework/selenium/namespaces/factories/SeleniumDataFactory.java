@@ -14,4 +14,8 @@ public interface SeleniumDataFactory {
     static <T, V extends DecoratedList<T>> Function<Data<V>, Data<DecoratedList<?>>> getUnwrapped() {
         return data -> DataFactoryFunctions.getWith(data.object.get(), data.status, data.message, data.exception, data.exceptionMessage);
     }
+
+    /*static <T> Data<T> getWithNameAndMessage(T object, boolean status, String nameof, String message, Exception exception, String exceptionMessage) {
+
+    }*/
 }

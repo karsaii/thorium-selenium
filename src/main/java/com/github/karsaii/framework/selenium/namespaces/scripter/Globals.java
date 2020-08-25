@@ -1,6 +1,6 @@
 package com.github.karsaii.framework.selenium.namespaces.scripter;
 
-import com.github.karsaii.framework.selenium.constants.scripts.GeneralSnippets;
+import com.github.karsaii.framework.selenium.constants.scripts.general.GeneralSnippets;
 
 import static com.github.karsaii.framework.selenium.namespaces.scripter.General.IF_FALSE_RETURN_FALSE;
 import static com.github.karsaii.framework.selenium.namespaces.scripter.General.RETURN;

@@ -1,4 +1,4 @@
-package com.github.karsaii.framework.selenium.constants.scripts;
+package com.github.karsaii.framework.selenium.constants.scripts.general;
 
 import com.github.karsaii.framework.selenium.namespaces.scripter.Globals;
 

@@ -22,8 +22,9 @@ public abstract class HomepageConstants {
 
     public static final String LOGO_NAME = NAME + "Logo";
     public static final String DESTINATION_FIELD_NAME = NAME + "Destination field";
+    public static final String TAB_NAME = "Tab";
 
-
+    public static final String TAB_LOCATOR = "a[class*='tab-anchor'] > span[class*='tab-text']";
     public static final String LOGO_LOCATOR = "img[alt=*' logo']";
     public static final String DESTINATION_FIELD_LOCATOR = "#location-field-destination";
     public static final String DESTINATION_FIELD_LOCATOR_2 = "hotel-destination-hp-hotel";
@@ -33,6 +34,7 @@ public abstract class HomepageConstants {
     public static final LazyLocator FALSE_DEST = LazyLocatorFactory.get("x" + DESTINATION_FIELD_LOCATOR_2, SelectorStrategyNameConstants.ID);
 
     public static final LazyElement LOGO = LazyElementFactory.getWithFilterParameters(LOGO_NAME, LazyLocatorFactory.get(LOGO_LOCATOR, SelectorStrategyNameConstants.CSS_SELECTOR));
+    public static final LazyElement TAB = LazyElementFactory.getWithFilterParameters(TAB_NAME, LazyLocatorFactory.get(TAB_LOCATOR, SelectorStrategyNameConstants.CSS_SELECTOR));
 
 
     /*public static final LazyElement DESTINATION_FIELD_COMPLEX = LazyElementFactory.getWithDefaultValidator(

@@ -5,7 +5,7 @@ import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
 import com.github.karsaii.core.extensions.namespaces.CoreUtilities;
 import com.github.karsaii.core.extensions.namespaces.NullableFunctions;
 import com.github.karsaii.core.records.Data;
-import com.github.karsaii.framework.selenium.constants.scripts.Displayed;
+import com.github.karsaii.framework.selenium.constants.scripts.element.Displayed;
 import com.github.karsaii.framework.selenium.enums.SingleGetter;
 import com.github.karsaii.framework.selenium.namespaces.Driver;
 import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;

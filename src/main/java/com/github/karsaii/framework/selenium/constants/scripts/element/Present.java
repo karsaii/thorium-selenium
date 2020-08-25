@@ -1,4 +1,4 @@
-package com.github.karsaii.framework.selenium.constants.scripts;
+package com.github.karsaii.framework.selenium.constants.scripts.element;
 
 import static com.github.karsaii.framework.selenium.namespaces.scripter.General.IF_RETURN;
 import static com.github.karsaii.framework.selenium.namespaces.scripter.General.RETURN;
