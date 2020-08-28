@@ -18,12 +18,14 @@ import com.github.karsaii.core.records.executor.ExecutionStateData;
 import com.github.karsaii.core.records.executor.ExecutionStepsData;
 import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
 import com.github.karsaii.core.namespaces.validators.CoreFormatter;
+import com.github.karsaii.framework.selenium.namespaces.executor.SeleniumExecutorUtilities;
 import com.github.karsaii.framework.selenium.namespaces.factories.DriverFunctionFactory;
 import org.openqa.selenium.WebDriver;
 import com.github.karsaii.core.constants.ExecutorConstants;
 import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.function.Function;
 
 import static com.github.karsaii.framework.selenium.namespaces.ExecutionCore.ifDriver;
@@ -103,7 +105,7 @@ public interface SeleniumExecutor {
     }
 
     static <ReturnType> DriverFunction<ReturnType> conditionalSequence(TriPredicate<Data<?>, Integer, Integer> guard, DriverFunction<?> before, DriverFunction<?> after) {
-        final var steps = Arrays.asList(before, after).toArray(new DriverFunction<?>[0]);
+        final var steps = SeleniumExecutorUtilities.getStepArray(before, after);
         return DriverFunctionFactory.getFunction(Executor.execute(
             ExecutionParametersDataFactory.getWithTwoCommandsRange(
                 ExecutorFunctionDataFactory.getWithSpecificMessageAndBreakCondition(CoreFormatterConstants.EXECUTION_ENDED, guard),
@@ -114,7 +116,7 @@ public interface SeleniumExecutor {
     }
 
     static <T, U, Any> DriverFunction<Any> conditionalSequence(DriverFunction<T> before, DriverFunction<U> after, Class<Any> clazz) {
-        final var steps = Arrays.asList(before, after).toArray(new DriverFunction<?>[0]);
+        final var steps = SeleniumExecutorUtilities.getStepArray(before, after);
         return DriverFunctionFactory.getFunction(Executor.execute(ExecutionParametersDataFactory.getWithDefaultFunctionDataAndTwoCommandRange(Executor::execute), steps));
     }
 
@@ -156,7 +158,7 @@ public interface SeleniumExecutor {
     }
 
     static <ReturnType> DriverFunction<ExecutionResultData<ReturnType>> conditionalSequence(TriPredicate<Data<?>, Integer, Integer> guard, ExecutionStateData stateData, DriverFunction<?> before, DriverFunction<?> after) {
-        final var steps = Arrays.asList(before, after).toArray(new DriverFunction<?>[0]);
+        final var steps = SeleniumExecutorUtilities.getStepArray(before, after);
         return DriverFunctionFactory.getFunction(Executor.execute(
             ExecutionParametersDataFactory.getWithTwoCommandsRange(
                 ExecutorFunctionDataFactory.getWithSpecificMessageAndBreakCondition(CoreFormatterConstants.EXECUTION_ENDED, guard),
@@ -168,7 +170,19 @@ public interface SeleniumExecutor {
     }
 
     static <T, U, ReturnType> DriverFunction<ExecutionResultData<ReturnType>> conditionalSequence(ExecutionStateData stateData, DriverFunction<T> before, DriverFunction<U> after, Class<ReturnType> clazz) {
-        final var steps = Arrays.asList(before, after).toArray(new DriverFunction<?>[0]);
+        final var steps = SeleniumExecutorUtilities.getStepArray(before, after);
         return DriverFunctionFactory.getFunction(Executor.execute(ExecutionParametersDataFactory.getWithDefaultFunctionDataAndTwoCommandRange(Executor::execute), stateData, steps));
+    }
+
+    static <ReturnType> DriverFunction<ExecutionResultData<ReturnType>> repeat(String message, ExecutionStateData stateData, DriverFunction<?> step, int amount) {
+        return execute(message, stateData, SeleniumExecutorUtilities.getStepArray(step, amount));
+    }
+
+    static <Any> DriverFunction<Any> repeat(String message, DriverFunction<?> step, int amount) {
+        return execute(message, SeleniumExecutorUtilities.getStepArray(step, amount));
+    }
+
+    static <Any> DriverFunction<Any> repeat(DriverFunction<?> step, int amount) {
+        return execute(SeleniumExecutorUtilities.getStepArray(step, amount));
     }
 }

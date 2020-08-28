@@ -15,6 +15,4 @@ public class LazyElementWaitParameters extends AbstractWaitParameters<LazyElemen
     public LazyElementWaitParameters(LazyElement object) {
         super(object, ElementWaitDefaults.INTERVAL, ElementWaitDefaults.DURATION);
     }
-
-
 }

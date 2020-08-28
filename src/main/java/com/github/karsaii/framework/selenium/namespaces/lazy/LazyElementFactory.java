@@ -130,4 +130,12 @@ public interface LazyElementFactory {
     static LazyElement getWithFilterParameters(String name, String message, LazyLocator locator) {
         return getWithFilterParameters(name, true, message, locator, SingleGetter.DEFAULT.getName());
     }
+
+    static LazyElement getSimple(String name, LazyLocator locator) {
+        return getWithFilterParameters(name, locator);
+    }
+
+    static LazyElement getSimple(String name, int index, LazyLocator locator) {
+        return getWithFilterParameters(name, index, locator);
+    }
 }

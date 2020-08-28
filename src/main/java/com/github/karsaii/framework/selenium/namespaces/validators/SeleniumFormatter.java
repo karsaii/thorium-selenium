@@ -355,4 +355,8 @@ public interface SeleniumFormatter {
             CoreFormatter.isNullMessageWithName(external, "External element data")
         );
     }
+
+    static String getJSDependenciesMessage(String message, boolean status) {
+        return CoreFormatter.getExecuteFragment(status) + " via Devtools console - Set JS Dependencies: " + message + CoreFormatterConstants.END_LINE;
+    }
 }

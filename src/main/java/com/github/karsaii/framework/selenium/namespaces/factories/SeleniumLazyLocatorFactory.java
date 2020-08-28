@@ -3,6 +3,7 @@ package com.github.karsaii.framework.selenium.namespaces.factories;
 import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
 import com.github.karsaii.framework.core.namespaces.factory.LazyLocatorFactory;
 import com.github.karsaii.framework.core.records.lazy.LazyLocator;
+import com.github.karsaii.framework.selenium.constants.SelectorStrategyNameConstants;
 import com.github.karsaii.framework.selenium.constants.SeleniumLazyLocatorConstants;
 import org.openqa.selenium.By;
 
@@ -38,6 +39,14 @@ public interface SeleniumLazyLocatorFactory {
 
     static LazyLocator get(String locator, String strategy) {
         return LazyLocatorFactory.get(locator, strategy);
+    }
+
+    static LazyLocator getID(String locator) {
+        return get(locator, SelectorStrategyNameConstants.ID);
+    }
+
+    static LazyLocator getCSSSelector(String locator) {
+        return get(locator, SelectorStrategyNameConstants.CSS_SELECTOR);
     }
 
     static LazyLocator get(By locator) {

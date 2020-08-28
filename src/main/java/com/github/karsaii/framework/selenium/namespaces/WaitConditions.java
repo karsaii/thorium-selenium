@@ -5,6 +5,7 @@ import com.github.karsaii.core.namespaces.wait.Wait;
 import com.github.karsaii.core.namespaces.wait.WaitTimeDataFactory;
 import com.github.karsaii.core.records.WaitData;
 import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
+import com.github.karsaii.framework.selenium.namespaces.factories.DriverFunctionFactory;
 import org.openqa.selenium.By;
 import com.github.karsaii.framework.selenium.constants.DriverFunctionConstants;
 import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
@@ -13,6 +14,7 @@ import com.github.karsaii.framework.selenium.records.lazy.LazyElement;
 import com.github.karsaii.framework.selenium.records.lazy.LazyElementWaitParameters;
 
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import static com.github.karsaii.core.extensions.namespaces.NullableFunctions.isNotNull;
 import static com.github.karsaii.core.namespaces.DataFactoryFunctions.appendMessage;
@@ -27,12 +29,12 @@ public interface WaitConditions {
         return ifDriver(
             "waitConditionCore",
             isNotNull(conditionGetter),
-            driver -> Wait.core(new WaitData<>(
+            Wait.core(new WaitData<>(
                 conditionGetter.apply(locator),
                 isBlank(option) ? WaitPredicateFunctions::isTruthyData : WaitPredicateFunctions::isFalsyData,
                 "Element located by: " + locator + " to be " + (isBlank(message) ? "clickable" : message) + CoreFormatterConstants.END_LINE,
                 WaitTimeDataFactory.getWithDefaultClock(interval, timeout)
-            )).apply(driver),
+            ))::apply,
             appendMessage(CoreDataConstants.NULL_BOOLEAN, "Condition Getter" + CoreFormatterConstants.WAS_NULL)
         );
     }
@@ -41,13 +43,13 @@ public interface WaitConditions {
         return ifDriver(
             "waitConditionCore",
             isNotNull(conditionGetter),
-            driver -> prependMessage(
+            DriverFunctionFactory.prependMessage(
                 Wait.core(new WaitData<>(
                     conditionGetter.apply(data),
                     isBlank(option) ? WaitPredicateFunctions::isTruthyData : WaitPredicateFunctions::isFalsyData,
                     data.name + " " + message,
                     WaitTimeDataFactory.getWithDefaultClock(interval, timeout)
-                )).apply(driver),
+                ))::apply,
                 CoreFormatterConstants.ELEMENT + data.name
             ),
             prependMessage(CoreDataConstants.NULL_BOOLEAN, CoreFormatterConstants.ELEMENT + data.name)
