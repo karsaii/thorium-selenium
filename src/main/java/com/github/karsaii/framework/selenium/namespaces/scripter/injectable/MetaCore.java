@@ -29,11 +29,11 @@ public interface MetaCore {
     }
 
     static String getBoolean(String base, LazyElement element, String valueSource) {
-        return MetaCore.get(base, element, "', '" + valueSource + "'", BOOLEAN_COMMAND_END);
+        return MetaCore.get(base, element, ", '" + valueSource + "'", BOOLEAN_COMMAND_END);
     }
 
     static String getBoolean(String base, LazyElement element, String valueSource, String assignedValue) {
-        return MetaCore.get(base, element, "', '" + valueSource  + "', '" + assignedValue + "'", BOOLEAN_COMMAND_END);
+        return MetaCore.get(base, element, ", '" + valueSource  + "', '" + assignedValue + "'", BOOLEAN_COMMAND_END);
     }
 
     static String getString(String base, LazyElement element) {
@@ -41,6 +41,6 @@ public interface MetaCore {
     }
 
     static String getString(String base, LazyElement element, String valueSource) {
-        return MetaCore.get(base, element, "', '" + valueSource + "'", STRING_COMMAND_END);
+        return MetaCore.get(base, element, ", '" + valueSource + "'", STRING_COMMAND_END);
     }
 }
