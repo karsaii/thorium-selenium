@@ -323,7 +323,7 @@ TU.FUNCTIONS.ELEMENT.GETTERS.TEXT_CONTAINED = function textContainedFunction(lis
 
     let index = 0;
     for (; (index < length); ++index) {
-        object = list[index].textContent;
+        object = list[index];
         if (
             TU.FUNCTIONS.ELEMENT.CONDITIONS.UTILITIES.IS_VALID_ELEMENT(object) &&
             TU.FUNCTIONS.NUMBER_PREDICATES.IS_BIGGER_THAN(object.textContent.indexOf(expected), -1)
@@ -698,11 +698,6 @@ TU.FUNCTIONS.ELEMENT.GET_TEXT_SELECTOR = function getTextSelectorFunction(elemen
 TU.FUNCTIONS.ELEMENT.GET_INNER_TEXT_SELECTOR = function getInnerTextSelectorFunction(elementData) {
     return TU.FUNCTIONS.ELEMENT.GET_INNER_TEXT(TU.FUNCTIONS.ELEMENT.GETTERS.GET_ELEMENT(name, selector));
 };
-
-TU.GE = TU.FUNCTIONS.ELEMENT.GETTERS.GET_ELEMENT;
-TU.GES = TU.FUNCTIONS.ELEMENT.GETTERS.GET_ELEMENTS;
-TU.GEBI = TU.FUNCTIONS.ELEMENT.GETTERS.GET_ELEMENT_BY_INDEX;
-TU.GEBT = TU.FUNCTIONS.ELEMENT.GETTERS.GET_ELEMENT_BY_TEXT;
 
 /* ================================== */
 /* SELECTOR FUNCTIONS END */
