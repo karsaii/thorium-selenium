@@ -3,7 +3,6 @@ package com.github.karsaii.framework.selenium.namespaces.extensions.boilers;
 import com.github.karsaii.core.extensions.DecoratedList;
 import org.openqa.selenium.WebElement;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class WebElementList extends DecoratedList<WebElement> {
@@ -12,14 +11,14 @@ public class WebElementList extends DecoratedList<WebElement> {
     }
 
     public WebElementList subList(int fromIndex, int toIndex) {
-        return subList(WebElementList.class, fromIndex, toIndex);
+        return new WebElementList(super.subList(fromIndex, toIndex));
     }
 
     public WebElementList tail() {
-        return tail(WebElementList.class);
+        return new WebElementList(super.tail());
     }
 
     public WebElementList initials() {
-        return initials(WebElementList.class);
+        return new WebElementList(super.initials());
     }
 }

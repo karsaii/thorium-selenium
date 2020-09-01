@@ -1,7 +1,7 @@
 package com.github.karsaii.framework.selenium.constants;
 
-import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.ScriptHandlerFunction;
 import com.github.karsaii.framework.selenium.namespaces.ScriptExecuteFunctions;
+import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.ScriptHandlerFunction;
 import com.github.karsaii.framework.selenium.records.scripter.ExecuteCoreFunctionData;
 import com.github.karsaii.framework.selenium.records.scripter.ParametersFieldDefaultsData;
 

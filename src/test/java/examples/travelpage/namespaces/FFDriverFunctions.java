@@ -13,11 +13,11 @@ public interface FFDriverFunctions {
         final var binary = new FirefoxBinary();
         //binary.addCommandLineOptions("--headless");
         final var driver = new FirefoxDriver(new FirefoxOptions().setBinary(binary));
-        DriverConstants.drivers.putIfAbsent(DriverConstants.BROWSER, driver);
-        return DriverConstants.drivers.get(DriverConstants.BROWSER);
+        DriverConstants.DRIVERS.putIfAbsent(DriverConstants.FF_BROWSER, driver);
+        return DriverConstants.DRIVERS.get(DriverConstants.FF_BROWSER);
     }
 
     static WebDriver get() {
-        return DriverConstants.drivers.containsKey(DriverConstants.BROWSER) ? DriverConstants.drivers.get(DriverConstants.BROWSER) : getFirefoxDriver();
+        return DriverConstants.DRIVERS.containsKey(DriverConstants.FF_BROWSER) ? DriverConstants.DRIVERS.get(DriverConstants.FF_BROWSER) : getFirefoxDriver();
     }
 }

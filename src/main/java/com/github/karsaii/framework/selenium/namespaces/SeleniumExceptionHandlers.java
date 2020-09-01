@@ -1,15 +1,15 @@
 package com.github.karsaii.framework.selenium.namespaces;
 
 import com.github.karsaii.core.constants.CoreConstants;
+import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
 import com.github.karsaii.core.exceptions.MethodInvokeException;
 import com.github.karsaii.core.namespaces.DataFactoryFunctions;
+import com.github.karsaii.core.namespaces.validators.HandlerResultDataValidator;
 import com.github.karsaii.core.records.Data;
 import com.github.karsaii.core.records.HandleResultData;
-import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
 import com.github.karsaii.framework.selenium.constants.validators.SeleniumFormatterConstants;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.StaleElementReferenceException;
-import com.github.karsaii.core.namespaces.validators.HandlerResultDataValidator;
 
 import static com.github.karsaii.core.extensions.namespaces.CoreUtilities.isNonException;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;

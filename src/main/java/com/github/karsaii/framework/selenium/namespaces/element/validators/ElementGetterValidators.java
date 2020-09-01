@@ -1,7 +1,7 @@
 package com.github.karsaii.framework.selenium.namespaces.element.validators;
 
-import com.github.karsaii.core.records.Data;
 import com.github.karsaii.core.namespaces.validators.CoreFormatter;
+import com.github.karsaii.core.records.Data;
 import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.WebElementList;
 
 import java.util.function.Function;

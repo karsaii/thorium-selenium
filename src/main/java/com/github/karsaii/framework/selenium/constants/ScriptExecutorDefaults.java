@@ -2,20 +2,20 @@ package com.github.karsaii.framework.selenium.constants;
 
 import com.github.karsaii.core.constants.CastDataConstants;
 import com.github.karsaii.core.extensions.namespaces.predicates.AmountPredicates;
-import com.github.karsaii.framework.selenium.namespaces.validators.SeleniumFormatter;
-import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
 import com.github.karsaii.core.namespaces.ExceptionHandlers;
 import com.github.karsaii.core.records.HandleResultData;
-import org.openqa.selenium.JavascriptExecutor;
 import com.github.karsaii.framework.selenium.namespaces.Driver;
 import com.github.karsaii.framework.selenium.namespaces.ScriptExecuteFunctions;
+import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
+import com.github.karsaii.framework.selenium.namespaces.validators.ScriptExecutions;
+import com.github.karsaii.framework.selenium.namespaces.validators.SeleniumFormatter;
 import com.github.karsaii.framework.selenium.records.scripter.ExecuteParameterizedData;
 import com.github.karsaii.framework.selenium.records.scripter.ExecuteRegularData;
-import com.github.karsaii.framework.selenium.records.scripter.ParametersFieldDefaultsData;
 import com.github.karsaii.framework.selenium.records.scripter.ExecutorWrappedResultFunctionsData;
 import com.github.karsaii.framework.selenium.records.scripter.ParameterizedExecutorData;
+import com.github.karsaii.framework.selenium.records.scripter.ParametersFieldDefaultsData;
 import com.github.karsaii.framework.selenium.records.scripter.RegularExecutorData;
-import com.github.karsaii.framework.selenium.namespaces.validators.ScriptExecutions;
+import org.openqa.selenium.JavascriptExecutor;
 
 public abstract class ScriptExecutorDefaults {
     public static final ParametersFieldDefaultsData SINGLE_PARAMETER_DEFAULTS = new ParametersFieldDefaultsData(AmountPredicates::isSingle, ScriptExecuteFunctions.executeScriptWithParameters());

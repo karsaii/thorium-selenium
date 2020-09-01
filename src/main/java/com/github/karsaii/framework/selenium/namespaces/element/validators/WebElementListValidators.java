@@ -28,7 +28,7 @@ public interface WebElementListValidators {
         return (
             DataPredicates.isInvalidOrFalse(data) ||
             CoreUtilities.isEqual(SeleniumDataConstants.NULL_LIST, data) ||
-            isInvalid(data)
+            isInvalid(data.object)
         );
     }
 

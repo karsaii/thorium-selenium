@@ -1,7 +1,7 @@
 package com.github.karsaii.framework.selenium.constants.driver.devtools;
 
 import com.github.karsaii.framework.selenium.namespaces.factories.SeleniumLazyLocatorFactory;
-import com.github.karsaii.framework.selenium.namespaces.lazy.LazyElementFactory;
+import com.github.karsaii.framework.selenium.namespaces.factories.lazy.LazyElementFactory;
 import com.github.karsaii.framework.selenium.records.lazy.LazyElement;
 import org.openqa.selenium.Keys;
 
@@ -14,13 +14,14 @@ public abstract class DevtoolsConstants {
 
     public static final String BODY_SELECTOR = "-blink-dev-tools";
     public static final String RESULT_FIELD_SELECTOR = ".console-message-text > span";
-    public static final String CONSOLE_FOCUS_SELECTOR = "div[class*=\"source-code\"][class*=\"fill\"]";
+    public static final String CONSOLE_FOCUS_SELECTOR = "div.source-code.fill";
 
     public static final LazyElement BODY = LazyElementFactory.getSimple(BODY_NAME, SeleniumLazyLocatorFactory.getID(BODY_SELECTOR));
     public static final LazyElement RESULT_FIELD = LazyElementFactory.getSimple(RESULT_FIELD_NAME, 0, SeleniumLazyLocatorFactory.getCSSSelector(RESULT_FIELD_SELECTOR));
     public static final LazyElement CONSOLE_FOCUS = LazyElementFactory.getSimple(CONSOLE_FOCUS_NAME, SeleniumLazyLocatorFactory.getCSSSelector(CONSOLE_FOCUS_SELECTOR));
 
-    public static final int TAB_SLEEP_MILLIS = 50;
+    public static final int TAB_SLEEP_MILLIS_LIMIT = 0;
+    public static final int TAB_SLEEP_MILLIS = 2;
 
     public static final String TAB_INPUT = Keys.chord(Keys.TAB);
     public static final String ENTER_INPUT = Keys.chord(Keys.ENTER);

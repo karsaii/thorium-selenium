@@ -1,7 +1,7 @@
 package com.github.karsaii.framework.selenium.constants;
 
-import org.openqa.selenium.By;
 import com.github.karsaii.framework.selenium.records.lazy.CachedLazyElementData;
+import org.openqa.selenium.By;
 
 import java.util.HashMap;
 

@@ -3,7 +3,6 @@ package com.github.karsaii.framework.selenium.namespaces.driver;
 import com.github.karsaii.core.constants.CoreConstants;
 import com.github.karsaii.core.constants.CoreDataConstants;
 import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
-import com.github.karsaii.core.extensions.namespaces.CoreUtilities;
 import com.github.karsaii.core.namespaces.DataFactoryFunctions;
 import com.github.karsaii.core.namespaces.validators.CoreFormatter;
 import com.github.karsaii.core.records.Data;
@@ -13,8 +12,6 @@ import com.github.karsaii.framework.selenium.namespaces.element.Element;
 import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
 import com.github.karsaii.framework.selenium.namespaces.factories.DriverFunctionFactory;
 import com.github.karsaii.framework.selenium.namespaces.scripter.MutationObserver;
-import com.github.karsaii.framework.selenium.namespaces.scripter.injectable.JSInitializerScripts;
-import com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilities;
 import org.apache.commons.lang3.BooleanUtils;
 import org.openqa.selenium.WebDriver;
 
@@ -43,7 +40,7 @@ public interface DevtoolsDriverUtilities {
     private static DriverFunction<Boolean> sleep(int milliseconds) {
         return ifDriver(
             "sleep",
-            CoreFormatter.isLessThanExpectedMessage(milliseconds, DevtoolsConstants.TAB_SLEEP_MILLIS, "Milliseconds of sleep"),
+            CoreFormatter.isMoreThanExpectedMessage(milliseconds, DevtoolsConstants.TAB_SLEEP_MILLIS_LIMIT, "Milliseconds of sleep"),
             DriverFunctionFactory.getFunction(sleepCore(milliseconds)),
             CoreDataConstants.NULL_BOOLEAN
         );
@@ -94,7 +91,7 @@ public interface DevtoolsDriverUtilities {
             "clearConsole",
             MutationObserver.setConsoleFocusedFunction(),
             DevtoolsDriverTabbing.tabToBeforeClear(),
-            DevtoolsDriverTabbing.inputTabAndCommand(DevtoolsConstants.ENTER_INPUT),
+            DevtoolsDriverTabbing.inputTabAndEnter(),
             DevtoolsDriverTabbing.tabToConsoleAfterClear(),
             MutationObserver.isConsoleFocused(),
             noResultInConsole()

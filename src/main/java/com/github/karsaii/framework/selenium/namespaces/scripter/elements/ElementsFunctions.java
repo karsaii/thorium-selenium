@@ -1,9 +1,5 @@
 package com.github.karsaii.framework.selenium.namespaces.scripter.elements;
 
-import static com.github.karsaii.core.namespaces.DataFactoryFunctions.replaceMessage;
-import static com.github.karsaii.framework.selenium.namespaces.ExecutionCore.ifDriver;
-import static com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilities.isNotNullWebElement;
-
 public interface ElementsFunctions {
     /*private static DriverFunction<Boolean> isDisplayedCore(Data<WebElement> data) {
         return ifDriver(

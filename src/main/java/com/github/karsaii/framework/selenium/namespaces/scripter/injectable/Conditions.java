@@ -1,41 +1,39 @@
 package com.github.karsaii.framework.selenium.namespaces.scripter.injectable;
 
+import com.github.karsaii.framework.selenium.records.lazy.LazyElement;
+
 public interface Conditions {
-    String NS_BASE = "TU.FUNCTIONS.ELEMENT.CONDITIONS.IS_SELECTOR_";
+    String NS_BASE = "TU.FUNCTIONS.ELEMENT.CONDITIONS.IS_";
 
-    private static String getCommon(String base, String name, String selector) {
-        return base + "('" + name + "', '" + selector + "').status";
+    static String getIsPresent(LazyElement element) {
+        return MetaCore.getBoolean(NS_BASE + "PRESENT", element);
     }
 
-    static String getIsPresent(String name, String selector) {
-        return getCommon(NS_BASE + "PRESENT", name, selector);
+    static String getIsAbsent(LazyElement element) {
+        return MetaCore.getBoolean(NS_BASE + "ABSENT", element);
     }
 
-    static String getIsAbsent(String name, String selector) {
-        return getCommon(NS_BASE + "ABSENT", name, selector);
+    static String getIsDisplayed(LazyElement element) {
+        return MetaCore.getBoolean(NS_BASE + "DISPLAYED", element);
     }
 
-    static String getIsDisplayed(String name, String selector) {
-        return getCommon(NS_BASE + "DISPLAYED", name, selector);
+    static String getIsHidden(LazyElement element) {
+        return MetaCore.getBoolean(NS_BASE + "HIDDEN", element);
     }
 
-    static String getIsHidden(String name, String selector) {
-        return getCommon(NS_BASE + "HIDDEN", name, selector);
+    static String getIsEnabled(LazyElement element) {
+        return MetaCore.getBoolean(NS_BASE + "ENABLED", element);
     }
 
-    static String getIsEnabled(String name, String selector) {
-        return getCommon(NS_BASE + "ENABLED", name, selector);
+    static String getIsDisabled(LazyElement element) {
+        return MetaCore.getBoolean(NS_BASE + "DISABLED", element);
     }
 
-    static String getIsDisabled(String name, String selector) {
-        return getCommon(NS_BASE + "DISABLED", name, selector);
+    static String getIsClickable(LazyElement element) {
+        return MetaCore.getBoolean(NS_BASE + "CLICKABLE", element);
     }
 
-    static String getIsClickable(String name, String selector) {
-        return getCommon(NS_BASE + "CLICKABLE", name, selector);
-    }
-
-    static String getIsUnclickable(String name, String selector) {
-        return getCommon(NS_BASE + "UNCLICKABLE", name, selector);
+    static String getIsUnclickable(LazyElement element) {
+        return MetaCore.getBoolean(NS_BASE + "UNCLICKABLE", element);
     }
 }

@@ -3,8 +3,8 @@ package com.github.karsaii.framework.selenium.namespaces;
 import com.github.karsaii.core.constants.CoreDataConstants;
 import com.github.karsaii.core.namespaces.DataExecutionFunctions;
 import com.github.karsaii.core.namespaces.validators.CoreFormatter;
-import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
 import com.github.karsaii.core.records.Data;
+import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
 import com.github.karsaii.framework.selenium.namespaces.factories.DriverFunctionFactory;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
@@ -21,8 +21,8 @@ import static com.github.karsaii.core.namespaces.DataExecutionFunctions.ifDepend
 import static com.github.karsaii.core.namespaces.DataFactoryFunctions.appendMessage;
 import static com.github.karsaii.core.namespaces.DataFactoryFunctions.getBoolean;
 import static com.github.karsaii.core.namespaces.predicates.DataPredicates.isInvalidOrFalse;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static com.github.karsaii.framework.selenium.namespaces.ExecutionCore.ifDriver;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public interface Screenshotter {
     private static Data<Boolean> takeScreenshot(TakesScreenshot shotter, String path) {

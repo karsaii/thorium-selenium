@@ -9,10 +9,10 @@ import com.github.karsaii.core.namespaces.InvokeFunctions;
 import com.github.karsaii.core.records.reflection.InvokeParametersFieldDefaultsData;
 import com.github.karsaii.core.records.reflection.ParameterizedInvokerDefaultsData;
 import com.github.karsaii.core.records.reflection.RegularInvokerDefaultsData;
-import org.openqa.selenium.SearchContext;
-import org.openqa.selenium.WebElement;
 import com.github.karsaii.framework.selenium.namespaces.SeleniumExceptionHandlers;
 import com.github.karsaii.framework.selenium.namespaces.validators.ScriptExecutions;
+import org.openqa.selenium.SearchContext;
+import org.openqa.selenium.WebElement;
 
 public abstract class SeleniumInvokeFunctionDefaults {
     public static final InvokeParametersFieldDefaultsData<WebElement> SINGLE_PARAMETER = new InvokeParametersFieldDefaultsData<>(AmountPredicates::isSingle, InvokeFunctions::invokeWithParameters);

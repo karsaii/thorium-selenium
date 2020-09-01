@@ -1,7 +1,7 @@
 package com.github.karsaii.framework.selenium.constants;
 
-import org.openqa.selenium.By;
 import com.github.karsaii.framework.selenium.enums.SeleniumSelectorStrategy;
+import org.openqa.selenium.By;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -37,6 +37,7 @@ public abstract class ElementStrategyMapConstants {
         SeleniumSelectorStrategy.TAG_NAME.getName(),
         SeleniumSelectorStrategy.NAME.getName(),
         SeleniumSelectorStrategy.PARTIAL_LINK_TEXT.getName(),
-        SeleniumSelectorStrategy.LINK_TEXT.getName()
+        SeleniumSelectorStrategy.LINK_TEXT.getName(),
+        "nested"
     ));
 }

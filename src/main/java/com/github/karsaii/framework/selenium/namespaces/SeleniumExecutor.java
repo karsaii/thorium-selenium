@@ -1,31 +1,29 @@
 package com.github.karsaii.framework.selenium.namespaces;
 
 import com.github.karsaii.core.constants.CoreConstants;
+import com.github.karsaii.core.constants.ExecutorConstants;
+import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
 import com.github.karsaii.core.extensions.interfaces.functional.QuadFunction;
 import com.github.karsaii.core.extensions.interfaces.functional.TriPredicate;
 import com.github.karsaii.core.extensions.interfaces.functional.boilers.IGetMessage;
 import com.github.karsaii.core.namespaces.DataFactoryFunctions;
-import com.github.karsaii.core.namespaces.executor.ExecutorFunctionDataFactory;
 import com.github.karsaii.core.namespaces.executor.ExecutionParametersDataFactory;
 import com.github.karsaii.core.namespaces.executor.ExecutionResultDataFactory;
 import com.github.karsaii.core.namespaces.executor.ExecutionStateDataFactory;
 import com.github.karsaii.core.namespaces.executor.ExecutionStepsDataFactory;
 import com.github.karsaii.core.namespaces.executor.Executor;
+import com.github.karsaii.core.namespaces.executor.ExecutorFunctionDataFactory;
+import com.github.karsaii.core.namespaces.validators.CoreFormatter;
 import com.github.karsaii.core.records.Data;
 import com.github.karsaii.core.records.executor.ExecutionParametersData;
 import com.github.karsaii.core.records.executor.ExecutionResultData;
 import com.github.karsaii.core.records.executor.ExecutionStateData;
 import com.github.karsaii.core.records.executor.ExecutionStepsData;
-import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
-import com.github.karsaii.core.namespaces.validators.CoreFormatter;
 import com.github.karsaii.framework.selenium.namespaces.executor.SeleniumExecutorUtilities;
+import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
 import com.github.karsaii.framework.selenium.namespaces.factories.DriverFunctionFactory;
 import org.openqa.selenium.WebDriver;
-import com.github.karsaii.core.constants.ExecutorConstants;
-import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.function.Function;
 
 import static com.github.karsaii.framework.selenium.namespaces.ExecutionCore.ifDriver;

@@ -1,41 +1,39 @@
 package com.github.karsaii.framework.selenium.namespaces.element;
 
 import com.github.karsaii.core.constants.CoreDataConstants;
-import com.github.karsaii.core.namespaces.DataExecutionFunctions;
-import com.github.karsaii.core.namespaces.validators.CoreFormatter;
 import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
-import com.github.karsaii.framework.core.namespaces.validators.FrameworkCoreFormatter;
-import com.github.karsaii.framework.selenium.constants.validators.SeleniumFormatterConstants;
-import com.github.karsaii.framework.selenium.namespaces.validators.SeleniumFormatter;
-import com.github.karsaii.framework.selenium.constants.Alternatives;
-import com.github.karsaii.framework.selenium.namespaces.SeleniumExecutor;
-import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
 import com.github.karsaii.core.extensions.interfaces.functional.TriFunction;
+import com.github.karsaii.core.namespaces.DataExecutionFunctions;
 import com.github.karsaii.core.namespaces.DataFactoryFunctions;
+import com.github.karsaii.core.namespaces.validators.CoreFormatter;
 import com.github.karsaii.core.records.Data;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
+import com.github.karsaii.framework.core.namespaces.validators.FrameworkCoreFormatter;
+import com.github.karsaii.framework.selenium.constants.Alternatives;
 import com.github.karsaii.framework.selenium.constants.ElementWaitDefaults;
+import com.github.karsaii.framework.selenium.constants.validators.SeleniumFormatterConstants;
 import com.github.karsaii.framework.selenium.enums.SingleGetter;
 import com.github.karsaii.framework.selenium.namespaces.Driver;
+import com.github.karsaii.framework.selenium.namespaces.SeleniumExecutor;
+import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
 import com.github.karsaii.framework.selenium.namespaces.factories.DriverFunctionFactory;
 import com.github.karsaii.framework.selenium.namespaces.repositories.LocatorRepository;
+import com.github.karsaii.framework.selenium.namespaces.validators.SeleniumFormatter;
 import com.github.karsaii.framework.selenium.records.ActionWhenData;
-import com.github.karsaii.framework.selenium.records.element.ElementWaitParameters;
+import com.github.karsaii.framework.selenium.records.element.regular.ElementWaitParameters;
 import com.github.karsaii.framework.selenium.records.lazy.LazyElement;
 import com.github.karsaii.framework.selenium.records.lazy.LazyElementWaitParameters;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import static com.github.karsaii.core.extensions.namespaces.CoreUtilities.areNotNull;
-
-import static com.github.karsaii.core.namespaces.DataExecutionFunctions.ifDependency;
 import static com.github.karsaii.core.namespaces.predicates.DataPredicates.isValidNonFalse;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static com.github.karsaii.framework.selenium.namespaces.ExecutionCore.ifDriver;
-import static com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilities.isNotNullLazyElementWaitParametersData;
 import static com.github.karsaii.framework.selenium.namespaces.WaitConditions.waitWith;
+import static com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilities.isNotNullLazyElementWaitParametersData;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public interface Element {
     private static Data<Boolean> actionCore(Data<Void> data, String message) {

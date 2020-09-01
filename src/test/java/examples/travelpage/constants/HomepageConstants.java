@@ -4,10 +4,7 @@ import com.github.karsaii.framework.core.namespaces.extensions.boilers.LazyLocat
 import com.github.karsaii.framework.core.namespaces.factory.LazyLocatorFactory;
 import com.github.karsaii.framework.core.records.lazy.LazyLocator;
 import com.github.karsaii.framework.selenium.constants.SelectorStrategyNameConstants;
-import com.github.karsaii.framework.selenium.namespaces.lazy.LazyElementFactory;
-import com.github.karsaii.framework.selenium.namespaces.lazy.LazyElementParameterMapFactory;
-import com.github.karsaii.framework.selenium.namespaces.lazy.LazyFilteredElementParametersFactory;
-import com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilities;
+import com.github.karsaii.framework.selenium.namespaces.factories.lazy.LazyElementFactory;
 import com.github.karsaii.framework.selenium.records.lazy.LazyElement;
 
 import java.util.Arrays;

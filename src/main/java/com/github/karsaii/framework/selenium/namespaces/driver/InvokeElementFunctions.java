@@ -1,7 +1,6 @@
 package com.github.karsaii.framework.selenium.namespaces.driver;
 
 import com.github.karsaii.core.abstracts.reflection.BaseInvokerDefaultsData;
-import com.github.karsaii.core.constants.CoreConstants;
 import com.github.karsaii.core.constants.CoreDataConstants;
 import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
 import com.github.karsaii.core.extensions.namespaces.CoreUtilities;

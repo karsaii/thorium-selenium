@@ -1,14 +1,14 @@
 package com.github.karsaii.framework.selenium.constants;
 
 import com.github.karsaii.core.records.Data;
-import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.WebElementList;
-import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import com.github.karsaii.framework.core.namespaces.extensions.boilers.LazyLocatorList;
 import com.github.karsaii.framework.selenium.enums.ManyGetter;
 import com.github.karsaii.framework.selenium.enums.SingleGetter;
 import com.github.karsaii.framework.selenium.namespaces.Driver;
-import com.github.karsaii.framework.core.namespaces.extensions.boilers.LazyLocatorList;
+import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
+import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.WebElementList;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
 import java.util.Collections;
 import java.util.EnumMap;
@@ -27,7 +27,7 @@ public abstract class ElementFinderConstants {
                 entry(SingleGetter.GET_NESTED_ELEMENT, Driver::getNestedElement),
                 entry(SingleGetter.GET_FRAME_NESTED_ELEMENT, Driver::getFrameNestedElement),
                 entry(SingleGetter.GET_SHADOW_ROOT_ELEMENT, Driver::getShadowRootElement),
-                entry(SingleGetter.GET_SHADOW_ROOT_NESTED_ELEMENT, Driver::getShadowNestedElement)
+                entry(SingleGetter.GET_SHADOW_NESTED_ELEMENT, Driver::getShadowNestedElement)
             )
         )
     );

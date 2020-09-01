@@ -1,31 +1,5 @@
 package com.github.karsaii.framework.selenium.constants.scripts.element;
 
-import com.github.karsaii.core.constants.CoreDataConstants;
-import com.github.karsaii.core.extensions.namespaces.predicates.ExecutorPredicates;
-import com.github.karsaii.core.namespaces.DataFactoryFunctions;
-import com.github.karsaii.core.namespaces.predicates.DataPredicates;
-import com.github.karsaii.core.records.Data;
-import com.github.karsaii.framework.selenium.constants.DriverFunctionConstants;
-import com.github.karsaii.framework.selenium.constants.scripts.general.ScrollIntoView;
-import com.github.karsaii.framework.selenium.enums.SingleGetter;
-import com.github.karsaii.framework.selenium.namespaces.Driver;
-import com.github.karsaii.framework.selenium.namespaces.ScriptExecuteFunctions;
-import com.github.karsaii.framework.selenium.namespaces.SeleniumExecutor;
-import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
-import com.github.karsaii.framework.selenium.namespaces.repositories.LocatorRepository;
-import com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilities;
-import com.github.karsaii.framework.selenium.namespaces.validators.SeleniumFormatter;
-import com.github.karsaii.framework.selenium.records.lazy.LazyElement;
-import com.github.karsaii.framework.selenium.records.scripter.ScriptParametersData;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-
-import static com.github.karsaii.core.extensions.namespaces.NullableFunctions.isNotNull;
-import static com.github.karsaii.core.namespaces.DataFactoryFunctions.getWithDefaultExceptionData;
-import static com.github.karsaii.core.namespaces.predicates.DataPredicates.isValidNonFalse;
-import static com.github.karsaii.framework.selenium.namespaces.ExecutionCore.ifDriver;
-import static com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilities.isNotNullLazyElement;
-
 public abstract class GetElements {
     /*static DriverFunction<Boolean> isGetElementsExistsData() {
         return ifDriver(

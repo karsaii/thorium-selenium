@@ -1,8 +1,5 @@
 package com.github.karsaii.framework.selenium.constants.scripts.element;
 
-import static com.github.karsaii.framework.selenium.namespaces.scripter.General.IF_RETURN;
-import static com.github.karsaii.framework.selenium.namespaces.scripter.General.RETURN;
-
 public abstract class Present {
     /*public static final String PRESENT_CORE = (
         "var isPresent = function isPresentFunction(element) {\n" +

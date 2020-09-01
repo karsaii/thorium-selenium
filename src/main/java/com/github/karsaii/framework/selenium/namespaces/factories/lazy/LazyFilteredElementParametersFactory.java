@@ -1,12 +1,12 @@
-package com.github.karsaii.framework.selenium.namespaces.lazy;
+package com.github.karsaii.framework.selenium.namespaces.factories.lazy;
 
-import com.github.karsaii.framework.core.namespaces.factory.LazyLocatorListFactory;
 import com.github.karsaii.framework.core.namespaces.extensions.boilers.LazyLocatorList;
+import com.github.karsaii.framework.core.namespaces.factory.LazyLocatorListFactory;
+import com.github.karsaii.framework.core.records.lazy.LazyLocator;
 import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.WebElementList;
 import com.github.karsaii.framework.selenium.namespaces.factories.ElementFilterDataFactory;
 import com.github.karsaii.framework.selenium.records.lazy.filtered.ElementFilterData;
 import com.github.karsaii.framework.selenium.records.lazy.filtered.LazyFilteredElementParameters;
-import com.github.karsaii.framework.core.records.lazy.LazyLocator;
 import org.openqa.selenium.WebElement;
 
 import static com.github.karsaii.framework.core.constants.lazy.CommonLazyIndexedFactoryConstants.FIRST_INDEX;
@@ -54,6 +54,29 @@ public interface LazyFilteredElementParametersFactory {
     static LazyFilteredElementParameters getWithFilterParametersAndLocatorList(boolean isFiltered, int index, double probability, LazyLocatorList lazyLocators, String getter) {
         final var filterData = ElementFilterDataFactory.getWithDefaultIndexHandler(isFiltered, index);
         return getWithFilterDataAndLocatorList(filterData, probability, lazyLocators, getter);
+    }
+
+    static LazyFilteredElementParameters getWithFilterParametersAndLocatorList(boolean isFiltered, String message, LazyLocatorList lazyLocators, String getter) {
+        final var filterData = ElementFilterDataFactory.getWithDefaultStringHandler(isFiltered, message);
+        return getWithFilterDataAndLocatorList(filterData, PROBABILITY, lazyLocators, getter);
+    }
+
+    static LazyFilteredElementParameters getWithFilterParametersAndLocatorList(boolean isFiltered, int index, LazyLocatorList lazyLocators, String getter) {
+        final var filterData = ElementFilterDataFactory.getWithDefaultIndexHandler(isFiltered, index);
+        return getWithFilterDataAndLocatorList(filterData, PROBABILITY, lazyLocators, getter);
+    }
+
+    static LazyFilteredElementParameters getWithFilterParametersAndLocatorList(String message, LazyLocatorList lazyLocators, String getter) {
+        return getWithFilterParametersAndLocatorList(true, message, PROBABILITY, lazyLocators, getter);
+    }
+
+
+    static LazyFilteredElementParameters getWithFilterParametersAndLocatorList(int index, LazyLocatorList lazyLocators, String getter) {
+        return getWithFilterParametersAndLocatorList(true, index, PROBABILITY, lazyLocators, getter);
+    }
+
+    static LazyFilteredElementParameters getWithFilterParametersAndLocatorListAndIndex(LazyLocatorList lazyLocators, String getter) {
+        return getWithFilterParametersAndLocatorList(true, FIRST_INDEX, PROBABILITY, lazyLocators, getter);
     }
 
     static LazyFilteredElementParameters getWithFilterParametersAndLocatorList(boolean isFiltered, int index, double probability, LazyLocatorList lazyLocators) {

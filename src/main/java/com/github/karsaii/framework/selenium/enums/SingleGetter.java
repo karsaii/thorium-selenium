@@ -9,7 +9,7 @@ public enum SingleGetter {
     GET_NESTED_ELEMENT("getNestedElement"),
     GET_FRAME_NESTED_ELEMENT("getFrameNestedElement"),
     GET_SHADOW_ROOT_ELEMENT("getShadowRootElement"),
-    GET_SHADOW_ROOT_NESTED_ELEMENT("getShadowNestedElement"),
+    GET_SHADOW_NESTED_ELEMENT("getShadowNestedElement"),
     DEFAULT("getElement");
 
     private static final Map<String, SingleGetter> VALUES = new HashMap<>();

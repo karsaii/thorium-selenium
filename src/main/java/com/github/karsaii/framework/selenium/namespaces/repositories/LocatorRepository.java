@@ -1,19 +1,18 @@
 package com.github.karsaii.framework.selenium.namespaces.repositories;
 
 import com.github.karsaii.core.constants.CoreDataConstants;
-import com.github.karsaii.core.namespaces.DataFactoryFunctions;
-import com.github.karsaii.core.records.Data;
 import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
-import com.github.karsaii.framework.selenium.constants.ElementRepositoryFunctionConstants;
-import com.github.karsaii.framework.selenium.constants.validators.SeleniumFormatterConstants;
+import com.github.karsaii.core.namespaces.DataFactoryFunctions;
 import com.github.karsaii.core.namespaces.validators.CoreFormatter;
-import org.openqa.selenium.By;
-import com.github.karsaii.framework.selenium.constants.SeleniumDataConstants;
+import com.github.karsaii.core.records.Data;
 import com.github.karsaii.framework.selenium.constants.RepositoryConstants;
+import com.github.karsaii.framework.selenium.constants.SeleniumDataConstants;
+import com.github.karsaii.framework.selenium.constants.validators.SeleniumFormatterConstants;
 import com.github.karsaii.framework.selenium.enums.SingleGetter;
-import com.github.karsaii.framework.selenium.namespaces.lazy.LazyElementFactory;
-import com.github.karsaii.framework.selenium.records.lazy.LazyElement;
+import com.github.karsaii.framework.selenium.namespaces.factories.lazy.LazyElementFactory;
 import com.github.karsaii.framework.selenium.records.lazy.CachedLazyElementData;
+import com.github.karsaii.framework.selenium.records.lazy.LazyElement;
+import org.openqa.selenium.By;
 
 import java.util.Map;
 

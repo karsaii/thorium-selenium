@@ -1,8 +1,8 @@
 package com.github.karsaii.framework.selenium.records;
 
-import com.github.karsaii.framework.core.records.lazy.ExternalSelectorData;
 import com.github.karsaii.core.records.Data;
 import com.github.karsaii.core.records.command.CommandRangeData;
+import com.github.karsaii.framework.core.records.lazy.ExternalSelectorData;
 import org.openqa.selenium.WebDriver;
 
 import java.util.List;

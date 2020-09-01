@@ -1,20 +1,20 @@
 package com.github.karsaii.framework.selenium.namespaces.element;
 
 import com.github.karsaii.core.namespaces.DataExecutionFunctions;
-import com.github.karsaii.core.records.Data;
 import com.github.karsaii.core.namespaces.validators.CoreFormatter;
+import com.github.karsaii.core.records.Data;
 import com.github.karsaii.framework.core.abstracts.element.finder.BaseFilterParameters;
+import com.github.karsaii.framework.core.namespaces.extensions.boilers.LazyLocatorList;
+import com.github.karsaii.framework.selenium.constants.SeleniumDataConstants;
 import com.github.karsaii.framework.selenium.enums.ManyGetter;
+import com.github.karsaii.framework.selenium.enums.SingleGetter;
+import com.github.karsaii.framework.selenium.namespaces.Driver;
+import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
+import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.WebElementList;
 import com.github.karsaii.framework.selenium.namespaces.factories.DriverFunctionFactory;
 import com.github.karsaii.framework.selenium.namespaces.validators.SeleniumFormatter;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import com.github.karsaii.framework.selenium.constants.SeleniumDataConstants;
-import com.github.karsaii.framework.selenium.enums.SingleGetter;
-import com.github.karsaii.framework.selenium.namespaces.Driver;
-import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
-import com.github.karsaii.framework.core.namespaces.extensions.boilers.LazyLocatorList;
-import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.WebElementList;
 
 import java.util.Map;
 import java.util.function.Function;
@@ -41,6 +41,6 @@ public interface ElementFilterFunctions {
     }
 
     static DriverFunction<WebElement> getElement(LazyLocatorList locators, Map<SingleGetter, Function<LazyLocatorList, Function<WebDriver, Data<WebElement>>>> getterMap, SingleGetter getter) {
-        return DriverFunctionFactory.getFunction(ifDependency("getElement via LazyElement parameters", SeleniumFormatter.getSingleGetterErrorMessage(getterMap, getter), getterMap.get(getter).apply(locators), SeleniumDataConstants.NULL_ELEMENT));
+        return DriverFunctionFactory.getFunction(ifDependency("getElement via LazyElement parameters(" + getter.getName() + ")", SeleniumFormatter.getSingleGetterErrorMessage(getterMap, getter), getterMap.get(getter).apply(locators), SeleniumDataConstants.NULL_ELEMENT));
     }
 }

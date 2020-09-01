@@ -1,15 +1,14 @@
 package com.github.karsaii.framework.selenium.namespaces.element;
 
 import com.github.karsaii.core.constants.CoreDataConstants;
-import com.github.karsaii.framework.selenium.constants.validators.SeleniumFormatterConstants;
-import com.github.karsaii.framework.selenium.namespaces.scripter.Execute;
-import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
 import com.github.karsaii.core.records.Data;
-import org.openqa.selenium.By;
+import com.github.karsaii.framework.selenium.constants.validators.SeleniumFormatterConstants;
 import com.github.karsaii.framework.selenium.enums.SingleGetter;
+import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
 import com.github.karsaii.framework.selenium.namespaces.repositories.LocatorRepository;
+import com.github.karsaii.framework.selenium.namespaces.scripter.Execute;
 import com.github.karsaii.framework.selenium.records.lazy.LazyElement;
-
+import org.openqa.selenium.By;
 
 import static com.github.karsaii.core.namespaces.predicates.DataPredicates.isValidNonFalse;
 import static com.github.karsaii.framework.selenium.namespaces.ExecutionCore.ifDriver;

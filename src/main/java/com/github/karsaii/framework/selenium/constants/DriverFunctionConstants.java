@@ -1,18 +1,18 @@
 package com.github.karsaii.framework.selenium.constants;
 
 import com.github.karsaii.core.constants.CoreDataConstants;
+import com.github.karsaii.core.enums.TypeKey;
+import com.github.karsaii.core.extensions.boilers.StringSet;
 import com.github.karsaii.core.namespaces.StringUtilities;
 import com.github.karsaii.core.records.Data;
 import com.github.karsaii.core.records.TypedEnumKeyData;
-import com.github.karsaii.core.extensions.boilers.StringSet;
 import com.github.karsaii.framework.core.namespaces.validators.FrameworkCoreFormatter;
 import com.github.karsaii.framework.selenium.namespaces.element.validators.ElementGetterValidators;
-import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.WebElementList;
 import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
+import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.WebElementList;
+import com.github.karsaii.framework.selenium.namespaces.factories.DriverFunctionFactory;
 import com.github.karsaii.framework.selenium.records.GetElementByData;
 import org.openqa.selenium.WebElement;
-import com.github.karsaii.core.enums.TypeKey;
-import com.github.karsaii.framework.selenium.namespaces.factories.DriverFunctionFactory;
 
 import java.util.Collections;
 import java.util.EnumMap;

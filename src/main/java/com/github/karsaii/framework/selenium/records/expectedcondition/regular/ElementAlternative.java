@@ -1,27 +1,26 @@
-package com.github.karsaii.framework.selenium.records.expectedcondition;
+package com.github.karsaii.framework.selenium.records.expectedcondition.regular;
 
 import com.github.karsaii.core.constants.CoreDataConstants;
 import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
-import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
 import com.github.karsaii.core.extensions.interfaces.functional.TriFunction;
 import com.github.karsaii.core.records.Data;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 import com.github.karsaii.framework.selenium.constants.DriverFunctionConstants;
 import com.github.karsaii.framework.selenium.constants.ElementFinderConstants;
-import com.github.karsaii.framework.selenium.namespaces.element.Element;
-import com.github.karsaii.framework.selenium.records.element.ElementFunctionsData;
 import com.github.karsaii.framework.selenium.enums.SingleGetter;
+import com.github.karsaii.framework.selenium.namespaces.element.Element;
+import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
 import com.github.karsaii.framework.selenium.namespaces.factories.DriverFunctionFactory;
-import com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilities;
 import com.github.karsaii.framework.selenium.namespaces.repositories.LocatorRepository;
+import com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilities;
 import com.github.karsaii.framework.selenium.records.ActionWhenData;
+import com.github.karsaii.framework.selenium.records.element.ElementFunctionsData;
 import com.github.karsaii.framework.selenium.records.lazy.LazyElement;
 import com.github.karsaii.framework.selenium.records.lazy.LazyElementWaitParameters;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
-
 
 import static com.github.karsaii.core.namespaces.predicates.DataPredicates.isValidNonFalse;
 import static com.github.karsaii.framework.selenium.namespaces.ExecutionCore.ifDriver;

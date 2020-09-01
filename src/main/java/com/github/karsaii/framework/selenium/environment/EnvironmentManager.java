@@ -1,11 +1,11 @@
 package com.github.karsaii.framework.selenium.environment;
 
+import com.github.karsaii.framework.selenium.constants.EnvironmentPropertyConstants;
+import com.github.karsaii.framework.selenium.namespaces.Driver;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import com.github.karsaii.framework.selenium.constants.EnvironmentPropertyConstants;
-import com.github.karsaii.framework.selenium.namespaces.Driver;
 
 public class EnvironmentManager {
     private static final String chromeDriver = "webdriver.chrome.driver";

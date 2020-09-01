@@ -2,17 +2,17 @@ package com.github.karsaii.framework.selenium.constants;
 
 import com.github.karsaii.core.constants.CoreDataConstants;
 import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
-import com.github.karsaii.framework.selenium.constants.validators.SeleniumFormatterConstants;
-import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.WebElementList;
 import com.github.karsaii.core.namespaces.DataFactoryFunctions;
 import com.github.karsaii.core.records.Data;
+import com.github.karsaii.framework.selenium.constants.validators.SeleniumFormatterConstants;
+import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.WebElementList;
+import com.github.karsaii.framework.selenium.records.ExternalElementData;
+import com.github.karsaii.framework.selenium.records.lazy.CachedLazyElementData;
 import com.github.karsaii.framework.selenium.records.lazy.CachedLookupKeysData;
+import com.github.karsaii.framework.selenium.records.lazy.LazyElement;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import com.github.karsaii.framework.selenium.records.ExternalElementData;
-import com.github.karsaii.framework.selenium.records.lazy.LazyElement;
-import com.github.karsaii.framework.selenium.records.lazy.CachedLazyElementData;
 
 import java.util.function.Function;
 

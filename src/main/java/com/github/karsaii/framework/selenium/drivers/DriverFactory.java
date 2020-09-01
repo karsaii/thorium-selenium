@@ -2,9 +2,9 @@ package com.github.karsaii.framework.selenium.drivers;
 
 import com.github.karsaii.core.extensions.namespaces.NullableFunctions;
 import com.github.karsaii.core.records.Data;
+import com.github.karsaii.framework.selenium.constants.SeleniumDataConstants;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import com.github.karsaii.framework.selenium.constants.SeleniumDataConstants;
 
 import java.util.HashMap;
 

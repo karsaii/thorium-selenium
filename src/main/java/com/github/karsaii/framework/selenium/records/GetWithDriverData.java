@@ -1,8 +1,7 @@
 package com.github.karsaii.framework.selenium.records;
 
-import com.github.karsaii.framework.core.records.lazy.GetWithBaseData;
-import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
 import com.github.karsaii.core.records.Data;
+import com.github.karsaii.framework.core.records.lazy.GetWithBaseData;
 import org.openqa.selenium.WebDriver;
 
 import java.util.function.Function;

@@ -2,8 +2,8 @@ package com.github.karsaii.framework.selenium.namespaces.element;
 
 import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
 import com.github.karsaii.framework.selenium.constants.validators.SeleniumFormatterConstants;
-import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
 import com.github.karsaii.framework.selenium.namespaces.ExpectedConditions;
+import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
 import com.github.karsaii.framework.selenium.records.lazy.LazyElement;
 
 public interface ElementExpectedConditions {

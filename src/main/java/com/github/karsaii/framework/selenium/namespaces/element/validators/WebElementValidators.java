@@ -1,14 +1,13 @@
 package com.github.karsaii.framework.selenium.namespaces.element.validators;
 
+import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
 import com.github.karsaii.core.extensions.namespaces.NullableFunctions;
 import com.github.karsaii.core.namespaces.DataFactoryFunctions;
 import com.github.karsaii.core.namespaces.predicates.DataPredicates;
-import com.github.karsaii.core.namespaces.validators.DataValidators;
 import com.github.karsaii.core.records.Data;
-import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
+import com.github.karsaii.framework.selenium.constants.SeleniumDataConstants;
 import com.github.karsaii.framework.selenium.constants.validators.SeleniumFormatterConstants;
 import org.openqa.selenium.WebElement;
-import com.github.karsaii.framework.selenium.constants.SeleniumDataConstants;
 
 import static com.github.karsaii.core.extensions.namespaces.CoreUtilities.isEqual;
 import static com.github.karsaii.core.namespaces.predicates.DataPredicates.isInvalidOrFalse;

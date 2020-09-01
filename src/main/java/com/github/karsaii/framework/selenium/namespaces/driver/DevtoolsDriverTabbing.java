@@ -19,7 +19,15 @@ public interface DevtoolsDriverTabbing {
         return SeleniumExecutor.execute(
             "inputTabAndCommand",
             DevtoolsDriverUtilities.sleep(),
-            Element.sendKeys(DevtoolsConstants.BODY, Keys.chord(DevtoolsConstants.TAB_INPUT, command))
+            Element.sendKeys(DevtoolsConstants.BODY, Keys.chord(DevtoolsConstants.TAB_INPUT, command, Keys.ENTER))
+        );
+    }
+
+    static DriverFunction<Boolean> inputTabAndEnter() {
+        return SeleniumExecutor.execute(
+                "inputTabAndCommand",
+                DevtoolsDriverUtilities.sleep(),
+                Element.sendKeys(DevtoolsConstants.BODY, Keys.chord(DevtoolsConstants.TAB_INPUT, Keys.ENTER))
         );
     }
 

@@ -2,11 +2,11 @@ package com.github.karsaii.framework.selenium.constants;
 
 import com.github.karsaii.framework.selenium.namespaces.element.Element;
 import com.github.karsaii.framework.selenium.namespaces.element.ElementAlternatives;
-import com.github.karsaii.framework.selenium.records.element.ClearData;
-import com.github.karsaii.framework.selenium.records.element.ClickData;
+import com.github.karsaii.framework.selenium.records.element.regular.ClearData;
+import com.github.karsaii.framework.selenium.records.element.regular.ClickData;
 import com.github.karsaii.framework.selenium.records.element.ElementFunctionsData;
-import com.github.karsaii.framework.selenium.records.element.SendKeysData;
-import com.github.karsaii.framework.selenium.records.expectedcondition.ElementAlternative;
+import com.github.karsaii.framework.selenium.records.element.regular.SendKeysData;
+import com.github.karsaii.framework.selenium.records.expectedcondition.regular.ElementAlternative;
 
 public abstract class Alternatives {
     public static final ElementAlternative regular = new ElementAlternative();

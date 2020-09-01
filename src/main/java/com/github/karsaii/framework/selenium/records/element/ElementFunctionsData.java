@@ -1,5 +1,9 @@
 package com.github.karsaii.framework.selenium.records.element;
 
+import com.github.karsaii.framework.selenium.records.element.regular.ClearData;
+import com.github.karsaii.framework.selenium.records.element.regular.ClickData;
+import com.github.karsaii.framework.selenium.records.element.regular.SendKeysData;
+
 import java.util.Objects;
 
 public class ElementFunctionsData {

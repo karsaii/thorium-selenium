@@ -1,13 +1,13 @@
 package com.github.karsaii.framework.selenium.namespaces;
 
-import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.WebElementList;
+import com.github.karsaii.framework.selenium.constants.SeleniumDataConstants;
 import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
+import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.WebElementList;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import com.github.karsaii.framework.selenium.constants.SeleniumDataConstants;
 
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static com.github.karsaii.framework.selenium.namespaces.ExecutionCore.ifDriver;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public interface DriverCompatibility {
     static DriverFunction<WebElement> getElementByCssSelector(String selector, String nameof) {

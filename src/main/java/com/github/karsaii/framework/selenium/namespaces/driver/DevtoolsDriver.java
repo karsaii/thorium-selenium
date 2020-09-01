@@ -10,81 +10,82 @@ import com.github.karsaii.framework.selenium.namespaces.utilities.LazyElementUti
 import com.github.karsaii.framework.selenium.records.lazy.LazyElement;
 
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import static com.github.karsaii.framework.selenium.namespaces.ExecutionCore.ifDriver;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public interface DevtoolsDriver {
-    private static String invokeElementPresent(String name, String selector) {
-        return Conditions.getIsPresent(name, selector);
+    private static String invokeElementPresent(LazyElement element) {
+        return Conditions.getIsPresent(element);
     }
 
-    private static String invokeElementAbsent(String name, String selector) {
-        return Conditions.getIsAbsent(name, selector);
+    private static String invokeElementAbsent(LazyElement element) {
+        return Conditions.getIsAbsent(element);
     }
 
-    private static String invokeElementDisplayed(String name, String selector) {
-        return Conditions.getIsDisplayed(name, selector);
+    private static String invokeElementDisplayed(LazyElement element) {
+        return Conditions.getIsDisplayed(element);
     }
 
-    private static String invokeElementHidden(String name, String selector) {
-        return Conditions.getIsHidden(name, selector);
+    private static String invokeElementHidden(LazyElement element) {
+        return Conditions.getIsHidden(element);
     }
 
-    private static String invokeElementEnabled(String name, String selector) {
-        return Conditions.getIsEnabled(name, selector);
+    private static String invokeElementEnabled(LazyElement element) {
+        return Conditions.getIsEnabled(element);
     }
 
-    private static String invokeElementDisabled(String name, String selector) {
-        return Conditions.getIsDisabled(name, selector);
+    private static String invokeElementDisabled(LazyElement element) {
+        return Conditions.getIsDisabled(element);
     }
 
-    private static String invokeElementClickable(String name, String selector) {
-        return Conditions.getIsClickable(name, selector);
+    private static String invokeElementClickable(LazyElement element) {
+        return Conditions.getIsClickable(element);
     }
 
-    private static String invokeElementUnclickable(String name, String selector) {
-        return Conditions.getIsUnclickable(name, selector);
+    private static String invokeElementUnclickable(LazyElement element) {
+        return Conditions.getIsUnclickable(element);
     }
 
-    private static String invokeClick(String name, String selector) {
-        return Actions.getClick(name, selector);
+    private static String invokeClick(LazyElement element) {
+        return Actions.getClick(element);
     }
 
-    private static String invokeSetValue(String name, String selector, String value) {
-        return Actions.getSetValue(name, selector, value);
+    private static String invokeSetValue(LazyElement element, String value) {
+        return Actions.getSetValue(element, value);
     }
 
-    private static String invokeGetValue(String name, String selector) {
-        return Actions.getGetValue(name, selector);
+    private static String invokeGetValue(LazyElement element) {
+        return Actions.getGetValue(element);
     }
 
-    private static String invokeSetAttribute(String name, String selector, String attribute, String value) {
-        return Actions.getSetAttribute(name, selector, attribute, value);
+    private static String invokeSetAttribute(LazyElement element, String attribute, String value) {
+        return Actions.getSetAttribute(element, attribute, value);
     }
 
-    private static String invokeGetAttribute(String name, String selector, String attribute) {
-        return Actions.getGetAttribute(name, selector, attribute);
+    private static String invokeGetAttribute(LazyElement element, String attribute) {
+        return Actions.getGetAttribute(element, attribute);
     }
 
-    private static String invokeGetCssValue(String name, String selector, String value) {
-        return Actions.getGetCssValue(name, selector, value);
+    private static String invokeGetCssValue(LazyElement element, String value) {
+        return Actions.getGetCssValue(element, value);
     }
 
-    private static String invokeGetText(String name, String selector) {
-        return Actions.getGetText(name, selector);
+    private static String invokeGetText(LazyElement element) {
+        return Actions.getGetText(element);
     }
 
-    private static String invokeGetInnerText(String name, String selector) {
-        return Actions.getGetInnerText(name, selector);
+    private static String invokeGetInnerText(LazyElement element) {
+        return Actions.getGetInnerText(element);
     }
 
-    static DriverFunction<Boolean> elementAction(String name, LazyElement element, BiFunction<String, String, String> action) {
+    static DriverFunction<Boolean> elementAction(String name, LazyElement element, Function<LazyElement, String> action) {
         final var nameof = isNotBlank(name) ? name : "elementAction";
         return ifDriver(
             nameof,
             FrameworkCoreFormatter.isNullLazyElementMessage(element),
-            DevtoolsDriverUtilities.doBooleanCommand(action.apply(element.name, LazyElementUtilities.getCSSSelectorFromElement(element))),
+            DevtoolsDriverUtilities.doBooleanCommand(action.apply(element)),
             CoreDataConstants.NULL_BOOLEAN
         );
     }
@@ -140,8 +141,8 @@ public interface DevtoolsDriver {
     static DriverFunction<Boolean> setValue(LazyElement element, String value) {
         return ifDriver(
             "setValue",
-            FrameworkCoreFormatter.isNullLazyElementMessage(element) + CoreFormatter.isBlankMessageWithName(value, "Value"),
-            DevtoolsDriverUtilities.doBooleanCommand(invokeSetValue(element.name, LazyElementUtilities.getCSSSelectorFromElement(element), value)),
+            FrameworkCoreFormatter.isNullLazyElementMessage(element) + CoreFormatter.isNullMessageWithName(value, "Value"),
+            DevtoolsDriverUtilities.doBooleanCommand(invokeSetValue(element, value)),
             CoreDataConstants.NULL_BOOLEAN
         );
     }
@@ -149,8 +150,8 @@ public interface DevtoolsDriver {
     static DriverFunction<Boolean> getAttribute(LazyElement element, String attribute) {
         return ifDriver(
             "getAttribute",
-            FrameworkCoreFormatter.isNullLazyElementMessage(element) + CoreFormatter.isBlankMessageWithName(attribute, "Attribute"),
-            DevtoolsDriverUtilities.doBooleanCommand(invokeGetAttribute(element.name, LazyElementUtilities.getCSSSelectorFromElement(element), attribute)),
+            FrameworkCoreFormatter.isNullLazyElementMessage(element) + CoreFormatter.isNullMessageWithName(attribute, "Attribute"),
+            DevtoolsDriverUtilities.doBooleanCommand(invokeGetAttribute(element, attribute)),
             CoreDataConstants.NULL_BOOLEAN
         );
     }
@@ -158,8 +159,8 @@ public interface DevtoolsDriver {
     static DriverFunction<Boolean> getCssValue(LazyElement element, String value) {
         return ifDriver(
             "getCssValue",
-            FrameworkCoreFormatter.isNullLazyElementMessage(element) + CoreFormatter.isBlankMessageWithName(value, "CSS Value"),
-            DevtoolsDriverUtilities.doBooleanCommand(invokeGetCssValue(element.name, LazyElementUtilities.getCSSSelectorFromElement(element), value)),
+            FrameworkCoreFormatter.isNullLazyElementMessage(element) + CoreFormatter.isNullMessageWithName(value, "CSS Value"),
+            DevtoolsDriverUtilities.doBooleanCommand(invokeGetCssValue(element, value)),
             CoreDataConstants.NULL_BOOLEAN
         );
     }
@@ -172,7 +173,7 @@ public interface DevtoolsDriver {
                 CoreFormatter.isBlankMessageWithName(attribute, "attribute") +
                 CoreFormatter.isBlankMessageWithName(value, "Value")
             ),
-            DevtoolsDriverUtilities.doBooleanCommand(invokeSetAttribute(element.name, LazyElementUtilities.getCSSSelectorFromElement(element), attribute, value)),
+            DevtoolsDriverUtilities.doBooleanCommand(invokeSetAttribute(element, attribute, value)),
             CoreDataConstants.NULL_BOOLEAN
         );
     }

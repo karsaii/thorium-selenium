@@ -1,8 +1,8 @@
-package com.github.karsaii.framework.selenium.records.element;
+package com.github.karsaii.framework.selenium.records.element.regular;
 
-import org.openqa.selenium.By;
 import com.github.karsaii.framework.selenium.abstracts.AbstractWaitParameters;
 import com.github.karsaii.framework.selenium.constants.ElementWaitDefaults;
+import org.openqa.selenium.By;
 
 public class ElementWaitParameters extends AbstractWaitParameters<By> {
     public ElementWaitParameters(By locator, int interval, int duration) {

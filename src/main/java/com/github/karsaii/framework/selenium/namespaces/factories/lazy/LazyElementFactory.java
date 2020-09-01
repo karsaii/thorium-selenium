@@ -1,20 +1,18 @@
-package com.github.karsaii.framework.selenium.namespaces.lazy;
+package com.github.karsaii.framework.selenium.namespaces.factories.lazy;
 
 import com.github.karsaii.core.extensions.namespaces.CoreUtilities;
 import com.github.karsaii.framework.core.abstracts.AbstractLazyResult;
 import com.github.karsaii.framework.core.namespaces.extensions.boilers.LazyLocatorList;
+import com.github.karsaii.framework.core.namespaces.validators.Invalids;
+import com.github.karsaii.framework.core.records.lazy.LazyLocator;
+import com.github.karsaii.framework.selenium.constants.SeleniumCoreConstants;
+import com.github.karsaii.framework.selenium.enums.SingleGetter;
+import com.github.karsaii.framework.selenium.namespaces.element.validators.ElementParameters;
 import com.github.karsaii.framework.selenium.namespaces.factories.SeleniumLazyLocatorFactory;
 import com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilities;
-import org.openqa.selenium.By;
-import com.github.karsaii.framework.selenium.constants.SeleniumCoreConstants;
-import com.github.karsaii.framework.selenium.enums.ManyGetter;
-import com.github.karsaii.framework.selenium.enums.SingleGetter;
-import com.github.karsaii.framework.selenium.records.lazy.filtered.ElementFilterData;
 import com.github.karsaii.framework.selenium.records.lazy.LazyElement;
 import com.github.karsaii.framework.selenium.records.lazy.filtered.LazyFilteredElementParameters;
-import com.github.karsaii.framework.core.records.lazy.LazyLocator;
-import com.github.karsaii.framework.selenium.namespaces.element.validators.ElementParameters;
-import com.github.karsaii.framework.core.namespaces.validators.Invalids;
+import org.openqa.selenium.By;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,6 +20,8 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import static com.github.karsaii.core.extensions.constants.IExtendedListConstants.FIRST_INDEX;
 
 public interface LazyElementFactory {
     static LazyElement getWith(String name, Map<String, LazyFilteredElementParameters> parameters, Predicate<LazyFilteredElementParameters> validator) {
@@ -48,6 +48,32 @@ public interface LazyElementFactory {
         return getWithDefaultValidator(CoreUtilities.getIncrementalUUID(SeleniumCoreConstants.ATOMIC_COUNT), parameters);
     }
 
+    static LazyElement getWithFilterParametersAndNestedLocator(String name, boolean isIndexed, int index, LazyLocatorList locators, String getter) {
+        final var parameters = LazyFilteredElementParametersFactory.getWithFilterParametersAndLocatorList(isIndexed, index, locators, getter);
+        final var map = LazyElementParameterMapFactory.getWithLocatorAndParameters("nested", parameters);
+
+        return getWithDefaultValidator(name, map);
+    }
+
+    static LazyElement getWithFilterParametersAndNestedLocator(String name, boolean isFiltered, String message, LazyLocatorList locators, String getter) {
+        final var parameters = LazyFilteredElementParametersFactory.getWithFilterParametersAndLocatorList(isFiltered, message, locators, getter);
+        final var map = LazyElementParameterMapFactory.getWithLocatorAndParameters("nested", parameters);
+
+        return getWithDefaultValidator(name, map);
+    }
+
+    static LazyElement getWithFilterParametersAndNestedLocator(String name, int index, LazyLocatorList locators, String getter) {
+        return getWithFilterParametersAndNestedLocator(name, true, index, locators, getter);
+    }
+
+    static LazyElement getWithFilterParametersAndNestedLocator(String name, LazyLocatorList locators, String getter) {
+        return getWithFilterParametersAndNestedLocator(name, false, FIRST_INDEX, locators, getter);
+    }
+
+    static LazyElement getWithFilterParametersAndNestedLocator(String name, String message, LazyLocatorList locators, String getter) {
+        return getWithFilterParametersAndNestedLocator(name, true, message, locators, getter);
+    }
+
     static LazyElement getWithFilterParameters(String name, boolean isIndexed, int index, LazyLocator locator, String getter) {
         final var parameters = LazyFilteredElementParametersFactory.getWithFilterParametersAndLocator(isIndexed, index, locator, getter);
         final var map = LazyElementParameterMapFactory.getWithLocatorAndParameters(locator.strategy, parameters);
@@ -62,28 +88,16 @@ public interface LazyElementFactory {
         return getWithDefaultValidator(name, map);
     }
 
-    static LazyElement getWithFilterParameters(By locator, SingleGetter getter) {
-        final var lazyLocator = SeleniumLazyLocatorFactory.get(locator);
-        final var parameters = LazyFilteredElementParametersFactory.getWithFilterParametersAndLocator(false, lazyLocator, getter.getName());
-        final var map = LazyElementParameterMapFactory.getWithLocatorAndParameters(lazyLocator.strategy, parameters);
-
-        return getWithDefaultNameAndValidator(map);
-    }
-
-    static LazyElement getWithFilterParameters(ElementFilterData<Integer> elementFilterData, By locator, ManyGetter getter) {
-        final var lazyLocator = SeleniumLazyLocatorFactory.get(locator);
-        final var parameters = LazyFilteredElementParametersFactory.getWithFilterDataAndLocator(elementFilterData, lazyLocator, getter.getName());
-        final var map = LazyElementParameterMapFactory.getWithLocatorAndParameters(lazyLocator.strategy, parameters);
-
-        return getWithDefaultNameAndValidator(map);
-    }
-
     static LazyElement getWithFilterParameters(String name, boolean isIndexed, LazyLocator locator, String getter) {
         return getWithFilterParameters(name, isIndexed, 0, locator, getter);
     }
 
     static LazyElement getWithFilterParameters(String name, int index, LazyLocator locator, String getter) {
         return getWithFilterParameters(name, true, index, locator, getter);
+    }
+
+    static LazyElement getWithFilterParametersAndDefaultIndex(String name, LazyLocator locator, String getter) {
+        return getWithFilterParameters(name, true, FIRST_INDEX, locator, getter);
     }
 
     static LazyElement getWithFilterParameters(String name, boolean isIndexed, int index, LazyLocator locator) {
@@ -102,21 +116,21 @@ public interface LazyElementFactory {
         return getWithFilterParameters(name, true, 0, locator, SingleGetter.DEFAULT.getName());
     }
 
-    static LazyElement getWithFilterParameters(String name, LazyLocatorList locators) {
+    static LazyElement getWithFilterParameters(String name, LazyLocatorList locators, String getter) {
         final var parameterList = new ArrayList<LazyFilteredElementParameters>();
         final var keyList = new ArrayList<String>();
         for(var locator : locators) {
-            parameterList.add(LazyFilteredElementParametersFactory.getWithFilterParametersAndLocator(true, 0, locator, SingleGetter.DEFAULT.getName()));
+            parameterList.add(LazyFilteredElementParametersFactory.getWithFilterParametersAndLocator(true, 0, locator, getter));
             keyList.add(locator.strategy + "-" + SeleniumCoreConstants.ELEMENT_ATOMIC_COUNT.getAndIncrement() + "-generated");
         }
 
         final var map = LazyElementParameterMapFactory.getWith(IntStream.range(0, keyList.size()).boxed().collect(Collectors.toMap(keyList::get, parameterList::get)));
 
-        return getWithDefaultNameAndValidator(map);
+        return getWithDefaultValidator(name, map);
     }
 
-    static LazyElement getWithFilterParameters(By locator) {
-        return getWithFilterParameters(locator, SingleGetter.DEFAULT);
+    static LazyElement getWithFilterParameters(String name, LazyLocatorList locators) {
+        return getWithFilterParameters(name, locators, SingleGetter.DEFAULT.getName());
     }
 
     static LazyElement getWithFilterParameters(String name, String message, LazyLocator locator, String getter) {
@@ -131,11 +145,31 @@ public interface LazyElementFactory {
         return getWithFilterParameters(name, true, message, locator, SingleGetter.DEFAULT.getName());
     }
 
+    static LazyElement getSimple(String name, LazyLocator locator, String getter) {
+        return getWithFilterParametersAndDefaultIndex(name, locator, getter);
+    }
+
     static LazyElement getSimple(String name, LazyLocator locator) {
         return getWithFilterParameters(name, locator);
     }
 
     static LazyElement getSimple(String name, int index, LazyLocator locator) {
         return getWithFilterParameters(name, index, locator);
+    }
+
+    static LazyElement getSimple(String name, String message, LazyLocator locator) {
+        return getWithFilterParameters(name, message, locator);
+    }
+
+    static LazyElement getWithFilterParameters(By locator, SingleGetter getter) {
+        final var lazyLocator = SeleniumLazyLocatorFactory.get(locator);
+        final var parameters = LazyFilteredElementParametersFactory.getWithFilterParametersAndLocator(false, lazyLocator, getter.getName());
+        final var map = LazyElementParameterMapFactory.getWithLocatorAndParameters(lazyLocator.strategy, parameters);
+
+        return getWithDefaultNameAndValidator(map);
+    }
+
+    static LazyElement getWithFilterParameters(By locator) {
+        return getWithFilterParameters(locator, SingleGetter.DEFAULT);
     }
 }

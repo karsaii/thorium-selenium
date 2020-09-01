@@ -1,28 +1,27 @@
 package com.github.karsaii.framework.selenium.namespaces;
 
 import com.github.karsaii.core.constants.CoreDataConstants;
-import com.github.karsaii.core.namespaces.wait.Wait;
-import com.github.karsaii.core.namespaces.wait.WaitTimeDataFactory;
-import com.github.karsaii.core.records.WaitData;
 import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
-import com.github.karsaii.framework.selenium.namespaces.factories.DriverFunctionFactory;
-import org.openqa.selenium.By;
+import com.github.karsaii.core.namespaces.factories.wait.WaitTimeDataFactory;
+import com.github.karsaii.core.namespaces.wait.Wait;
+import com.github.karsaii.core.records.wait.WaitData;
 import com.github.karsaii.framework.selenium.constants.DriverFunctionConstants;
 import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
-import com.github.karsaii.framework.selenium.records.element.ElementWaitParameters;
+import com.github.karsaii.framework.selenium.namespaces.factories.DriverFunctionFactory;
+import com.github.karsaii.framework.selenium.records.element.regular.ElementWaitParameters;
 import com.github.karsaii.framework.selenium.records.lazy.LazyElement;
 import com.github.karsaii.framework.selenium.records.lazy.LazyElementWaitParameters;
+import org.openqa.selenium.By;
 
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 import static com.github.karsaii.core.extensions.namespaces.NullableFunctions.isNotNull;
 import static com.github.karsaii.core.namespaces.DataFactoryFunctions.appendMessage;
 import static com.github.karsaii.core.namespaces.DataFactoryFunctions.prependMessage;
-import static org.apache.commons.lang3.StringUtils.isBlank;
 import static com.github.karsaii.framework.selenium.namespaces.ExecutionCore.ifDriver;
 import static com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilities.isNotNullElementWaitParametersData;
 import static com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilities.isNotNullLazyElementWaitParametersData;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public interface WaitConditions {
     static DriverFunction<Boolean> waitWith(By locator, Function<By, DriverFunction<Boolean>> conditionGetter, String option, int interval, int timeout, String message) {

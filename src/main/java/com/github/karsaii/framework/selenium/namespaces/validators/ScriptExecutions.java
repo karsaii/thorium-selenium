@@ -1,12 +1,11 @@
 package com.github.karsaii.framework.selenium.namespaces.validators;
 
+import com.github.karsaii.core.abstracts.reflection.BaseInvokerDefaultsData;
 import com.github.karsaii.core.constants.CastDataConstants;
-import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
 import com.github.karsaii.core.namespaces.validators.CoreFormatter;
 import com.github.karsaii.core.records.caster.BasicCastData;
 import com.github.karsaii.core.records.caster.WrappedCastData;
 import com.github.karsaii.core.records.reflection.InvokerParameterizedParametersFieldData;
-import com.github.karsaii.core.abstracts.reflection.BaseInvokerDefaultsData;
 import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.ScriptHandlerFunction;
 import com.github.karsaii.framework.selenium.records.scripter.ExecutorData;
 import com.github.karsaii.framework.selenium.records.scripter.ExecutorParametersFieldData;
@@ -19,7 +18,6 @@ import static com.github.karsaii.core.extensions.namespaces.CoreUtilities.areNot
 import static com.github.karsaii.core.extensions.namespaces.NullableFunctions.isNotNull;
 import static com.github.karsaii.core.namespaces.validators.CoreFormatter.getNamedErrorMessageOrEmpty;
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public interface ScriptExecutions {
     static boolean isValidExecutorParametersData(ExecutorParametersFieldData data) {

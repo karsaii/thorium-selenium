@@ -1,7 +1,6 @@
 package com.github.karsaii.framework.selenium.constants.validators;
 
 import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
-import com.github.karsaii.framework.selenium.enums.SeleniumSelectorStrategy;
 import org.openqa.selenium.Keys;
 
 public abstract class SeleniumFormatterConstants {
@@ -38,7 +37,7 @@ public abstract class SeleniumFormatterConstants {
     public static final String TITLE_OF_WINDOW = "Title of window ";
     public static final String NULL_ELEMENT_ID = "NULL_ELEMENT_ID";
     public static final String COULDNT_SWITCH_TO = "Couldn't switch to ";
-    public static final String SUCCESSFULLY_SWITCHED_TO = "Couldn't switch to ";
+    public static final String SUCCESSFULLY_SWITCHED_TO = "Switched to ";
     public static final String ELEMENT_CLICKABLE = " " + CoreFormatterConstants.ELEMENT + "is clickable" + CoreFormatterConstants.END_LINE;
     public static final String ELEMENT_WAS_FOUND = "Element was found" + CoreFormatterConstants.END_LINE;
     public static final String DRIVER_WAS_NULL = "Driver" + CoreFormatterConstants.WAS_NULL;

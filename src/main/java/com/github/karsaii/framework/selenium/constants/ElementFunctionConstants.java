@@ -4,8 +4,8 @@ import com.github.karsaii.core.extensions.namespaces.CardinalitiesFunctions;
 import com.github.karsaii.framework.selenium.namespaces.Driver;
 import com.github.karsaii.framework.selenium.namespaces.ExecutionCore;
 import com.github.karsaii.framework.selenium.namespaces.validators.SeleniumDataValidators;
-import com.github.karsaii.framework.selenium.records.element.is.regular.ElementParameterizedValueParameters;
 import com.github.karsaii.framework.selenium.records.element.is.regular.ElementConditionParameters;
+import com.github.karsaii.framework.selenium.records.element.is.regular.ElementParameterizedValueParameters;
 import com.github.karsaii.framework.selenium.records.element.is.regular.ElementStringValueParameters;
 
 public abstract class ElementFunctionConstants {

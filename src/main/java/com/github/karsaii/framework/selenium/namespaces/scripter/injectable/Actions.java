@@ -1,58 +1,38 @@
 package com.github.karsaii.framework.selenium.namespaces.scripter.injectable;
 
-import com.github.karsaii.framework.selenium.constants.driver.devtools.DevtoolsConstants;
-
+import com.github.karsaii.framework.selenium.records.lazy.LazyElement;
 public interface Actions {
     String NS_BASE = "TU.FUNCTIONS.ELEMENT.";
-    private static String getBooleanCommon(String base, String name, String selector) {
-        return base + "('" + name + "', '" + selector + "').status" + DevtoolsConstants.ENTER_INPUT;
+
+    static String getClick(LazyElement element) {
+        return MetaCore.getBoolean(NS_BASE + "CLICK", element);
     }
 
-    private static String getBooleanCommon(String base, String name, String selector, String valueSource) {
-        return base + "('" + name + "', '" + selector + "', '" + valueSource + "').status" + DevtoolsConstants.ENTER_INPUT;
+    static String getSetValue(LazyElement element, String value) {
+        return MetaCore.getBoolean(NS_BASE + "SET_VALUE", element, value);
     }
 
-    private static String getBooleanCommon(String base, String name, String selector, String valueSource, String assignedValue) {
-        return base + "('" + name + "', '" + selector + "', '" + valueSource  + "', '" + assignedValue + "').status" + DevtoolsConstants.ENTER_INPUT;
+    static String getSetAttribute(LazyElement element, String attribute, String value) {
+        return MetaCore.getBoolean(NS_BASE + "SET_ATTRIBUTE", element, attribute, value);
     }
 
-    private static String getStringCommon(String base, String name, String selector) {
-        return base + "('" + name + "', '" + selector + "').object" + DevtoolsConstants.ENTER_INPUT;
+    static String getGetValue(LazyElement element) {
+        return MetaCore.getString(NS_BASE + "GET_VALUE", element);
     }
 
-    private static String getStringCommon(String base, String name, String selector, String valueSource) {
-        return base + "('" + name + "', '" + selector + "', '" + valueSource + "').object" + DevtoolsConstants.ENTER_INPUT;
+    static String getGetText(LazyElement element) {
+        return MetaCore.getString(NS_BASE + "GET_TEXT", element);
     }
 
-    static String getClick(String name, String selector) {
-        return getBooleanCommon(NS_BASE + "CLICK_SELECTOR", name, selector);
+    static String getGetInnerText(LazyElement element) {
+        return MetaCore.getString(NS_BASE + "GET_INNER_TEXT", element);
     }
 
-    static String getSetValue(String name, String selector, String value) {
-        return getBooleanCommon(NS_BASE + "SET_VALUE_SELECTOR", name, selector, value);
+    static String getGetAttribute(LazyElement element, String attribute) {
+        return MetaCore.getString(NS_BASE + "GET_ATTRIBUTE", element, attribute);
     }
 
-    static String getSetAttribute(String name, String selector, String attribute, String value) {
-        return getBooleanCommon(NS_BASE + "SET_ATTRIBUTE_SELECTOR", name, selector, attribute, value);
-    }
-
-    static String getGetValue(String name, String selector) {
-        return getStringCommon(NS_BASE + "GET_VALUE_SELECTOR", name, selector);
-    }
-
-    static String getGetText(String name, String selector) {
-        return getStringCommon(NS_BASE + "GET_TEXT_SELECTOR", name, selector);
-    }
-
-    static String getGetInnerText(String name, String selector) {
-        return getStringCommon(NS_BASE + "GET_INNER_TEXT_SELECTOR", name, selector);
-    }
-
-    static String getGetAttribute(String name, String selector, String attribute) {
-        return getStringCommon(NS_BASE + "GET_ATTRIBUTE_SELECTOR", name, selector, attribute);
-    }
-
-    static String getGetCssValue(String name, String selector, String value) {
-        return getStringCommon(NS_BASE + "GET_CSS_VALUE_SELECTOR", name, selector, value);
+    static String getGetCssValue(LazyElement element, String value) {
+        return MetaCore.getString(NS_BASE + "GET_CSS_VALUE", element, value);
     }
 }

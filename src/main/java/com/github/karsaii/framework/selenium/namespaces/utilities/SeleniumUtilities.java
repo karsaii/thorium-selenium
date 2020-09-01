@@ -6,25 +6,25 @@ import com.github.karsaii.core.extensions.namespaces.predicates.BasicPredicates;
 import com.github.karsaii.core.namespaces.DataFactoryFunctions;
 import com.github.karsaii.core.namespaces.predicates.DataPredicates;
 import com.github.karsaii.core.records.Data;
+import com.github.karsaii.framework.core.abstracts.AbstractLazyResult;
+import com.github.karsaii.framework.core.namespaces.extensions.boilers.LazyLocatorList;
 import com.github.karsaii.framework.core.namespaces.factory.LazyLocatorListFactory;
+import com.github.karsaii.framework.core.records.lazy.LazyLocator;
+import com.github.karsaii.framework.selenium.abstracts.AbstractWaitParameters;
+import com.github.karsaii.framework.selenium.constants.ElementStrategyMapConstants;
+import com.github.karsaii.framework.selenium.constants.SeleniumDataConstants;
 import com.github.karsaii.framework.selenium.constants.validators.SeleniumFormatterConstants;
+import com.github.karsaii.framework.selenium.enums.SeleniumSelectorStrategy;
 import com.github.karsaii.framework.selenium.namespaces.factories.SeleniumLazyLocatorFactory;
+import com.github.karsaii.framework.selenium.namespaces.factories.lazy.LazyFilteredElementParametersFactory;
 import com.github.karsaii.framework.selenium.namespaces.validators.SeleniumLazyLocatorValidators;
+import com.github.karsaii.framework.selenium.records.element.regular.ElementWaitParameters;
+import com.github.karsaii.framework.selenium.records.lazy.LazyElementWaitParameters;
+import com.github.karsaii.framework.selenium.records.lazy.filtered.ElementFilterData;
+import com.github.karsaii.framework.selenium.records.lazy.filtered.LazyFilteredElementParameters;
 import org.apache.commons.lang3.ArrayUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import com.github.karsaii.framework.core.abstracts.AbstractLazyResult;
-import com.github.karsaii.framework.selenium.abstracts.AbstractWaitParameters;
-import com.github.karsaii.framework.selenium.constants.SeleniumDataConstants;
-import com.github.karsaii.framework.selenium.constants.ElementStrategyMapConstants;
-import com.github.karsaii.framework.selenium.enums.SeleniumSelectorStrategy;
-import com.github.karsaii.framework.selenium.namespaces.lazy.LazyFilteredElementParametersFactory;
-import com.github.karsaii.framework.selenium.records.element.ElementWaitParameters;
-import com.github.karsaii.framework.selenium.records.lazy.filtered.ElementFilterData;
-import com.github.karsaii.framework.core.namespaces.extensions.boilers.LazyLocatorList;
-import com.github.karsaii.framework.selenium.records.lazy.LazyElementWaitParameters;
-import com.github.karsaii.framework.selenium.records.lazy.filtered.LazyFilteredElementParameters;
-import com.github.karsaii.framework.core.records.lazy.LazyLocator;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -40,7 +40,6 @@ import static com.github.karsaii.core.extensions.namespaces.CoreUtilities.areAny
 import static com.github.karsaii.core.extensions.namespaces.CoreUtilities.areAnyNull;
 import static com.github.karsaii.core.extensions.namespaces.CoreUtilities.isEqual;
 import static com.github.karsaii.core.extensions.namespaces.NullableFunctions.isNull;
-
 import static com.github.karsaii.core.namespaces.predicates.DataPredicates.isValidNonFalse;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
@@ -54,7 +53,7 @@ public interface SeleniumUtilities {
         return !isInvalidLazyLocator(data);
     }
 
-    static boolean areNullLazyData(LazyLocator... data) {
+    static boolean areNullLazyLocators(LazyLocator... data) {
         return areAll(SeleniumUtilities::isInvalidLazyLocator, data);
     }
 
@@ -62,15 +61,15 @@ public interface SeleniumUtilities {
         return new LazyLocator[0];
     }
 
-    static boolean areNullLazyData(List<LazyLocator> data) {
-        return areNullLazyData(data.toArray(getEmptyLazyLocatorArray()));
+    static boolean areNullLazyLocators(List<LazyLocator> data) {
+        return areNullLazyLocators(data.toArray(getEmptyLazyLocatorArray()));
     }
 
     static boolean isNullLazyDataList(LazyLocatorList list) {
-        return EmptiableFunctions.isNullOrEmpty(list) || areNullLazyData(list.list);
+        return EmptiableFunctions.isNullOrEmpty(list) || areNullLazyLocators(list.list);
     }
 
-    static boolean isNotNullLazyData(LazyLocator data) {
+    static boolean isNotNullLazyLocator(LazyLocator data) {
         return !isInvalidLazyLocator(data);
     }
 

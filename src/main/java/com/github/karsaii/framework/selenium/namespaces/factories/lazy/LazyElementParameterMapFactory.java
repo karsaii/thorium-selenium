@@ -1,4 +1,4 @@
-package com.github.karsaii.framework.selenium.namespaces.lazy;
+package com.github.karsaii.framework.selenium.namespaces.factories.lazy;
 
 import com.github.karsaii.framework.selenium.records.lazy.filtered.LazyFilteredElementParameters;
 

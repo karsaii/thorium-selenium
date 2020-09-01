@@ -1,28 +1,27 @@
 package com.github.karsaii.framework.selenium.namespaces.element.validators;
 
+import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
 import com.github.karsaii.core.extensions.namespaces.NullableFunctions;
 import com.github.karsaii.core.namespaces.validators.CoreFormatter;
-import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
-import com.github.karsaii.framework.core.namespaces.validators.FrameworkCoreFormatter;
-import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
-import com.github.karsaii.core.records.WaitTimeData;
 import com.github.karsaii.core.records.caster.WrappedCastData;
+import com.github.karsaii.core.records.wait.WaitTimeData;
+import com.github.karsaii.framework.core.abstracts.AbstractLazyResult;
+import com.github.karsaii.framework.core.namespaces.validators.FrameworkCoreFormatter;
+import com.github.karsaii.framework.core.records.lazy.LazyElementParameters;
+import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
+import com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilities;
+import com.github.karsaii.framework.selenium.records.lazy.LazyElement;
+import com.github.karsaii.framework.selenium.records.lazy.filtered.LazyFilteredElementParameters;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.WebElement;
-import com.github.karsaii.framework.core.abstracts.AbstractLazyResult;
-import com.github.karsaii.framework.selenium.records.lazy.LazyElement;
-import com.github.karsaii.framework.core.records.lazy.LazyElementParameters;
-import com.github.karsaii.framework.selenium.records.lazy.filtered.LazyFilteredElementParameters;
 
 import java.lang.reflect.Method;
-import java.util.Objects;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-
+import static com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilities.areNullLazyLocators;
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilities.areNullLazyData;
 
 public interface ElementParameters {
     static String validateWaitTimeData(WaitTimeData timeData) {
@@ -48,7 +47,7 @@ public interface ElementParameters {
     }
 
     static boolean isInvalidLazyElemenet(LazyElementParameters data) {
-        return NullableFunctions.isNull(data) || StringUtils.isBlank(data.getter) || areNullLazyData(data.lazyLocators);
+        return NullableFunctions.isNull(data) || StringUtils.isBlank(data.getter) || SeleniumUtilities.areNullLazyLocators(data.lazyLocators);
     }
 
     static boolean isValidLazyElement(LazyElementParameters data) {

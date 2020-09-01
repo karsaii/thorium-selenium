@@ -5,7 +5,6 @@ import com.github.karsaii.core.extensions.namespaces.CoreUtilities;
 import com.github.karsaii.core.namespaces.DataFactoryFunctions;
 import com.github.karsaii.core.records.Data;
 import com.github.karsaii.framework.core.namespaces.validators.FrameworkCoreFormatter;
-import com.github.karsaii.framework.selenium.constants.SelectorStrategyNameConstants;
 import com.github.karsaii.framework.selenium.constants.driver.devtools.DevtoolsConstants;
 import com.github.karsaii.framework.selenium.namespaces.Driver;
 import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
@@ -19,27 +18,27 @@ import java.util.function.Function;
 import static com.github.karsaii.core.namespaces.DataExecutionFunctions.ifDependency;
 
 public interface MutationObserver {
-    private static String getMutationObserver(String cssSelector) {
+    private static String getMutationObserver(String locator) {
         return (
             "if ((typeof document['__test']) === (typeof {})) {" +
             "    return true;" +
             "}" +
             "document['__test'] = {};" +
             "document['__test']['consoleFocused'] = false;" +
-            "document['__test']['observing'] = document.querySelectorAll('" + cssSelector + "')[0];" +
+            "document['__test']['observing'] = document.querySelectorAll('" + locator + "')[0];" +
             "document['__test']['observerCore'] = function observerCoreFunction(mutations) {" +
             "    var length = mutations.length," +
             "        index = 0," +
             "        mutation = undefined;" +
             "    for(; index < length; ++index) {" +
             "        mutation = mutations[index];" +
-            "        if (mutation.attributeName += 'class') {" +
+            "        if (mutation.attributeName != 'class') {" +
             "            continue;" +
             "        }" +
             "        document['__test']['consoleFocused'] = mutation.target.classList.contains('CodeMirror-focused');" +
             "        break;" +
             "    }" +
-            "" +
+            "};" +
             "document['__test']['observer'] = new MutationObserver(document['__test']['observerCore']);" +
             "document['__test']['observer'].observe(document['__test']['observing'], {attributes: true});" +
             "return true;"

@@ -1,11 +1,11 @@
 package com.github.karsaii.framework.selenium.records.scripter;
 
 import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
-import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.ScriptFunction;
 import com.github.karsaii.core.extensions.namespaces.NullableFunctions;
 import com.github.karsaii.core.records.ExecuteCommonData;
-import org.openqa.selenium.JavascriptExecutor;
 import com.github.karsaii.framework.selenium.abstracts.ExecuteBaseData;
+import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.ScriptFunction;
+import org.openqa.selenium.JavascriptExecutor;
 
 import java.security.InvalidParameterException;
 import java.util.function.Function;

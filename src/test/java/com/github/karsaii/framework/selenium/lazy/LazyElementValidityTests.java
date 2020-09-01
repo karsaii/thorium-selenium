@@ -3,7 +3,7 @@ package com.github.karsaii.framework.selenium.lazy;
 import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
 import com.github.karsaii.framework.core.namespaces.validators.FrameworkCoreFormatter;
 import com.github.karsaii.framework.core.records.lazy.LazyLocator;
-import com.github.karsaii.framework.selenium.namespaces.lazy.LazyElementFactory;
+import com.github.karsaii.framework.selenium.namespaces.factories.lazy.LazyElementFactory;
 import com.github.karsaii.framework.selenium.records.lazy.LazyElement;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Assertions;

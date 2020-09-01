@@ -1,13 +1,11 @@
 package com.github.karsaii.framework.selenium.namespaces.validators;
 
-import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
 import com.github.karsaii.core.namespaces.validators.CoreFormatter;
 import com.github.karsaii.framework.selenium.records.scripter.ExecuteCoreFunctionData;
 import com.github.karsaii.framework.selenium.records.scripter.ParametersFieldDefaultsData;
 
 import static com.github.karsaii.core.namespaces.validators.CoreFormatter.getNamedErrorMessageOrEmpty;
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public interface ExecuteCoreValidators {
     static String isInvalidParametersFieldDefaultsData(ParametersFieldDefaultsData parameterData) {

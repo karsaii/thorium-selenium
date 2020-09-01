@@ -1,6 +1,13 @@
 package com.github.karsaii.framework.selenium.namespaces;
 
+import com.github.karsaii.core.abstracts.reflection.BaseInvokerDefaultsData;
+import com.github.karsaii.core.constants.CoreConstants;
 import com.github.karsaii.core.constants.CoreDataConstants;
+import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
+import com.github.karsaii.core.extensions.DecoratedList;
+import com.github.karsaii.core.extensions.boilers.StringSet;
+import com.github.karsaii.core.extensions.namespaces.CoreUtilities;
+import com.github.karsaii.core.extensions.namespaces.NullableFunctions;
 import com.github.karsaii.core.extensions.namespaces.factories.DecoratedListFactory;
 import com.github.karsaii.core.extensions.namespaces.predicates.BasicPredicates;
 import com.github.karsaii.core.extensions.namespaces.predicates.SizablePredicates;
@@ -8,59 +15,90 @@ import com.github.karsaii.core.implementations.reflection.message.ParameterizedM
 import com.github.karsaii.core.implementations.reflection.message.RegularMessageData;
 import com.github.karsaii.core.namespaces.BaseExecutionFunctions;
 import com.github.karsaii.core.namespaces.DataExecutionFunctions;
-import com.github.karsaii.framework.core.abstracts.AbstractLazyResult;
-import com.github.karsaii.framework.core.namespaces.Adjuster;
-import com.github.karsaii.framework.core.namespaces.FrameworkFunctions;
-import com.github.karsaii.framework.core.namespaces.validators.FrameworkCoreFormatter;
-import com.github.karsaii.framework.core.records.GetByFilterFormatterData;
-import com.github.karsaii.framework.core.records.lazy.ExternalSelectorData;
-import com.github.karsaii.framework.selenium.constants.RepositoryConstants;
-import com.github.karsaii.framework.selenium.constants.SeleniumInvokeConstants;
+import com.github.karsaii.core.namespaces.DataFactoryFunctions;
+import com.github.karsaii.core.namespaces.InvokeFunctions;
+import com.github.karsaii.core.namespaces.repositories.MethodRepository;
+import com.github.karsaii.core.namespaces.validators.CoreFormatter;
 import com.github.karsaii.core.namespaces.validators.DataValidators;
 import com.github.karsaii.core.namespaces.validators.MethodParametersDataValidators;
-import com.github.karsaii.core.namespaces.validators.CoreFormatter;
-import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
+import com.github.karsaii.core.records.Data;
+import com.github.karsaii.core.records.ExecuteCommonData;
+import com.github.karsaii.core.records.HandleResultData;
+import com.github.karsaii.core.records.MethodData;
+import com.github.karsaii.core.records.MethodMessageData;
+import com.github.karsaii.core.records.MethodParametersData;
+import com.github.karsaii.core.records.reflection.InvokerParameterizedParametersFieldData;
+import com.github.karsaii.core.records.reflection.message.InvokeCommonMessageParametersData;
+import com.github.karsaii.framework.core.abstracts.AbstractLazyResult;
+import com.github.karsaii.framework.core.constants.AdjusterConstants;
+import com.github.karsaii.framework.core.namespaces.Adjuster;
+import com.github.karsaii.framework.core.namespaces.FrameworkFunctions;
+import com.github.karsaii.framework.core.namespaces.extensions.boilers.LazyLocatorList;
+import com.github.karsaii.framework.core.namespaces.validators.FrameworkCoreFormatter;
+import com.github.karsaii.framework.core.records.GetByFilterFormatterData;
+import com.github.karsaii.framework.core.records.InternalSelectorData;
+import com.github.karsaii.framework.core.records.ProbabilityData;
+import com.github.karsaii.framework.core.records.lazy.ExternalSelectorData;
+import com.github.karsaii.framework.core.records.lazy.LazyLocator;
+import com.github.karsaii.framework.core.selector.records.SelectorKeySpecificityData;
+import com.github.karsaii.framework.selenium.abstracts.regular.AbstractElementFunctionParameters;
+import com.github.karsaii.framework.selenium.constants.DriverFunctionConstants;
+import com.github.karsaii.framework.selenium.constants.ElementFinderConstants;
+import com.github.karsaii.framework.selenium.constants.ElementFunctionConstants;
+import com.github.karsaii.framework.selenium.constants.ExecuteCoreDataConstants;
+import com.github.karsaii.framework.selenium.constants.ExecuteCoreFunctionDataConstants;
+import com.github.karsaii.framework.selenium.constants.FactoryConstants;
+import com.github.karsaii.framework.selenium.constants.MethodDefaults;
+import com.github.karsaii.framework.selenium.constants.RepositoryConstants;
+import com.github.karsaii.framework.selenium.constants.SeleniumCoreConstants;
+import com.github.karsaii.framework.selenium.constants.SeleniumDataConstants;
+import com.github.karsaii.framework.selenium.constants.SeleniumGetOrderConstants;
+import com.github.karsaii.framework.selenium.constants.SeleniumInvokeConstants;
+import com.github.karsaii.framework.selenium.constants.SeleniumInvokeFunctionDefaults;
+import com.github.karsaii.framework.selenium.constants.SeleniumMethodDefaults;
 import com.github.karsaii.framework.selenium.constants.lazy.GetLazyElementConstants;
 import com.github.karsaii.framework.selenium.constants.validators.SeleniumFormatterConstants;
+import com.github.karsaii.framework.selenium.enums.SingleGetter;
+import com.github.karsaii.framework.selenium.namespaces.element.ElementFilterFunctions;
 import com.github.karsaii.framework.selenium.namespaces.element.validators.WebElementListValidators;
+import com.github.karsaii.framework.selenium.namespaces.element.validators.WebElementValidators;
+import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
+import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.WebElementList;
 import com.github.karsaii.framework.selenium.namespaces.factories.DriverFunctionFactory;
 import com.github.karsaii.framework.selenium.namespaces.factories.LazyElementWithOptionsDataFactory;
 import com.github.karsaii.framework.selenium.namespaces.factories.SeleniumDataFactory;
 import com.github.karsaii.framework.selenium.namespaces.factories.SeleniumLazyLocatorFactory;
 import com.github.karsaii.framework.selenium.namespaces.factories.WebElementListFactory;
+import com.github.karsaii.framework.selenium.namespaces.factories.lazy.LazyFilteredElementParametersFactory;
+import com.github.karsaii.framework.selenium.namespaces.repositories.ElementRepository;
+import com.github.karsaii.framework.selenium.namespaces.repositories.FunctionRepository;
+import com.github.karsaii.framework.selenium.namespaces.repositories.LocatorRepository;
+import com.github.karsaii.framework.selenium.namespaces.scripter.Execute;
+import com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilities;
 import com.github.karsaii.framework.selenium.namespaces.utilities.URLUtilities;
+import com.github.karsaii.framework.selenium.namespaces.validators.ExecuteCoreValidators;
 import com.github.karsaii.framework.selenium.namespaces.validators.GetElementByDataValidators;
+import com.github.karsaii.framework.selenium.namespaces.validators.InvokeCoreValidator;
+import com.github.karsaii.framework.selenium.namespaces.validators.ScriptExecutions;
 import com.github.karsaii.framework.selenium.namespaces.validators.SeleniumFormatter;
-import com.github.karsaii.framework.selenium.abstracts.regular.AbstractElementFunctionParameters;
-import com.github.karsaii.framework.selenium.constants.ElementFunctionConstants;
-import com.github.karsaii.framework.selenium.constants.SeleniumInvokeFunctionDefaults;
-import com.github.karsaii.core.extensions.DecoratedList;
-import com.github.karsaii.core.extensions.boilers.StringSet;
-import com.github.karsaii.framework.selenium.namespaces.element.ElementFilterFunctions;
-import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.WebElementList;
-import com.github.karsaii.framework.selenium.constants.FactoryConstants;
-import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
-import com.github.karsaii.core.extensions.namespaces.CoreUtilities;
-import com.github.karsaii.core.extensions.namespaces.NullableFunctions;
-import com.github.karsaii.core.namespaces.DataFactoryFunctions;
-import com.github.karsaii.core.namespaces.InvokeFunctions;
-import com.github.karsaii.core.namespaces.repositories.MethodRepository;
-import com.github.karsaii.core.records.Data;
-import com.github.karsaii.core.records.ExecuteCommonData;
-import com.github.karsaii.core.records.HandleResultData;
-import com.github.karsaii.core.records.MethodData;
-import com.github.karsaii.framework.selenium.constants.MethodDefaults;
-import com.github.karsaii.core.records.MethodMessageData;
-import com.github.karsaii.core.records.MethodParametersData;
-import com.github.karsaii.core.records.reflection.InvokerParameterizedParametersFieldData;
-import com.github.karsaii.core.abstracts.reflection.BaseInvokerDefaultsData;
-import com.github.karsaii.core.constants.CoreConstants;
-import com.github.karsaii.core.records.reflection.message.InvokeCommonMessageParametersData;
+import com.github.karsaii.framework.selenium.records.ExternalElementData;
+import com.github.karsaii.framework.selenium.records.ExternalSeleniumSelectorData;
 import com.github.karsaii.framework.selenium.records.GetElementByData;
 import com.github.karsaii.framework.selenium.records.GetWithDriverData;
+import com.github.karsaii.framework.selenium.records.SwitchResultMessageData;
+import com.github.karsaii.framework.selenium.records.element.is.regular.ElementConditionParameters;
+import com.github.karsaii.framework.selenium.records.element.is.regular.ElementParameterizedValueParameters;
+import com.github.karsaii.framework.selenium.records.element.is.regular.ElementStringValueParameters;
 import com.github.karsaii.framework.selenium.records.lazy.CachedLookupKeysData;
 import com.github.karsaii.framework.selenium.records.lazy.GetLazyElementData;
+import com.github.karsaii.framework.selenium.records.lazy.LazyElement;
+import com.github.karsaii.framework.selenium.records.lazy.LazyElementWithOptionsData;
 import com.github.karsaii.framework.selenium.records.lazy.filtered.LazyFilteredElementParameters;
+import com.github.karsaii.framework.selenium.records.scripter.ExecuteCoreData;
+import com.github.karsaii.framework.selenium.records.scripter.ExecuteCoreFunctionData;
+import com.github.karsaii.framework.selenium.records.scripter.ExecutorData;
+import com.github.karsaii.framework.selenium.records.scripter.ExecutorParametersFieldData;
+import com.github.karsaii.framework.selenium.records.scripter.ParametersFieldDefaultsData;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -70,44 +108,6 @@ import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriver.TargetLocator;
 import org.openqa.selenium.WebElement;
-import com.github.karsaii.framework.core.selector.records.SelectorKeySpecificityData;
-import com.github.karsaii.framework.core.constants.AdjusterConstants;
-import com.github.karsaii.framework.selenium.constants.SeleniumDataConstants;
-import com.github.karsaii.framework.selenium.constants.DriverFunctionConstants;
-import com.github.karsaii.framework.selenium.constants.ElementFinderConstants;
-import com.github.karsaii.framework.selenium.constants.ExecuteCoreDataConstants;
-import com.github.karsaii.framework.selenium.constants.ExecuteCoreFunctionDataConstants;
-import com.github.karsaii.framework.selenium.constants.SeleniumGetOrderConstants;
-import com.github.karsaii.framework.selenium.constants.SeleniumCoreConstants;
-import com.github.karsaii.framework.selenium.constants.SeleniumMethodDefaults;
-import com.github.karsaii.framework.selenium.enums.SingleGetter;
-import com.github.karsaii.framework.selenium.namespaces.lazy.LazyFilteredElementParametersFactory;
-import com.github.karsaii.framework.selenium.namespaces.scripter.Execute;
-import com.github.karsaii.framework.selenium.namespaces.repositories.ElementRepository;
-import com.github.karsaii.framework.selenium.namespaces.repositories.FunctionRepository;
-import com.github.karsaii.framework.selenium.namespaces.repositories.LocatorRepository;
-import com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilities;
-import com.github.karsaii.framework.selenium.namespaces.validators.ExecuteCoreValidators;
-import com.github.karsaii.framework.selenium.namespaces.validators.InvokeCoreValidator;
-import com.github.karsaii.framework.selenium.namespaces.element.validators.WebElementValidators;
-import com.github.karsaii.framework.selenium.records.element.is.regular.ElementConditionParameters;
-import com.github.karsaii.framework.selenium.records.element.is.regular.ElementStringValueParameters;
-import com.github.karsaii.framework.selenium.records.element.is.regular.ElementParameterizedValueParameters;
-import com.github.karsaii.framework.selenium.records.scripter.ExecuteCoreData;
-import com.github.karsaii.framework.selenium.records.scripter.ExecuteCoreFunctionData;
-import com.github.karsaii.framework.selenium.records.ExternalElementData;
-import com.github.karsaii.framework.selenium.records.ExternalSeleniumSelectorData;
-import com.github.karsaii.framework.core.records.InternalSelectorData;
-import com.github.karsaii.framework.selenium.records.lazy.LazyElement;
-import com.github.karsaii.framework.core.namespaces.extensions.boilers.LazyLocatorList;
-import com.github.karsaii.framework.selenium.records.scripter.ParametersFieldDefaultsData;
-import com.github.karsaii.framework.core.records.ProbabilityData;
-import com.github.karsaii.framework.selenium.records.SwitchResultMessageData;
-import com.github.karsaii.framework.selenium.records.lazy.LazyElementWithOptionsData;
-import com.github.karsaii.framework.core.records.lazy.LazyLocator;
-import com.github.karsaii.framework.selenium.records.scripter.ExecutorData;
-import com.github.karsaii.framework.selenium.records.scripter.ExecutorParametersFieldData;
-import com.github.karsaii.framework.selenium.namespaces.validators.ScriptExecutions;
 
 import java.util.List;
 import java.util.Map;
@@ -126,29 +126,31 @@ import static com.github.karsaii.core.namespaces.DataFactoryFunctions.appendMess
 import static com.github.karsaii.core.namespaces.DataFactoryFunctions.prependMessage;
 import static com.github.karsaii.core.namespaces.DataFactoryFunctions.replaceMessage;
 import static com.github.karsaii.core.namespaces.DataFactoryFunctions.replaceName;
+import static com.github.karsaii.core.namespaces.DataFactoryFunctions.replaceObject;
 import static com.github.karsaii.core.namespaces.predicates.DataPredicates.isInvalidOrFalse;
 import static com.github.karsaii.core.namespaces.predicates.DataPredicates.isValidNonFalse;
 import static com.github.karsaii.core.namespaces.validators.CoreFormatter.getValidNonFalseAndValidContainedMessage;
-import static com.github.karsaii.core.namespaces.validators.CoreFormatter.isNullMessageWithName;
-import static com.github.karsaii.core.namespaces.validators.CoreFormatter.isNullOrEmptyListMessageWithName;
-import static com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilities.isValidLazyLocator;
-import static com.github.karsaii.framework.selenium.namespaces.validators.SeleniumFormatter.getElementsParametersMessage;
 import static com.github.karsaii.core.namespaces.validators.CoreFormatter.isBlankMessageWithName;
 import static com.github.karsaii.core.namespaces.validators.CoreFormatter.isInvalidOrFalseMessage;
+import static com.github.karsaii.core.namespaces.validators.CoreFormatter.isInvalidOrFalseMessageWithName;
 import static com.github.karsaii.core.namespaces.validators.CoreFormatter.isNegativeMessage;
 import static com.github.karsaii.core.namespaces.validators.CoreFormatter.isNullMessage;
-import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static com.github.karsaii.core.namespaces.validators.CoreFormatter.isNullMessageWithName;
+import static com.github.karsaii.core.namespaces.validators.CoreFormatter.isNullOrEmptyListMessageWithName;
+import static com.github.karsaii.framework.core.namespaces.FrameworkCoreUtilities.isNullLazyLocator;
 import static com.github.karsaii.framework.selenium.namespaces.ExecutionCore.ifData;
 import static com.github.karsaii.framework.selenium.namespaces.ExecutionCore.ifDriver;
 import static com.github.karsaii.framework.selenium.namespaces.ExecutionCore.ifDriverGuardData;
 import static com.github.karsaii.framework.selenium.namespaces.ExecutionCore.validChain;
 import static com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilities.getLocator;
-import static com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilities.isNotNullLazyData;
+import static com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilities.isNotNullLazyLocator;
 import static com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilities.isNotNullLazyElement;
 import static com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilities.isNotNullWebElement;
-import static com.github.karsaii.framework.core.namespaces.FrameworkCoreUtilities.isNullLazyLocator;
 import static com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilities.isNullWebElement;
+import static com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilities.isValidLazyLocator;
+import static com.github.karsaii.framework.selenium.namespaces.validators.SeleniumFormatter.getElementsParametersMessage;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public interface Driver {
     private static JavascriptExecutor getExecutor(WebDriver driver) {
@@ -1011,7 +1013,7 @@ public interface Driver {
         final var lazyLocator = SeleniumLazyLocatorFactory.get(locator);
         return ifDriver(
             "getElementsAmount",
-            isNotNullLazyData(lazyLocator) && BasicPredicates.isNonNegative(expected),
+            isNotNullLazyLocator(lazyLocator) && BasicPredicates.isNonNegative(expected),
             getElementsAmount(getElements(lazyLocator), lazyLocator, expected),
             SeleniumDataConstants.NULL_LIST
         );
@@ -1020,7 +1022,7 @@ public interface Driver {
     static DriverFunction<WebElementList> getElementsAmount(LazyLocator locator, int expected) {
         return ifDriver(
             "getElementsAmount",
-            isNotNullLazyData(locator) && BasicPredicates.isNonNegative(expected),
+            isNotNullLazyLocator(locator) && BasicPredicates.isNonNegative(expected),
             getElementsAmount(getElements(locator), locator, expected),
             SeleniumDataConstants.NULL_LIST
         );
@@ -1099,7 +1101,7 @@ public interface Driver {
         final var nameof = "getRootElementByInvokedElement";
         return ifDriver(
             nameof,
-            isNotNullWebElement(data) && isNotNullLazyData(locator),
+            isNotNullWebElement(data) && isNotNullLazyLocator(locator),
             getShadowRootElement(invokeGetElement(getLocator(locator).object).apply(getSearchContextOf("Element data", data))),
             replaceMessage(SeleniumDataConstants.NULL_ELEMENT, nameof, "Parameters were wrong: locator or data.")
         );
@@ -1108,7 +1110,7 @@ public interface Driver {
     static DriverFunction<WebElement> getRootElementByInvokedElement(LazyElement element, LazyLocator locator) {
         return ifDriver(
             "getRootElementByInvokedElement",
-            isNotNullLazyElement(element) && isNotNullLazyData(locator),
+            isNotNullLazyElement(element) && isNotNullLazyLocator(locator),
             driver -> getShadowRootElement(invokeGetElement(getLocator(locator).object).apply(getSearchContextOf("Element data", element.get().apply(driver)))).apply(driver),
             SeleniumDataConstants.NULL_ELEMENT//, nameof, "Parameters were wrong: locator or data.")
         );
@@ -1150,32 +1152,44 @@ public interface Driver {
         ) : data -> DriverFunctionFactory.getWithMessage(SeleniumCoreConstants.STOCK_ELEMENT, false, SeleniumFormatterConstants.LOCATOR_WAS_NULL);
     }
 
+    private static Data<WebElement> getShadowRootElementCore(WebDriver driver, LazyLocatorList locators) {
+        final var currentBy = locators.first();
+        final var current = getShadowRootElement(getLocator(currentBy).object).apply(driver);
+        if (isInvalidOrFalse(current) || NullableFunctions.isNull(current.object)) {
+            return prependMessage(SeleniumDataConstants.NULL_ELEMENT, "Current " + CoreFormatterConstants.WAS_NULL + current.message.toString());
+        }
+
+        return locators.isMany() ? getShadowRootElement(current, locators.tail()).apply(driver) : current;
+    }
+
+    private static Function<WebDriver, Data<WebElement>> getShadowRootElementCore(LazyLocatorList locators) {
+        return driver -> getShadowRootElementCore(driver, locators);
+    }
+
     static DriverFunction<WebElement> getShadowRootElement(LazyLocatorList locators) {
         final var nameof = "getShadowRootElement";
         return ifDriver(
             nameof,
-            isNotNull(locators) && locators.isNotNullAndNonEmpty() && isNotNullLazyData(locators.first()),
-            driver -> {
-                final var currentBy = locators.first();
-                final var current = getShadowRootElement(getLocator(currentBy).object).apply(driver);
-                if (isNullWebElement(current)) {
-                    return prependMessage(SeleniumDataConstants.NULL_ELEMENT, "Current " + CoreFormatterConstants.WAS_NULL + current.message.toString());
-                }
-
-                return locators.isMany() ? getShadowRootElement(current, locators.tail()).apply(driver) : current;
-            },
+            isNotNull(locators) && locators.isNotNullAndNonEmpty() && isNotNullLazyLocator(locators.first()),
+            DriverFunctionFactory.getFunction(getShadowRootElementCore(locators)),
             prependMessage(SeleniumDataConstants.NULL_ELEMENT, nameof, "Shadow locators list" + CoreFormatterConstants.WAS_NULL)
         );
+    }
+
+    private static Data<WebElement> getShadowRootElementCore(WebDriver driver, DriverFunction<WebElement> getter, LazyLocatorList locators) {
+        var current = getter.apply(driver);
+        return isNotNullWebElement(current) ? getShadowRootElement(current, locators).apply(driver) : SeleniumDataConstants.NULL_ELEMENT;
+    }
+
+    private static Function<WebDriver, Data<WebElement>> getShadowRootElementCore(DriverFunction<WebElement> getter, LazyLocatorList locators) {
+        return driver -> getShadowRootElementCore(driver, getter, locators);
     }
 
     static DriverFunction<WebElement> getShadowRootElement(DriverFunction<WebElement> data, LazyLocatorList locators) {
         return ifDriver(
             "getShadowRootElement",
             areNotNull(data, locators) && locators.isNotNullAndNonEmpty(),
-            driver -> {
-                var current = data.apply(driver);
-                return isNotNullWebElement(current) ? getShadowRootElement(current, locators).apply(driver) : SeleniumDataConstants.NULL_ELEMENT;
-            },
+            DriverFunctionFactory.getFunction(getShadowRootElementCore(data, locators)),
             SeleniumDataConstants.NULL_ELEMENT
         );
     }
@@ -1214,8 +1228,7 @@ public interface Driver {
     }
 
     static Function<Data<SearchContext>, Data<WebElement>> getNestedElement(LazyLocator locator) {
-        final var nameof = "getNestedElement";
-        return isNotNullLazyData(locator) ? getNestedElement(getLocator(locator).object) : data -> replaceMessage(SeleniumDataConstants.NULL_ELEMENT, nameof, SeleniumFormatterConstants.LOCATOR_WAS_NULL);
+        return ifDependency("getNestedElement", SeleniumFormatter.isNullLazyDataMessage(locator), getNestedElement(getLocator(locator).object), SeleniumDataConstants.NULL_ELEMENT);
     }
 
     static Function<Data<SearchContext>, Data<WebElementList>> getNestedElements(LazyLocator locator) {
@@ -1246,16 +1259,39 @@ public interface Driver {
         ) : context -> SeleniumDataConstants.NO_ELEMENTS_FOUND;
     }
 
+    private static <T> Data<T> getShadowNestedCore(WebDriver driver, Function<LazyLocator, Function<Data<SearchContext>, Data<T>>> getter, LazyLocatorList locators, LazyLocator locator, T defaultValue) {
+        final var switchResult = switchToDefaultContent().apply(driver);
+        if (isInvalidOrFalse(switchResult)) {
+            return replaceObject(switchResult, defaultValue);
+        }
+
+        //TODO valid unwrap chain
+        final var shadowRoot = getShadowRootElement(locators).apply(driver);
+        if (isInvalidOrFalse(shadowRoot)) {
+            return replaceObject(shadowRoot, defaultValue);
+        }
+
+        final var context = getSearchContext(shadowRoot.object);
+        if (isInvalidOrFalse(context)) {
+            return replaceObject(context, defaultValue);
+        }
+
+        final var contextFunction = getter.apply(locator);
+        return contextFunction.apply(context);
+    }
+
+    private static <T> Function<WebDriver, Data<T>> getShadowNestedCore(Function<LazyLocator, Function<Data<SearchContext>, Data<T>>> getter, LazyLocatorList locators, LazyLocator locator, T defaultValue) {
+        return driver -> getShadowNestedCore(driver, getter, locators, locator, defaultValue);
+    }
+
     private static <T> DriverFunction<T> getShadowNested(Function<LazyLocator, Function<Data<SearchContext>, Data<T>>> getter, LazyLocatorList locators, LazyLocator locator, T defaultValue) {
         final var nameof = "getShadowNested";
-        return ifDriver(
+        return DriverFunctionFactory.getFunction(ifDependency(
             nameof,
-            areNotNull(getter, locators, defaultValue) && locators.isNotNullAndNonEmpty() && isNotNullLazyData(locator),
-            driver -> isValidNonFalse(switchToDefaultContent().apply(driver)) ? (
-                getter.apply(locator).apply(getSearchContext(getShadowRootElement(locators).apply(driver).object))
-            ) : DataFactoryFunctions.getInvalidWithNameAndMessage(defaultValue, nameof, "Couldn't switch to default content" + CoreFormatterConstants.END_LINE),
+            areNotNull(getter, locators, defaultValue) && locators.isNotNullAndNonEmpty() && isNotNullLazyLocator(locator),
+            getShadowNestedCore(getter, locators, locator, defaultValue),
             DataFactoryFunctions.getWithMessage(defaultValue, false, "There were parameter issues" + CoreFormatterConstants.END_LINE)
-        );
+        ));
     }
 
     static DriverFunction<WebElement> getShadowNestedElement(LazyLocatorList locators, LazyLocator elementLocator) {
@@ -1414,7 +1450,7 @@ public interface Driver {
             BasicPredicates.isNonNegative(target),
             TargetLocator::frame,
             SeleniumFormatter::getSwitchToMessage,
-            new SwitchResultMessageData<Integer>(target, "frame", "switchToFrame(int frameLocator): ")
+            new SwitchResultMessageData<>(target, "frame", "switchToFrame(int frameLocator): ")
         );
     }
 
@@ -1425,7 +1461,7 @@ public interface Driver {
             isNotBlank(target),
             TargetLocator::frame,
             SeleniumFormatter::getSwitchToMessage,
-            new SwitchResultMessageData<String>(target, "window", "switchToWindow(String target): ")
+            new SwitchResultMessageData<>(target, "window", "switchToWindow(String target): ")
         );
     }
 
@@ -1550,10 +1586,12 @@ public interface Driver {
             return DriverFunctionFactory.get(prependMessage(SeleniumDataConstants.NULL_ELEMENT, "Lazy Locator list doesn't have enough items" + CoreFormatterConstants.END_LINE));
         }
 
-        final var start = locators.first();
-        final var tail = locators.tail();
-        return isNotNullLazyData(start) && isNotNull(tail) ? (
-            getShadowNestedElement(tail, start)
+        final var element = locators.last();
+        final var nests = locators.initials();
+        final var notNullTail = isNotNull(nests);
+        final var validLocator = isNotNullLazyLocator(element);
+        return isNotNullLazyLocator(element) && isNotNull(nests) ? (
+            getShadowNestedElement(nests, element)
         ) : DriverFunctionFactory.get(prependMessage(SeleniumDataConstants.NULL_ELEMENT, "Lazy locator item issues" + CoreFormatterConstants.END_LINE));
     }
 
@@ -1577,7 +1615,7 @@ public interface Driver {
         final var nameof = "getNestedElement";
         return ifDriver(
             nameof,
-            isNotNull(locators) && locators.hasAtleast(2) && isNotNullLazyData(locators.first()),
+            isNotNull(locators) && locators.hasAtleast(2) && isNotNullLazyLocator(locators.first()),
             driver -> {
                 if (isInvalidOrFalse(switchToDefaultContent().apply(driver))) {
                     return DataFactoryFunctions.getWithNameAndMessage(SeleniumCoreConstants.STOCK_ELEMENT, false, nameof, "Driver was null or couldn't switch to default content" + CoreFormatterConstants.END_LINE);
@@ -1613,7 +1651,7 @@ public interface Driver {
     static <T> DriverFunction<T> getFrameNested(Function<LazyLocator, DriverFunction<T>> getter, LazyLocatorList locators, Data<T> defaultValue, String nameof) {
         return ifDriver(
             nameof,
-            areNotNull(getter, locators, defaultValue, nameof) && locators.hasAtleast(2) && isNotNullLazyData(locators.first()),
+            areNotNull(getter, locators, defaultValue, nameof) && locators.hasAtleast(2) && isNotNullLazyLocator(locators.first()),
             driver -> {
                 if (isInvalidOrFalse(switchToDefaultContent().apply(driver))) {
                     return replaceMessage(defaultValue, nameof, "Driver was null or couldn't switch to default content" + CoreFormatterConstants.END_LINE);
@@ -1647,7 +1685,7 @@ public interface Driver {
     static DriverFunction<WebElementList> getNestedElementsFromLast(LazyLocatorList locators) {
         return ifDriver(
             "getNestedElementsFromLast",
-            isNotNull(locators) && locators.hasAtleast(2) && isNotNullLazyData(locators.first()), //TODO: Move to formatter, and do blank check instead
+            isNotNull(locators) && locators.hasAtleast(2) && isNotNullLazyLocator(locators.first()), //TODO: Move to formatter, and do blank check instead
             driver -> {
                 if (isInvalidOrFalse(switchToDefaultContent().apply(driver))) {
                     return replaceMessage(SeleniumDataConstants.NULL_LIST, "Couldn't switch to default content" + CoreFormatterConstants.END_LINE);
@@ -1656,7 +1694,7 @@ public interface Driver {
                 final var function = ElementFinderConstants.frameAmountStrategyMap.get("" + locators.hasMoreThan(2));
                 final var element = function.apply(locators.initials()).apply(driver);
                 if (isInvalidOrFalse(element)) {
-                    return replaceMessage(SeleniumDataConstants.NULL_LIST, "Failed, nested com.github.karsaii.framework.selenium.element issue - sublist length(" + locators.initials().size() + "): " + element.message);
+                    return replaceMessage(SeleniumDataConstants.NULL_LIST, "Failed, element issue - sublist length(" + locators.initials().size() + "): " + element.message);
                 }
 
                 final var locator = locators.last();
@@ -1675,7 +1713,7 @@ public interface Driver {
     static DriverFunction<WebElementList> getShadowNestedElementsFromLast(LazyLocatorList locators) {
         return ifDriver(
             "getShadowNestedElementsFromLast",
-            isNotNull(locators) && locators.isNotNullAndNonEmpty() && isNotNullLazyData(locators.last()),
+            isNotNull(locators) && locators.isNotNullAndNonEmpty() && isNotNullLazyLocator(locators.last()),
             getShadowNestedElements(locators.initials(), locators.last()),
             replaceMessage(SeleniumDataConstants.NULL_LIST, "Locators were null" + CoreFormatterConstants.END_LINE)
         );

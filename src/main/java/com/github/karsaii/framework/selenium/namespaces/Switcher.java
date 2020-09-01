@@ -1,13 +1,13 @@
 package com.github.karsaii.framework.selenium.namespaces;
 
-import com.github.karsaii.framework.selenium.constants.validators.SeleniumFormatterConstants;
-import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
 import com.github.karsaii.core.namespaces.DataFactoryFunctions;
 import com.github.karsaii.core.records.Data;
+import com.github.karsaii.framework.selenium.constants.validators.SeleniumFormatterConstants;
+import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
 import com.github.karsaii.framework.selenium.namespaces.factories.DriverFunctionFactory;
+import com.github.karsaii.framework.selenium.records.lazy.LazyElement;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import com.github.karsaii.framework.selenium.records.lazy.LazyElement;
 
 public interface Switcher {
     static DriverFunction<Boolean> switchToFrame(WebElement element) {

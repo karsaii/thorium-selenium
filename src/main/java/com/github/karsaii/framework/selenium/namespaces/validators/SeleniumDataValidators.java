@@ -3,10 +3,10 @@ package com.github.karsaii.framework.selenium.namespaces.validators;
 import com.github.karsaii.core.constants.CoreDataConstants;
 import com.github.karsaii.core.records.Data;
 import com.github.karsaii.framework.core.namespaces.validators.FrameworkCoreFormatter;
-import org.openqa.selenium.WebElement;
 import com.github.karsaii.framework.selenium.namespaces.element.validators.WebElementValidators;
 import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
 import com.github.karsaii.framework.selenium.records.lazy.LazyElement;
+import org.openqa.selenium.WebElement;
 
 import java.util.function.Function;
 

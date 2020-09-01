@@ -1,24 +1,22 @@
 package com.github.karsaii.framework.selenium.namespaces;
 
 import com.github.karsaii.core.constants.CoreDataConstants;
-import com.github.karsaii.core.extensions.namespaces.predicates.BasicPredicates;
-import com.github.karsaii.core.namespaces.StringUtilities;
 import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
-import com.github.karsaii.core.namespaces.validators.CoreFormatter;
-import com.github.karsaii.framework.selenium.constants.validators.SeleniumFormatterConstants;
-import com.github.karsaii.framework.selenium.namespaces.validators.SeleniumFormatter;
-import com.github.karsaii.framework.selenium.constants.ExpectedConditionConstants;
-import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
 import com.github.karsaii.core.extensions.namespaces.CoreUtilities;
+import com.github.karsaii.core.extensions.namespaces.predicates.BasicPredicates;
 import com.github.karsaii.core.namespaces.DataFactoryFunctions;
+import com.github.karsaii.core.namespaces.StringUtilities;
+import com.github.karsaii.core.namespaces.validators.CoreFormatter;
 import com.github.karsaii.core.records.Data;
+import com.github.karsaii.framework.selenium.constants.ExpectedConditionConstants;
+import com.github.karsaii.framework.selenium.constants.validators.SeleniumFormatterConstants;
+import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
+import com.github.karsaii.framework.selenium.namespaces.validators.SeleniumFormatter;
+import com.github.karsaii.framework.selenium.records.lazy.LazyElement;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import com.github.karsaii.framework.selenium.records.lazy.LazyElement;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -26,11 +24,10 @@ import java.util.function.Function;
 import static com.github.karsaii.core.extensions.namespaces.CoreUtilities.areAnyNull;
 import static com.github.karsaii.core.extensions.namespaces.CoreUtilities.areNotBlank;
 import static com.github.karsaii.core.extensions.namespaces.CoreUtilities.areNotNull;
-import static com.github.karsaii.core.namespaces.predicates.DataPredicates.isValidNonFalse;
-import static com.github.karsaii.core.namespaces.predicates.DataPredicates.isInvalidOrFalse;
 import static com.github.karsaii.core.namespaces.DataFactoryFunctions.replaceMessage;
 import static com.github.karsaii.core.namespaces.DataFactoryFunctions.replaceName;
-
+import static com.github.karsaii.core.namespaces.predicates.DataPredicates.isInvalidOrFalse;
+import static com.github.karsaii.core.namespaces.predicates.DataPredicates.isValidNonFalse;
 import static com.github.karsaii.framework.selenium.namespaces.ExecutionCore.ifDriver;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 

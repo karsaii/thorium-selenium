@@ -1,16 +1,16 @@
 package com.github.karsaii.framework.selenium.constants;
 
+import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
 import com.github.karsaii.core.namespaces.DataFactoryFunctions;
 import com.github.karsaii.core.records.Data;
-import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.SearchContext;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
 import com.github.karsaii.framework.selenium.compatibility.NullJavascriptExecutor;
 import com.github.karsaii.framework.selenium.compatibility.NullSearchContext;
 import com.github.karsaii.framework.selenium.compatibility.NullTakesScreenshot;
 import com.github.karsaii.framework.selenium.compatibility.NullTargetLocator;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.SearchContext;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
 
 public abstract class FactoryConstants {
     public static final JavascriptExecutor NULL_JAVASCRIPT_EXECUTOR = new NullJavascriptExecutor();
