@@ -122,6 +122,7 @@ import static com.github.karsaii.core.extensions.namespaces.CoreUtilities.isNonE
 import static com.github.karsaii.core.extensions.namespaces.NullableFunctions.isNotNull;
 import static com.github.karsaii.core.extensions.namespaces.NullableFunctions.isNull;
 import static com.github.karsaii.core.namespaces.DataExecutionFunctions.ifDependency;
+import static com.github.karsaii.core.namespaces.DataExecutionFunctions.validUnwrapChain;
 import static com.github.karsaii.core.namespaces.DataFactoryFunctions.appendMessage;
 import static com.github.karsaii.core.namespaces.DataFactoryFunctions.prependMessage;
 import static com.github.karsaii.core.namespaces.DataFactoryFunctions.replaceMessage;
@@ -693,13 +694,11 @@ public interface Driver {
     }
 
     static DriverFunction<String> getElementText(Data<LazyElement> data) {
-        final var errorMessage = DataValidators.isInvalidOrFalseMessage(data);
-        return isBlank(errorMessage) ? getElementText(data.object) : DriverFunctionFactory.get(replaceMessage(CoreDataConstants.NULL_STRING, "getElementText", errorMessage));
+        return ifDriver("getElementText", DataValidators.isInvalidOrFalseMessage(data), getElementText(data.object), CoreDataConstants.NULL_STRING);
     }
 
     static DriverFunction<String> getElementTagName(Data<LazyElement> data) {
-        final var errorMessage = DataValidators.isInvalidOrFalseMessage(data);
-        return isBlank(errorMessage) ? getElementTagName(data.object) : DriverFunctionFactory.get(replaceMessage(CoreDataConstants.NULL_STRING, "getElementTagName", errorMessage));
+        return ifDriver("getElementTagName", DataValidators.isInvalidOrFalseMessage(data), getElementTagName(data.object), CoreDataConstants.NULL_STRING);
     }
 
     static DriverFunction<String> getElementAttribute(Data<LazyElement> data, String value) {
@@ -708,7 +707,7 @@ public interface Driver {
     }
 
     static DriverFunction<String> getElementCssValue(Data<LazyElement> data, String value) {
-        final var errorMessage = DataValidators.isInvalidOrFalseMessage(data) + isBlankMessageWithName(value, "Attribute value");
+        final var errorMessage = DataValidators.isInvalidOrFalseMessage(data) + isBlankMessageWithName(value, "CSS value");
         return isBlank(errorMessage) ? getElementCssValue(data.object, value) : DriverFunctionFactory.get(replaceMessage(CoreDataConstants.NULL_STRING, "getElementCssValue", errorMessage));
     }
 
@@ -834,18 +833,17 @@ public interface Driver {
             return DataFactoryFunctions.getInvalidWithNameAndMessage(negative, nameof, errorMessage);
         }
 
-        final var context = contextData.object;
-        errorMessage = CoreFormatter.isNullMessageWithName(context, "Context");
-        if (isNotBlank(errorMessage)) {
-            return DataFactoryFunctions.getInvalidWithNameAndMessage(negative, nameof, errorMessage);
-        }
-
         final var data = getLocator(locator);
         errorMessage = isInvalidOrFalseMessage(data);
         if (isNotBlank(errorMessage)) {
             return DataFactoryFunctions.getInvalidWithNameAndMessage(negative, nameof, errorMessage);
         }
 
+        final var context = contextData.object;
+        errorMessage = CoreFormatter.isNullMessageWithName(context, "Context");
+        if (isNotBlank(errorMessage)) {
+            return DataFactoryFunctions.getInvalidWithNameAndMessage(negative, nameof, errorMessage);
+        }
         return getElementsCore(context, data.object);
     }
 
@@ -928,33 +926,21 @@ public interface Driver {
         return DataFactoryFunctions.getWithNameAndMessage(object, status, nameof, message);
     }
 
-    static Data<WebElement> getElementByIndex(Data<WebElementList> data, int index) {
-        return getElementBy(DriverFunctionConstants.BY_CONTAINED_INTEGER_CONSTANTS, data, index);
-    }
-
-    static Data<WebElement> getElementByContainedText(Data<WebElementList> data, String text) {
-        return getElementBy(DriverFunctionConstants.BY_CONTAINED_TEXT_CONSTANTS, data, text);
-    }
-
     static Function<Data<WebElementList>, Data<WebElement>> getElementByContainedText(String message) {
-        return data -> getElementByContainedText(data, message);
+        return data -> getElementBy(DriverFunctionConstants.BY_CONTAINED_TEXT_CONSTANTS, data, message);
     }
 
     static Function<Data<WebElementList>, Data<WebElement>> getElementByIndex(int index) {
-        return data -> getElementByIndex(data, index);
+        return data -> getElementBy(DriverFunctionConstants.BY_CONTAINED_INTEGER_CONSTANTS, data, index);
     }
 
     static DriverFunction<WebElement> getElementByIndex(DriverFunction<WebElementList> getter, int index) {
         return ifDriver(
-            "getElementByIndexFrom",
-            isNotNull(getter) && BasicPredicates.isNonNegative(index),
+            "getElementByIndex",
+            isNullMessageWithName(getter, "Getter"),
             validChain(getter, getElementByIndex(index), SeleniumDataConstants.NULL_ELEMENT),
             SeleniumDataConstants.NULL_ELEMENT
         );
-    }
-
-    static DriverFunction<WebElement> getElementByIndex(By locator, int index) {
-        return getElementByIndex(getElements(locator), index);
     }
 
     static DriverFunction<WebElement> getElementByContainedText(DriverFunction<WebElementList> getter, String message) {
@@ -966,13 +952,17 @@ public interface Driver {
         );
     }
 
+    static DriverFunction<WebElement> getElementByIndex(By locator, int index) {
+        return getElementByIndex(getElements(locator), index);
+    }
+
     static DriverFunction<WebElement> getElementByContainedText(By locator, String message) {
         return getElementByContainedText(getElements(locator), message);
     }
 
     static Data<WebElement> getElementFromSingle(Data<WebElementList> data) {
         final var nameof = "getElementFromSingle";
-        return isValidNonFalse(data) ? getElementByIndex(data, 0) : prependMessage(SeleniumDataConstants.NULL_ELEMENT, nameof, "Data or index" + CoreFormatterConstants.WAS_NULL + data.toString());
+        return isValidNonFalse(data) ? getElementByIndex(0).apply(data) : prependMessage(SeleniumDataConstants.NULL_ELEMENT, nameof, "Data or index" + CoreFormatterConstants.WAS_NULL + data.toString());
     }
 
     static DriverFunction<WebElement> getElementFromSingle(DriverFunction<WebElementList> getter) {

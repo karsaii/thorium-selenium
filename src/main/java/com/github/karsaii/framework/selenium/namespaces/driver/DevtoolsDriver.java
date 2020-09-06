@@ -2,6 +2,7 @@ package com.github.karsaii.framework.selenium.namespaces.driver;
 
 import com.github.karsaii.core.constants.CoreDataConstants;
 import com.github.karsaii.core.namespaces.validators.CoreFormatter;
+import com.github.karsaii.core.records.Data;
 import com.github.karsaii.framework.core.namespaces.validators.FrameworkCoreFormatter;
 import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
 import com.github.karsaii.framework.selenium.namespaces.scripter.injectable.Actions;
@@ -80,14 +81,22 @@ public interface DevtoolsDriver {
         return Actions.getGetInnerText(element);
     }
 
-    static DriverFunction<Boolean> elementAction(String name, LazyElement element, Function<LazyElement, String> action) {
-        final var nameof = isNotBlank(name) ? name : "elementAction";
+    static <T> DriverFunction<T> elementActionCore(String name, LazyElement element, Function<LazyElement, String> action, Function<String, DriverFunction<T>> handler, Data<T> defaultValue) {
+        final var nameof = isNotBlank(name) ? name : "elementActionCore";
         return ifDriver(
             nameof,
             FrameworkCoreFormatter.isNullLazyElementMessage(element),
-            DevtoolsDriverUtilities.doBooleanCommand(action.apply(element)),
-            CoreDataConstants.NULL_BOOLEAN
+            handler.apply(action.apply(element)),
+            defaultValue
         );
+    }
+
+    static DriverFunction<Boolean> elementAction(String name, LazyElement element, Function<LazyElement, String> action) {
+        return elementActionCore(name, element, action, DevtoolsDriverUtilities::doBooleanCommand, CoreDataConstants.NULL_BOOLEAN);
+    }
+
+    static DriverFunction<String> elementStringAction(String name, LazyElement element, Function<LazyElement, String> action) {
+        return elementActionCore(name, element, action, DevtoolsDriverUtilities::doCommand, CoreDataConstants.NULL_STRING);
     }
 
     static DriverFunction<Boolean> isElementPresent(LazyElement element) {
@@ -126,41 +135,11 @@ public interface DevtoolsDriver {
         return elementAction("click", element, DevtoolsDriver::invokeClick);
     }
 
-    static DriverFunction<Boolean> getValue(LazyElement element) {
-        return elementAction("getValue", element, DevtoolsDriver::invokeGetValue);
-    }
-
-    static DriverFunction<Boolean> getText(LazyElement element) {
-        return elementAction("getText", element, DevtoolsDriver::invokeGetText);
-    }
-
-    static DriverFunction<Boolean> getInnerText(LazyElement element) {
-        return elementAction("getInnerText", element, DevtoolsDriver::invokeGetInnerText);
-    }
-
     static DriverFunction<Boolean> setValue(LazyElement element, String value) {
         return ifDriver(
             "setValue",
             FrameworkCoreFormatter.isNullLazyElementMessage(element) + CoreFormatter.isNullMessageWithName(value, "Value"),
             DevtoolsDriverUtilities.doBooleanCommand(invokeSetValue(element, value)),
-            CoreDataConstants.NULL_BOOLEAN
-        );
-    }
-
-    static DriverFunction<Boolean> getAttribute(LazyElement element, String attribute) {
-        return ifDriver(
-            "getAttribute",
-            FrameworkCoreFormatter.isNullLazyElementMessage(element) + CoreFormatter.isNullMessageWithName(attribute, "Attribute"),
-            DevtoolsDriverUtilities.doBooleanCommand(invokeGetAttribute(element, attribute)),
-            CoreDataConstants.NULL_BOOLEAN
-        );
-    }
-
-    static DriverFunction<Boolean> getCssValue(LazyElement element, String value) {
-        return ifDriver(
-            "getCssValue",
-            FrameworkCoreFormatter.isNullLazyElementMessage(element) + CoreFormatter.isNullMessageWithName(value, "CSS Value"),
-            DevtoolsDriverUtilities.doBooleanCommand(invokeGetCssValue(element, value)),
             CoreDataConstants.NULL_BOOLEAN
         );
     }
@@ -175,6 +154,36 @@ public interface DevtoolsDriver {
             ),
             DevtoolsDriverUtilities.doBooleanCommand(invokeSetAttribute(element, attribute, value)),
             CoreDataConstants.NULL_BOOLEAN
+        );
+    }
+
+    static DriverFunction<String> getValue(LazyElement element) {
+        return elementStringAction("getValue", element, DevtoolsDriver::invokeGetValue);
+    }
+
+    static DriverFunction<String> getText(LazyElement element) {
+        return elementStringAction("getText", element, DevtoolsDriver::invokeGetText);
+    }
+
+    static DriverFunction<String> getInnerText(LazyElement element) {
+        return elementStringAction("getInnerText", element, DevtoolsDriver::invokeGetInnerText);
+    }
+
+    static DriverFunction<String> getAttribute(LazyElement element, String attribute) {
+        return ifDriver(
+            "getAttribute",
+            FrameworkCoreFormatter.isNullLazyElementMessage(element) + CoreFormatter.isNullMessageWithName(attribute, "Attribute"),
+            DevtoolsDriverUtilities.doCommand(invokeGetAttribute(element, attribute)),
+            CoreDataConstants.NULL_STRING
+        );
+    }
+
+    static DriverFunction<String> getCssValue(LazyElement element, String value) {
+        return ifDriver(
+            "getCssValue",
+            FrameworkCoreFormatter.isNullLazyElementMessage(element) + CoreFormatter.isNullMessageWithName(value, "CSS Value"),
+            DevtoolsDriverUtilities.doCommand(invokeGetCssValue(element, value)),
+            CoreDataConstants.NULL_STRING
         );
     }
 }
