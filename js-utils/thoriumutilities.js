@@ -456,11 +456,11 @@ TU.FUNCTIONS.ELEMENT._GET_CSS_VALUE = function getCSSValueClosureFunction(value)
 TU.FUNCTIONS.ELEMENT.GET_CORE = function getCoreFunction(name, elementData, typeName, getter, formatterFunction) {
     const NAME = TU.FUNCTIONS.UTILITIES.IS_NON_BLANK_STRING(name) ? name : 'getCore';
     if (!elementData.status) {
-        return TU.FUNCTIONS.DATA.CREATE_INVALID_DATA('', NAME, 'Element value wasn\'t set to (\'' + value + '\')' + TU.CONSTANTS.STRINGS.END_LINE  + 'Reason: ' + elementData.message, elementData.exception, elementData.exceptionMessage);
+        return TU.FUNCTIONS.DATA.CREATE_INVALID_DATA('', NAME, TU.CONSTANTS.STRINGS['NOT_AN_ELEMENT']  + 'Reason: ' + elementData.message, elementData.exception, elementData.exceptionMessage);
     }
 
     const VALUE = getter(elementData.object);
-    return TU.FUNCTIONS.DATA.CREATE_DATA(VALUE, true, formatterFunction(true, typeName, value), elementData.exception, elementData.exceptionMessage);
+    return TU.FUNCTIONS.DATA.CREATE_DATA(VALUE, true, formatterFunction(true, typeName, VALUE), elementData.exception, elementData.exceptionMessage);
 };
 
 TU.FUNCTIONS.ELEMENT.GET_VALUE = function getValueFunction(elementData) {
