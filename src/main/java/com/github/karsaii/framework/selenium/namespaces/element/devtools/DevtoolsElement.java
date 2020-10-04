@@ -6,6 +6,7 @@ import com.github.karsaii.core.extensions.interfaces.functional.TriFunction;
 import com.github.karsaii.core.namespaces.DataExecutionFunctions;
 import com.github.karsaii.core.records.Data;
 import com.github.karsaii.framework.core.namespaces.validators.FrameworkCoreFormatter;
+import com.github.karsaii.framework.selenium.constants.element.DevtoolsElementConstants;
 import com.github.karsaii.framework.selenium.constants.page.DefaultElementConstants;
 import com.github.karsaii.framework.selenium.constants.validators.SeleniumFormatterConstants;
 import com.github.karsaii.framework.selenium.namespaces.Driver;
@@ -55,38 +56,6 @@ public interface DevtoolsElement {
 
     static DriverFunction<Boolean> waitUnclickable(LazyElement element, int interval, int timeout) {
         return waitWith(element, DevtoolsDriver::isElementUnclickable, CoreFormatterConstants.OPTION_NOT, interval, timeout, SeleniumFormatterConstants.UNCLICKABLE);
-    }
-
-    static DriverFunction<Boolean> waitPresentDefaults(LazyElement element) {
-        return waitPresent(element, 300, 3000);
-    }
-
-    static DriverFunction<Boolean> waitDisplayedDefaults(LazyElement element) {
-        return waitDisplayed(element, 300, 3000);
-    }
-
-    static DriverFunction<Boolean> waitEnabledDefaults(LazyElement element) {
-        return waitEnabled(element, 300, 3000);
-    }
-
-    static DriverFunction<Boolean> waitClickableDefaults(LazyElement element) {
-        return waitClickable(element, 300, 3000);
-    }
-
-    static DriverFunction<Boolean> waitAbsentDefaults(LazyElement element) {
-        return waitAbsent(element, 300, 3000);
-    }
-
-    static DriverFunction<Boolean> waitHiddenDefaults(LazyElement element) {
-        return waitHidden(element, 300, 3000);
-    }
-
-    static DriverFunction<Boolean> waitDisabledDefaults(LazyElement element) {
-        return waitDisabled(element, 300, 3000);
-    }
-
-    static DriverFunction<Boolean> waitUnclickableDefaults(LazyElement element) {
-        return waitUnclickable(element, 300, 3000);
     }
 
     private static DriverFunction<Boolean> clickCore(LazyElement element) {
@@ -162,22 +131,6 @@ public interface DevtoolsElement {
         return clickWhenCore(element, DevtoolsElement::waitClickable, interval, timeout);
     }
 
-    static DriverFunction<Boolean> clickWhenPresentDefaults(LazyElement element) {
-        return clickWhenPresent(element, 300, 3000);
-    }
-
-    static DriverFunction<Boolean> clickWhenDisplayedDefaults(LazyElement element) {
-        return clickWhenCore(element, DevtoolsElement::waitDisplayed, 300, 3000);
-    }
-
-    static DriverFunction<Boolean> clickWhenEnabledDefaults(LazyElement element) {
-        return clickWhenCore(element, DevtoolsElement::waitEnabled, 300, 3000);
-    }
-
-    static DriverFunction<Boolean> clickWhenClickableDefaults(LazyElement element) {
-        return clickWhenCore(element, DevtoolsElement::waitClickable, 300, 3000);
-    }
-
     static DriverFunction<Boolean> clearWhenPresent(LazyElement element, int interval, int timeout) {
         return clearWhenCore(element, DevtoolsElement::waitPresent, interval, timeout);
     }
@@ -192,22 +145,6 @@ public interface DevtoolsElement {
 
     static DriverFunction<Boolean> clearWhenClickable(LazyElement element, int interval, int timeout) {
         return clearWhenCore(element, DevtoolsElement::waitClickable, interval, timeout);
-    }
-
-    static DriverFunction<Boolean> clearWhenPresentDefaults(LazyElement element) {
-        return clearWhenCore(element, DevtoolsElement::waitPresent, 300, 3000);
-    }
-
-    static DriverFunction<Boolean> clearWhenDisplayedDefaults(LazyElement element) {
-        return clearWhenCore(element, DevtoolsElement::waitDisplayed, 300, 3000);
-    }
-
-    static DriverFunction<Boolean> clearWhenEnabledDefaults(LazyElement element) {
-        return clearWhenCore(element, DevtoolsElement::waitEnabled, 300, 3000);
-    }
-
-    static DriverFunction<Boolean> clearWhenClickableDefaults(LazyElement element) {
-        return clearWhenCore(element, DevtoolsElement::waitClickable, 300, 3000);
     }
 
     static DriverFunction<Boolean> setValueWhenPresent(LazyElement element, String value, int interval, int timeout) {
@@ -226,19 +163,83 @@ public interface DevtoolsElement {
         return setValueWhenCore(element, value, DevtoolsElement::waitClickable, interval, timeout);
     }
 
+    static DriverFunction<Boolean> waitPresentDefaults(LazyElement element) {
+        return waitPresent(element, DevtoolsElementConstants.INTERVAL_DURATION, DevtoolsElementConstants.TIMEOUT_DURATION);
+    }
+
+    static DriverFunction<Boolean> waitDisplayedDefaults(LazyElement element) {
+        return waitDisplayed(element, DevtoolsElementConstants.INTERVAL_DURATION, DevtoolsElementConstants.TIMEOUT_DURATION);
+    }
+
+    static DriverFunction<Boolean> waitEnabledDefaults(LazyElement element) {
+        return waitEnabled(element, DevtoolsElementConstants.INTERVAL_DURATION, DevtoolsElementConstants.TIMEOUT_DURATION);
+    }
+
+    static DriverFunction<Boolean> waitClickableDefaults(LazyElement element) {
+        return waitClickable(element, DevtoolsElementConstants.INTERVAL_DURATION, DevtoolsElementConstants.TIMEOUT_DURATION);
+    }
+
+    static DriverFunction<Boolean> waitAbsentDefaults(LazyElement element) {
+        return waitAbsent(element, DevtoolsElementConstants.INTERVAL_DURATION, DevtoolsElementConstants.TIMEOUT_DURATION);
+    }
+
+    static DriverFunction<Boolean> waitHiddenDefaults(LazyElement element) {
+        return waitHidden(element, DevtoolsElementConstants.INTERVAL_DURATION, DevtoolsElementConstants.TIMEOUT_DURATION);
+    }
+
+    static DriverFunction<Boolean> waitDisabledDefaults(LazyElement element) {
+        return waitDisabled(element, DevtoolsElementConstants.INTERVAL_DURATION, DevtoolsElementConstants.TIMEOUT_DURATION);
+    }
+
+    static DriverFunction<Boolean> waitUnclickableDefaults(LazyElement element) {
+        return waitUnclickable(element, DevtoolsElementConstants.INTERVAL_DURATION, DevtoolsElementConstants.TIMEOUT_DURATION);
+    }
+
+    static DriverFunction<Boolean> clickWhenPresentDefaults(LazyElement element) {
+        return clickWhenPresent(element, DevtoolsElementConstants.INTERVAL_DURATION, DevtoolsElementConstants.TIMEOUT_DURATION);
+    }
+
+    static DriverFunction<Boolean> clickWhenDisplayedDefaults(LazyElement element) {
+        return clickWhenCore(element, DevtoolsElement::waitDisplayed, DevtoolsElementConstants.INTERVAL_DURATION, DevtoolsElementConstants.TIMEOUT_DURATION);
+    }
+
+    static DriverFunction<Boolean> clickWhenEnabledDefaults(LazyElement element) {
+        return clickWhenCore(element, DevtoolsElement::waitEnabled, DevtoolsElementConstants.INTERVAL_DURATION, DevtoolsElementConstants.TIMEOUT_DURATION);
+    }
+
+    static DriverFunction<Boolean> clickWhenClickableDefaults(LazyElement element) {
+        return clickWhenCore(element, DevtoolsElement::waitClickable, DevtoolsElementConstants.INTERVAL_DURATION, DevtoolsElementConstants.TIMEOUT_DURATION);
+    }
+
+    static DriverFunction<Boolean> clearWhenPresentDefaults(LazyElement element) {
+        return clearWhenCore(element, DevtoolsElement::waitPresent, DevtoolsElementConstants.INTERVAL_DURATION, DevtoolsElementConstants.TIMEOUT_DURATION);
+    }
+
+    static DriverFunction<Boolean> clearWhenDisplayedDefaults(LazyElement element) {
+        return clearWhenCore(element, DevtoolsElement::waitDisplayed, DevtoolsElementConstants.INTERVAL_DURATION, DevtoolsElementConstants.TIMEOUT_DURATION);
+    }
+
+    static DriverFunction<Boolean> clearWhenEnabledDefaults(LazyElement element) {
+        return clearWhenCore(element, DevtoolsElement::waitEnabled, DevtoolsElementConstants.INTERVAL_DURATION, DevtoolsElementConstants.TIMEOUT_DURATION);
+    }
+
+    static DriverFunction<Boolean> clearWhenClickableDefaults(LazyElement element) {
+        return clearWhenCore(element, DevtoolsElement::waitClickable, DevtoolsElementConstants.INTERVAL_DURATION, DevtoolsElementConstants.TIMEOUT_DURATION);
+    }
+
     static DriverFunction<Boolean> setValueWhenPresentDefaults(LazyElement element, String value) {
-        return setValueWhenCore(element, value, DevtoolsElement::waitPresent, 300, 3000);
+        return setValueWhenCore(element, value, DevtoolsElement::waitPresent, DevtoolsElementConstants.INTERVAL_DURATION, DevtoolsElementConstants.TIMEOUT_DURATION);
     }
 
     static DriverFunction<Boolean> setValueWhenDisplayedDefaults(LazyElement element, String value) {
-        return setValueWhenCore(element, value, DevtoolsElement::waitDisplayed, 300, 3000);
+        return setValueWhenCore(element, value, DevtoolsElement::waitDisplayed, DevtoolsElementConstants.INTERVAL_DURATION, DevtoolsElementConstants.TIMEOUT_DURATION);
     }
 
     static DriverFunction<Boolean> setValueWhenEnabledDefaults(LazyElement element, String value) {
-        return setValueWhenCore(element, value, DevtoolsElement::waitEnabled, 300, 3000);
+        return setValueWhenCore(element, value, DevtoolsElement::waitEnabled, DevtoolsElementConstants.INTERVAL_DURATION, DevtoolsElementConstants.TIMEOUT_DURATION);
     }
 
     static DriverFunction<Boolean> setValueWhenClickableDefaults(LazyElement element, String value) {
-        return setValueWhenCore(element, value, DevtoolsElement::waitClickable, 300, 3000);
+        return setValueWhenCore(element, value, DevtoolsElement::waitClickable, DevtoolsElementConstants.INTERVAL_DURATION, DevtoolsElementConstants.TIMEOUT_DURATION);
     }
 }
