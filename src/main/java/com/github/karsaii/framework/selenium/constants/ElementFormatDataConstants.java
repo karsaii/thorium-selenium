@@ -4,7 +4,7 @@ import com.github.karsaii.framework.selenium.constants.validators.SeleniumFormat
 import com.github.karsaii.framework.selenium.namespaces.validators.element.ElementFormatters;
 import com.github.karsaii.framework.selenium.records.element.is.ElementFormatData;
 
-public class ElementFormatDataConstants {
+public abstract class ElementFormatDataConstants {
     public static final ElementFormatData<Boolean> PRESENT_DATA = new ElementFormatData<>(ElementFormatters::getConditionMessage, "isElementPresent", SeleniumFormatterConstants.PRESENT);
     public static final ElementFormatData<Boolean> DISPLAYED_DATA = new ElementFormatData<>(ElementFormatters::getConditionMessage, "isElementDisplayed", SeleniumFormatterConstants.DISPLAYED);
     public static final ElementFormatData<Boolean> ENABLED_DATA = new ElementFormatData<>(ElementFormatters::getConditionMessage, "isElementEnabled", SeleniumFormatterConstants.ENABLED);

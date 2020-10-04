@@ -3,6 +3,7 @@ package com.github.karsaii.framework.selenium.namespaces;
 import com.github.karsaii.core.constants.CoreDataConstants;
 import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
 import com.github.karsaii.core.extensions.namespaces.predicates.BasicPredicates;
+import com.github.karsaii.core.namespaces.factories.wait.WaitDataFactory;
 import com.github.karsaii.core.namespaces.factories.wait.WaitTimeDataFactory;
 import com.github.karsaii.core.namespaces.wait.Wait;
 import com.github.karsaii.core.records.wait.WaitData;
@@ -19,7 +20,7 @@ public interface DriverWaits {
             "waitNavigatedTo",
             isNotBlank(url) && isNotNull(query) && areAll(BasicPredicates::isPositiveNonZero, interval, timeout) && (interval < timeout),
             driver -> Wait.core(
-                new WaitData<>(
+                WaitDataFactory.getWith(
                     ExpectedConditions.isUrlContains(url, query),
                     WaitPredicateFunctions::isTruthyData,
                     "Waiting for url",

@@ -2,6 +2,7 @@ package com.github.karsaii.framework.selenium.namespaces;
 
 import com.github.karsaii.core.constants.CoreDataConstants;
 import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
+import com.github.karsaii.core.namespaces.factories.wait.WaitDataFactory;
 import com.github.karsaii.core.namespaces.factories.wait.WaitTimeDataFactory;
 import com.github.karsaii.core.namespaces.wait.Wait;
 import com.github.karsaii.core.records.wait.WaitData;
@@ -28,7 +29,7 @@ public interface WaitConditions {
         return ifDriver(
             "waitConditionCore",
             isNotNull(conditionGetter),
-            Wait.core(new WaitData<>(
+            Wait.core(WaitDataFactory.getWith(
                 conditionGetter.apply(locator),
                 isBlank(option) ? WaitPredicateFunctions::isTruthyData : WaitPredicateFunctions::isFalsyData,
                 "Element located by: " + locator + " to be " + (isBlank(message) ? "clickable" : message) + CoreFormatterConstants.END_LINE,
@@ -43,7 +44,7 @@ public interface WaitConditions {
             "waitConditionCore",
             isNotNull(conditionGetter),
             DriverFunctionFactory.prependMessage(
-                Wait.core(new WaitData<>(
+                Wait.core(WaitDataFactory.getWith(
                     conditionGetter.apply(data),
                     isBlank(option) ? WaitPredicateFunctions::isTruthyData : WaitPredicateFunctions::isFalsyData,
                     data.name + " " + message,
