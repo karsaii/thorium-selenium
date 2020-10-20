@@ -1,12 +1,18 @@
 package com.github.karsaii.framework.selenium.namespaces.driver;
 
+import com.github.karsaii.core.namespaces.clipboard.ClipboardFunctions;
 import com.github.karsaii.framework.selenium.constants.driver.devtools.DevtoolsConstants;
 import com.github.karsaii.framework.selenium.namespaces.SeleniumExecutor;
 import com.github.karsaii.framework.selenium.namespaces.element.Element;
 import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
+import com.github.karsaii.framework.selenium.namespaces.factories.DriverFunctionFactory;
 import org.openqa.selenium.Keys;
 
 public interface DevtoolsDriverTabbing {
+    private static DriverFunction<Boolean> copyCommand(String command) {
+        return DriverFunctionFactory.getFunction((driver) -> ClipboardFunctions.copyToClipboard(command));
+    }
+
     static DriverFunction<Boolean> inputTab() {
         return SeleniumExecutor.execute(
             "inputTab",
@@ -19,7 +25,8 @@ public interface DevtoolsDriverTabbing {
         return SeleniumExecutor.execute(
             "inputTabAndCommand",
             DevtoolsDriverUtilities.sleep(),
-            Element.sendKeys(DevtoolsConstants.BODY, Keys.chord(DevtoolsConstants.TAB_INPUT, command, Keys.ENTER))
+            copyCommand(command),
+            Element.sendKeys(DevtoolsConstants.BODY, Keys.chord(DevtoolsConstants.TAB_INPUT, Keys.chord(Keys.CONTROL, "v"), Keys.END, Keys.ENTER))
         );
     }
 
