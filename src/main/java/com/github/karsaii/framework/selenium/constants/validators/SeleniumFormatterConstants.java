@@ -52,4 +52,6 @@ public abstract class SeleniumFormatterConstants {
     public static final String TYPE_NOT_IN_CACHE_MAP = "The parameter map didn't contain an expected, indexed selector-type" + CoreFormatterConstants.END_LINE;
 
     public static final String CLEAR_CONSOLE = Keys.chord(Keys.CONTROL, "l");
+
+    public static final String COLON_SINGLE_QUOTE = ", '";
 }

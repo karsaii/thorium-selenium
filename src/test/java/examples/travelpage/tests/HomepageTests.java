@@ -1,12 +1,10 @@
 package examples.travelpage.tests;
 
-import com.github.karsaii.framework.selenium.namespaces.Driver;
 import com.github.karsaii.framework.selenium.namespaces.DriverWaits;
 import com.github.karsaii.framework.selenium.namespaces.SeleniumExecutor;
 import com.github.karsaii.framework.selenium.namespaces.element.Element;
 import com.github.karsaii.framework.selenium.namespaces.element.ElementExpectedConditions;
 import examples.travelpage.constants.HomepageConstants;
-import examples.travelpage.namespaces.ChromeDriverFunctions;
 import examples.travelpage.namespaces.FFDriverFunctions;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
@@ -28,6 +26,6 @@ public class HomepageTests {
 
     @AfterAll
     public static void teardown() {
-        Driver.quitDriver().apply(FFDriverFunctions.get());
+        FFDriverFunctions.unregister();
     }
 }

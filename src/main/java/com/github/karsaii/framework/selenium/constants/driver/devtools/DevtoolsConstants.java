@@ -24,5 +24,4 @@ public abstract class DevtoolsConstants {
     public static final int TAB_SLEEP_MILLIS = 2;
 
     public static final String TAB_INPUT = Keys.chord(Keys.TAB);
-    public static final String ENTER_INPUT = Keys.chord(Keys.ENTER);
 }

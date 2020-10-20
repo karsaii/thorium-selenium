@@ -1,5 +1,6 @@
 package examples.travelpage.namespaces;
 
+import com.github.karsaii.framework.selenium.namespaces.Driver;
 import examples.travelpage.constants.DriverConstants;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxBinary;
@@ -19,5 +20,15 @@ public interface FFDriverFunctions {
 
     static WebDriver get() {
         return DriverConstants.DRIVERS.containsKey(DriverConstants.FF_BROWSER) ? DriverConstants.DRIVERS.get(DriverConstants.FF_BROWSER) : getFirefoxDriver();
+    }
+
+    static void unregister(String name) {
+        final var driver = DriverConstants.DRIVERS.get(name);
+        Driver.quitDriver().apply(driver);
+        DriverConstants.DRIVERS.remove(name);
+    }
+
+    static void unregister() {
+        unregister(DriverConstants.FF_BROWSER);
     }
 }

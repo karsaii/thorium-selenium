@@ -34,6 +34,6 @@ public class PasteTests {
 
     @AfterAll
     public static void teardown() {
-        Driver.quitDriver().apply(FFDriverFunctions.get());
+        FFDriverFunctions.unregister();
     }
 }
