@@ -1,7 +1,8 @@
 package com.github.karsaii.framework.selenium.namespaces.driver;
 
 import com.github.karsaii.core.namespaces.clipboard.ClipboardFunctions;
-import com.github.karsaii.framework.selenium.constants.driver.devtools.DevtoolsConstants;
+import com.github.karsaii.framework.selenium.constants.clipboard.CopyPasteConstants;
+import com.github.karsaii.framework.selenium.constants.driver.devtools.DevtoolsViewConstants;
 import com.github.karsaii.framework.selenium.namespaces.SeleniumExecutor;
 import com.github.karsaii.framework.selenium.namespaces.element.Element;
 import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
@@ -17,16 +18,17 @@ public interface DevtoolsDriverTabbing {
         return SeleniumExecutor.execute(
             "inputTab",
             DevtoolsDriverUtilities.sleep(),
-            Element.sendKeys(DevtoolsConstants.BODY, DevtoolsConstants.TAB_INPUT)
+            Element.sendKeys(DevtoolsViewConstants.BODY, DevtoolsViewConstants.TAB_INPUT)
         );
     }
 
     static DriverFunction<Boolean> inputTabAndCommand(String command) {
+        ;
         return SeleniumExecutor.execute(
             "inputTabAndCommand",
             DevtoolsDriverUtilities.sleep(),
             copyCommand(command),
-            Element.sendKeys(DevtoolsConstants.BODY, Keys.chord(DevtoolsConstants.TAB_INPUT, Keys.chord(Keys.CONTROL, "v"), Keys.END, Keys.ENTER))
+            Element.sendKeys(DevtoolsViewConstants.BODY, Keys.chord(DevtoolsViewConstants.TAB_INPUT, CopyPasteConstants.PLATFORM_COPYPASTE_CHORD, Keys.END, Keys.ENTER))
         );
     }
 
@@ -34,7 +36,7 @@ public interface DevtoolsDriverTabbing {
         return SeleniumExecutor.execute(
             "inputTabAndCommand",
             DevtoolsDriverUtilities.sleep(),
-            Element.sendKeys(DevtoolsConstants.BODY, Keys.chord(DevtoolsConstants.TAB_INPUT, Keys.ENTER))
+            Element.sendKeys(DevtoolsViewConstants.BODY, Keys.chord(DevtoolsViewConstants.TAB_INPUT, Keys.ENTER))
         );
     }
 
@@ -45,7 +47,7 @@ public interface DevtoolsDriverTabbing {
     static DriverFunction<Boolean> tabToBeforeClear() {
         return SeleniumExecutor.execute(
             "tabToClear",
-            Element.clickWhenClickable(DevtoolsConstants.BODY),
+            Element.clickWhenClickable(DevtoolsViewConstants.BODY),
             repeatTab(5)
         );
     }

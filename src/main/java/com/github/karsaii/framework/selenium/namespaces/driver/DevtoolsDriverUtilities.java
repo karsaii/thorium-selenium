@@ -6,7 +6,7 @@ import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
 import com.github.karsaii.core.namespaces.DataFactoryFunctions;
 import com.github.karsaii.core.namespaces.validators.CoreFormatter;
 import com.github.karsaii.core.records.Data;
-import com.github.karsaii.framework.selenium.constants.driver.devtools.DevtoolsConstants;
+import com.github.karsaii.framework.selenium.constants.driver.devtools.DevtoolsViewConstants;
 import com.github.karsaii.framework.selenium.namespaces.SeleniumExecutor;
 import com.github.karsaii.framework.selenium.namespaces.element.Element;
 import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
@@ -40,27 +40,27 @@ public interface DevtoolsDriverUtilities {
     private static DriverFunction<Boolean> sleep(int milliseconds) {
         return ifDriver(
             "sleep",
-            CoreFormatter.isMoreThanExpectedMessage(milliseconds, DevtoolsConstants.TAB_SLEEP_MILLIS_LIMIT, "Milliseconds of sleep"),
+            CoreFormatter.isMoreThanExpectedMessage(milliseconds, DevtoolsViewConstants.TAB_SLEEP_MILLIS_LIMIT, "Milliseconds of sleep"),
             DriverFunctionFactory.getFunction(sleepCore(milliseconds)),
             CoreDataConstants.NULL_BOOLEAN
         );
     }
 
     static DriverFunction<Boolean> sleep() {
-        return sleep(DevtoolsConstants.TAB_SLEEP_MILLIS);
+        return sleep(DevtoolsViewConstants.TAB_SLEEP_MILLIS);
     }
 
     static DriverFunction<Boolean> noResultInConsole() {
         return SeleniumExecutor.execute(
             "noResultInConsole",
-            Element.waitAbsent(DevtoolsConstants.RESULT_FIELD, 300, 3000)
+            Element.waitAbsent(DevtoolsViewConstants.RESULT_FIELD, 300, 3000)
         );
     }
 
     static DriverFunction<Boolean> consoleResultDisplayed() {
         return SeleniumExecutor.execute(
             "consoleResultDisplayed",
-            Element.waitDisplayed(DevtoolsConstants.RESULT_FIELD, 300, 3000)
+            Element.waitDisplayed(DevtoolsViewConstants.RESULT_FIELD, 300, 3000)
         );
     }
 
@@ -68,7 +68,7 @@ public interface DevtoolsDriverUtilities {
         return SeleniumExecutor.execute(
             "getConsoleResult",
             consoleResultDisplayed(),
-            Element.getText(DevtoolsConstants.RESULT_FIELD)
+            Element.getText(DevtoolsViewConstants.RESULT_FIELD)
         );
     }
 

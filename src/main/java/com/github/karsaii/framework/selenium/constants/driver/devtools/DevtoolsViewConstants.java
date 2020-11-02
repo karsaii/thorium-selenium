@@ -5,7 +5,7 @@ import com.github.karsaii.framework.selenium.namespaces.factories.lazy.LazyEleme
 import com.github.karsaii.framework.selenium.records.lazy.LazyElement;
 import org.openqa.selenium.Keys;
 
-public abstract class DevtoolsConstants {
+public abstract class DevtoolsViewConstants {
     public static final String NAME = "Devtools - ";
 
     public static final String BODY_NAME = NAME + "Body";

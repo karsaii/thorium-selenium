@@ -227,7 +227,7 @@ public interface Execute {
             "readyState",
             driver -> {
                 final var result = Driver.execute(ReadyState.script).apply(driver);
-                return isValidNonFalse(result) ? new Data<>(Boolean.valueOf(result.object.toString()), result.status, result.message, result.exception, result.exceptionMessage) : negative;
+                return isValidNonFalse(result) ? DataFactoryFunctions.replaceObject(result, Boolean.valueOf(result.object.toString())) : negative;
             },
             negative
         );
