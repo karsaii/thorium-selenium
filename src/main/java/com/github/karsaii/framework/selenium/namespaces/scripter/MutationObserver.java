@@ -68,7 +68,7 @@ public interface MutationObserver {
     }
 
     private static Data<Boolean> setConsoleFocusedFunctionCore(WebDriver driver, LazyElement element) {
-        final var isSetData = isConsoleFocusedCore(driver);
+        final var isSetData = isConsoleFocusedObserverSet(driver);
         if (DataPredicates.isValidNonFalse(isSetData)) {
             return isSetData;
         }
