@@ -1,6 +1,7 @@
 package com.github.karsaii.framework.selenium.namespaces.driver;
 
 import com.github.karsaii.core.namespaces.clipboard.ClipboardFunctions;
+import com.github.karsaii.core.namespaces.systemidentity.BasicSystemIdentityFunctions;
 import com.github.karsaii.framework.selenium.constants.clipboard.CopyPasteConstants;
 import com.github.karsaii.framework.selenium.constants.driver.devtools.DevtoolsViewConstants;
 import com.github.karsaii.framework.selenium.namespaces.SeleniumExecutor;
@@ -27,7 +28,7 @@ public interface DevtoolsDriverTabbing {
             "inputTabAndCommand",
             DevtoolsDriverUtilities.sleep(),
             copyCommand(command),
-            Element.sendKeys(DevtoolsViewConstants.BODY, Keys.chord(DevtoolsViewConstants.TAB_INPUT, CopyPasteConstants.PLATFORM_COPYPASTE_CHORD, Keys.END, Keys.ENTER))
+            Element.sendKeys(DevtoolsViewConstants.BODY, Keys.chord(DevtoolsViewConstants.TAB_INPUT, Keys.chord(CopyPasteConstants.PASTE_CONTROL, "v"), Keys.END, Keys.ENTER))
         );
     }
 

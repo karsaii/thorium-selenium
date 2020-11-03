@@ -4,5 +4,5 @@ import com.github.karsaii.core.namespaces.systemidentity.BasicSystemIdentityFunc
 import org.openqa.selenium.Keys;
 
 public abstract class CopyPasteConstants {
-    public static final String PLATFORM_COPYPASTE_CHORD = Keys.chord(BasicSystemIdentityFunctions.isMac() ? Keys.COMMAND : Keys.CONTROL, "v");
+    public static final Keys PASTE_CONTROL = BasicSystemIdentityFunctions.isMac() ? Keys.COMMAND : Keys.CONTROL;
 }
