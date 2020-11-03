@@ -28,7 +28,9 @@ public interface DevtoolsDriverTabbing {
             "inputTabAndCommand",
             DevtoolsDriverUtilities.sleep(),
             copyCommand(command),
-            Element.sendKeys(DevtoolsViewConstants.BODY, Keys.chord(DevtoolsViewConstants.TAB_INPUT, Keys.chord(CopyPasteConstants.PASTE_CONTROL, "v"), Keys.END, Keys.ENTER))
+            BasicSystemIdentityFunctions.isMac() ? (
+                Element.sendKeys(DevtoolsViewConstants.BODY, Keys.chord(DevtoolsViewConstants.TAB_INPUT, Keys.chord(Keys.COMMAND, "v"), Keys.END, Keys.ENTER))
+            ) : Element.sendKeys(DevtoolsViewConstants.BODY, Keys.chord(DevtoolsViewConstants.TAB_INPUT, Keys.chord(Keys.CONTROL, "v"), Keys.END, Keys.ENTER))
         );
     }
 

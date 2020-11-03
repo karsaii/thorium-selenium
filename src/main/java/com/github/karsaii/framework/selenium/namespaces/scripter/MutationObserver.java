@@ -59,11 +59,6 @@ public interface MutationObserver {
     }
 
     private static Data<Boolean> isConsoleFocusedCore(WebDriver driver) {
-        final var isSetData = isConsoleFocusedObserverSet(driver);
-        if (DataPredicates.isInvalidOrFalse(isSetData)) {
-            return isSetData;
-        }
-
         final var result = Driver.execute(DevtoolsConstants.CONSOLE_FOCUSED_CHECK).apply(driver);
         final var status = CoreUtilities.castToBoolean(result.object);
         final var message = "Console was" + (status ? "" : "not") + " focused" + CoreFormatterConstants.END_LINE;
