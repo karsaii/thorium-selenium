@@ -51,32 +51,34 @@ public interface MutationObserver {
         final var result = Driver.execute(DevtoolsConstants.GUARD).apply(driver);
         final var object = result.object instanceof String ? (String) result.object : CoreFormatterConstants.EMPTY;
         final var status = Boolean.parseBoolean(object);
-        return DataFactoryFunctions.getBoolean(status, "isConsoleFocusedObserverSet", result.message.toString(), result.exception);
-    }
-
-    private static DriverFunction<Boolean> isConsoleFocusedObserverSet() {
-        return MutationObserver::isConsoleFocusedObserverSet;
+        final var message = "Observer was" + (status ? "" : "not") + " set" + CoreFormatterConstants.END_LINE;
+        return DataFactoryFunctions.getBoolean(status, "isConsoleFocusedObserverSet", message, result.exception);
     }
 
     private static Data<Boolean> isConsoleFocusedCore(WebDriver driver) {
-        Data<?> result = isConsoleFocusedObserverSet().apply(driver);
-        if (DataPredicates.isValidNonFalse(result)) {
-            result = Driver.execute(DevtoolsConstants.CONSOLE_FOCUSED_CHECK).apply(driver);
+        final var isSetData = isConsoleFocusedObserverSet(driver);
+        if (DataPredicates.isInvalidOrFalse(isSetData)) {
+            return isSetData;
         }
 
+        final var result = Driver.execute(DevtoolsConstants.CONSOLE_FOCUSED_CHECK).apply(driver);
         final var status = CoreUtilities.castToBoolean(result.object);
-        return DataFactoryFunctions.getBoolean(status, "isConsoleFocused", result.message.toString(), result.exception);
+        final var message = "Console was" + (status ? "" : "not") + " focused" + CoreFormatterConstants.END_LINE;
+        return DataFactoryFunctions.getBoolean(status, "isConsoleFocused", message, result.exception);
     }
 
     private static Data<Boolean> setConsoleFocusedFunctionCore(WebDriver driver, LazyElement element) {
-        final var locator = LazyElementUtilities.getCSSSelectorFromElement(element);
-        Data<?> result = isConsoleFocusedObserverSet().apply(driver);
-        if (DataPredicates.isInvalidOrFalse(result)) {
-            result = Driver.execute(getMutationObserverScript(locator)).apply(driver);
+        final var isSetData = isConsoleFocusedCore(driver);
+        if (DataPredicates.isValidNonFalse(isSetData)) {
+            return isSetData;
         }
 
-        final var status = DataPredicates.isInvalidOrFalse(result);
-        return DataFactoryFunctions.getBoolean(status, result.message.toString(), result.exception);
+        final var locator = LazyElementUtilities.getCSSSelectorFromElement(element);
+        final var script = getMutationObserverScript(locator);
+        final var result = Driver.execute(script).apply(driver);
+        final var status = DataPredicates.isValidNonFalse(result);
+        final var message = "Observer was" + (status ? "" : "not") + " set" + CoreFormatterConstants.END_LINE;
+        return DataFactoryFunctions.getBoolean(status, message, result.exception);
     }
 
     private static Function<WebDriver, Data<Boolean>> setConsoleFocusedFunctionCore(LazyElement element) {
@@ -96,11 +98,11 @@ public interface MutationObserver {
         return setConsoleFocusedFunction(DevtoolsViewConstants.CONSOLE_FOCUS);
     }
 
-    private static Function<WebDriver, Data<Boolean>> isConsoleFocusedCore() {
-        return MutationObserver::isConsoleFocusedCore;
+    private static DriverFunction<Boolean> isConsoleFocusedObserverSet() {
+        return MutationObserver::isConsoleFocusedObserverSet;
     }
 
     static DriverFunction<Boolean> isConsoleFocused() {
-        return DriverFunctionFactory.getFunction(isConsoleFocusedCore());
+        return MutationObserver::isConsoleFocusedCore;
     }
 }
