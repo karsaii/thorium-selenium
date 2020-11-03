@@ -57,7 +57,8 @@ public interface MutationObserver {
     }
 
     private static Data<Boolean> isConsoleFocusedCore(WebDriver driver) {
-        final var result = Driver.execute(DevtoolsConstants.CONSOLE_FOCUSED_CHECK).apply(driver);
+
+        final var result = SeleniumExecutor.execute(isConsoleFocusedObserverSet(), Driver.execute(DevtoolsConstants.CONSOLE_FOCUSED_CHECK)).apply(driver);
         final var status = CoreUtilities.castToBoolean(result.object);
         return DataFactoryFunctions.getBoolean(status, "isConsoleFocused", result.message.toString(), result.exception);
     }
