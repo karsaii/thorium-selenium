@@ -25,6 +25,9 @@ import static com.github.karsaii.core.namespaces.DataExecutionFunctions.ifDepend
 public interface MutationObserver {
     private static String getMutationObserverScript(String locator) {
         return (
+            "if ((typeof document['__test']) === (typeof {})) {" +
+            "    return true;" +
+            "}" +
             "document['__test'] = {};" +
             "document['__test']['consoleFocused'] = false;" +
             "document['__test']['observing'] = document.querySelectorAll('" + locator + "')[0];" +
@@ -68,11 +71,6 @@ public interface MutationObserver {
     }
 
     private static Data<Boolean> setConsoleFocusedFunctionCore(WebDriver driver, LazyElement element) {
-        final var isSetData = isConsoleFocusedObserverSet(driver);
-        if (isSetData.status) {
-            return isSetData;
-        }
-
         final var locator = LazyElementUtilities.getCSSSelectorFromElement(element);
         final var script = getMutationObserverScript(locator);
         final var result = Driver.execute(script).apply(driver);
