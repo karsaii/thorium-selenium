@@ -1,6 +1,7 @@
 package com.github.karsaii.framework.selenium.namespaces.scripter;
 
 import com.github.karsaii.core.constants.CoreDataConstants;
+import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
 import com.github.karsaii.core.extensions.namespaces.CoreUtilities;
 import com.github.karsaii.core.extensions.namespaces.predicates.ExecutorPredicates;
 import com.github.karsaii.core.namespaces.DataFactoryFunctions;
@@ -48,7 +49,8 @@ public interface MutationObserver {
 
     private static Data<Boolean> isConsoleFocusedObserverSet(WebDriver driver) {
         final var result = Driver.execute(DevtoolsConstants.GUARD).apply(driver);
-        final var status = CoreUtilities.castToBoolean(result.object);
+        final var object = result.object instanceof String ? (String) result.object : CoreFormatterConstants.EMPTY;
+        final var status = Boolean.parseBoolean(object);
         return DataFactoryFunctions.getBoolean(status, "isConsoleFocusedObserverSet", result.message.toString(), result.exception);
     }
 
@@ -57,15 +59,22 @@ public interface MutationObserver {
     }
 
     private static Data<Boolean> isConsoleFocusedCore(WebDriver driver) {
+        Data<?> result = isConsoleFocusedObserverSet().apply(driver);
+        if (DataPredicates.isValidNonFalse(result)) {
+            result = Driver.execute(DevtoolsConstants.CONSOLE_FOCUSED_CHECK).apply(driver);
+        }
 
-        final var result = SeleniumExecutor.execute(isConsoleFocusedObserverSet(), Driver.execute(DevtoolsConstants.CONSOLE_FOCUSED_CHECK)).apply(driver);
         final var status = CoreUtilities.castToBoolean(result.object);
         return DataFactoryFunctions.getBoolean(status, "isConsoleFocused", result.message.toString(), result.exception);
     }
 
     private static Data<Boolean> setConsoleFocusedFunctionCore(WebDriver driver, LazyElement element) {
         final var locator = LazyElementUtilities.getCSSSelectorFromElement(element);
-        final var result = SeleniumExecutor.conditionalSequence(ExecutorPredicates::isFalseStatus, isConsoleFocusedObserverSet(), Driver.execute(getMutationObserverScript(locator))).apply(driver);
+        Data<?> result = isConsoleFocusedObserverSet().apply(driver);
+        if (DataPredicates.isInvalidOrFalse(result)) {
+            result = Driver.execute(getMutationObserverScript(locator)).apply(driver);
+        }
+
         final var status = DataPredicates.isInvalidOrFalse(result);
         return DataFactoryFunctions.getBoolean(status, result.message.toString(), result.exception);
     }
