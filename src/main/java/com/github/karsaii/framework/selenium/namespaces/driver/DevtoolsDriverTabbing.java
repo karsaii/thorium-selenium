@@ -23,7 +23,6 @@ public interface DevtoolsDriverTabbing {
     }
 
     static DriverFunction<Boolean> inputTabAndCommand(String command) {
-        ;
         return SeleniumExecutor.execute(
             "inputTabAndCommand",
             DevtoolsDriverUtilities.sleep(),

@@ -76,7 +76,7 @@ public interface MutationObserver {
         final var locator = LazyElementUtilities.getCSSSelectorFromElement(element);
         final var script = getMutationObserverScript(locator);
         final var result = Driver.execute(script).apply(driver);
-        final var status = DataPredicates.isValidNonFalse(result);
+        final var status = CoreUtilities.castToBoolean(result.object);
         final var message = "Observer was" + (status ? "" : "not") + " set" + CoreFormatterConstants.END_LINE;
         return DataFactoryFunctions.getBoolean(status, message, result.exception);
     }
