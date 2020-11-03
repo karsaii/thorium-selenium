@@ -49,7 +49,7 @@ public interface MutationObserver {
 
     private static Data<Boolean> isConsoleFocusedObserverSet(WebDriver driver) {
         final var result = Driver.execute(DevtoolsConstants.GUARD).apply(driver);
-        final var object = result.object instanceof String ? (String) result.object : CoreFormatterConstants.EMPTY;
+        final var object = result.object instanceof String ? ((String) result.object).trim().replaceAll("\"", "") : CoreFormatterConstants.EMPTY;
         final var status = Boolean.parseBoolean(object);
         final var message = "Observer was" + (status ? "" : "not") + " set" + CoreFormatterConstants.END_LINE;
         return DataFactoryFunctions.getBoolean(status, "isConsoleFocusedObserverSet", message, result.exception);
@@ -69,7 +69,7 @@ public interface MutationObserver {
 
     private static Data<Boolean> setConsoleFocusedFunctionCore(WebDriver driver, LazyElement element) {
         final var isSetData = isConsoleFocusedObserverSet(driver);
-        if (DataPredicates.isValidNonFalse(isSetData)) {
+        if (isSetData.status) {
             return isSetData;
         }
 
