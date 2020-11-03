@@ -2,7 +2,6 @@ package com.github.karsaii.framework.selenium.namespaces.driver;
 
 import com.github.karsaii.core.namespaces.clipboard.ClipboardFunctions;
 import com.github.karsaii.core.namespaces.systemidentity.BasicSystemIdentityFunctions;
-import com.github.karsaii.framework.selenium.constants.clipboard.CopyPasteConstants;
 import com.github.karsaii.framework.selenium.constants.driver.devtools.DevtoolsViewConstants;
 import com.github.karsaii.framework.selenium.namespaces.SeleniumExecutor;
 import com.github.karsaii.framework.selenium.namespaces.element.Element;
@@ -29,7 +28,7 @@ public interface DevtoolsDriverTabbing {
             DevtoolsDriverUtilities.sleep(),
             copyCommand(command),
             BasicSystemIdentityFunctions.isMac() ? (
-                Element.sendKeys(DevtoolsViewConstants.BODY, Keys.chord(DevtoolsViewConstants.TAB_INPUT, Keys.chord(Keys.COMMAND, "v"), Keys.END, Keys.ENTER))
+                Element.sendKeys(DevtoolsViewConstants.BODY, Keys.chord(DevtoolsViewConstants.TAB_INPUT, Keys.chord(Keys.SHIFT, Keys.INSERT), Keys.END, Keys.ENTER))
             ) : Element.sendKeys(DevtoolsViewConstants.BODY, Keys.chord(DevtoolsViewConstants.TAB_INPUT, Keys.chord(Keys.CONTROL, "v"), Keys.END, Keys.ENTER))
         );
     }
