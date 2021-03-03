@@ -8,9 +8,9 @@ public abstract class ElementRepositoryFunctionConstants {
     public static final GetCachedElementData GET_ELEMENT_DEFAULTS = new GetCachedElementData(
         "getElement",
         ElementRepositoryValidators::isInvalidContainsElementMessage,
-        RepositoryConstants.ELEMENTS::getOrDefault,
+        RepositoryConstants.CACHED_ELEMENTS::getOrDefault,
         SeleniumFormatter::getElementFoundInCacheMessage,
         SeleniumCoreConstants.NULL_CACHED_LAZY_ELEMENT_DATA,
-        RepositoryConstants.ELEMENTS
+        RepositoryConstants.CACHED_ELEMENTS
     );
 }

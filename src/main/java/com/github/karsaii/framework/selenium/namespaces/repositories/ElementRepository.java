@@ -90,11 +90,11 @@ public interface ElementRepository {
     }
 
     static Data<Boolean> containsElement(String name, Data<Boolean> defaultValue) {
-        return containsElement(RepositoryConstants.ELEMENTS, name, defaultValue);
+        return containsElement(RepositoryConstants.CACHED_ELEMENTS, name, defaultValue);
     }
 
     static Data<Boolean> containsElement(String name) {
-        return containsElement(RepositoryConstants.ELEMENTS, name, CoreDataConstants.NULL_BOOLEAN);
+        return containsElement(RepositoryConstants.CACHED_ELEMENTS, name, CoreDataConstants.NULL_BOOLEAN);
     }
 
     static Data<CachedLazyElementData> getElement(GetCachedElementData data, String elementName) {

@@ -1,10 +1,14 @@
 package com.github.karsaii.framework.selenium.namespaces.factories.lazy;
 
+import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
 import com.github.karsaii.core.extensions.namespaces.CoreUtilities;
+import com.github.karsaii.core.namespaces.validators.CoreFormatter;
 import com.github.karsaii.framework.core.abstracts.AbstractLazyResult;
 import com.github.karsaii.framework.core.namespaces.extensions.boilers.LazyLocatorList;
+import com.github.karsaii.framework.core.namespaces.validators.FrameworkCoreFormatter;
 import com.github.karsaii.framework.core.namespaces.validators.Invalids;
 import com.github.karsaii.framework.core.records.lazy.LazyLocator;
+import com.github.karsaii.framework.selenium.constants.RepositoryConstants;
 import com.github.karsaii.framework.selenium.constants.SeleniumCoreConstants;
 import com.github.karsaii.framework.selenium.enums.SingleGetter;
 import com.github.karsaii.framework.selenium.namespaces.element.validators.ElementParameters;
@@ -12,19 +16,36 @@ import com.github.karsaii.framework.selenium.namespaces.factories.SeleniumLazyLo
 import com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilities;
 import com.github.karsaii.framework.selenium.records.lazy.LazyElement;
 import com.github.karsaii.framework.selenium.records.lazy.filtered.LazyFilteredElementParameters;
+import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static com.github.karsaii.core.extensions.constants.IExtendedListConstants.FIRST_INDEX;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public interface LazyElementFactory {
+    private static <T> String getComplexKey(String name, Map<String, LazyFilteredElementParameters> parameters, Predicate<LazyFilteredElementParameters> validator) {
+        return "Regular-" + Objects.hash(name, parameters, validator) + "-element";
+    }
+
     static LazyElement getWith(String name, Map<String, LazyFilteredElementParameters> parameters, Predicate<LazyFilteredElementParameters> validator) {
+        final var errorMessage = FrameworkCoreFormatter.isNullLazyElementParametersMessage(name, parameters, validator);
+        if (isNotBlank(errorMessage)) {
+            throw new IllegalArgumentException(errorMessage);
+        }
+
+        final var key = getComplexKey(name, parameters, validator);
+        if (RepositoryConstants.FACTORY_ELEMENTS.containsKey(key)) {
+            throw new IllegalArgumentException("Name collision in lazy element repository" + CoreFormatterConstants.END_LINE);
+        }
+
         return new LazyElement(name, parameters, validator);
     }
 
@@ -50,14 +71,14 @@ public interface LazyElementFactory {
 
     static LazyElement getWithFilterParametersAndNestedLocator(String name, boolean isIndexed, int index, LazyLocatorList locators, String getter) {
         final var parameters = LazyFilteredElementParametersFactory.getWithFilterParametersAndLocatorList(isIndexed, index, locators, getter);
-        final var map = LazyElementParameterMapFactory.getWithLocatorAndParameters("nested", parameters);
+        final var map = LazyElementParameterMapFactory.getWithNestedLocatorAndParameters(parameters);
 
         return getWithDefaultValidator(name, map);
     }
 
     static LazyElement getWithFilterParametersAndNestedLocator(String name, boolean isFiltered, String message, LazyLocatorList locators, String getter) {
         final var parameters = LazyFilteredElementParametersFactory.getWithFilterParametersAndLocatorList(isFiltered, message, locators, getter);
-        final var map = LazyElementParameterMapFactory.getWithLocatorAndParameters("nested", parameters);
+        final var map = LazyElementParameterMapFactory.getWithNestedLocatorAndParameters(parameters);
 
         return getWithDefaultValidator(name, map);
     }

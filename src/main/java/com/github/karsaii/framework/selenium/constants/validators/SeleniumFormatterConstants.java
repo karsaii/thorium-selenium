@@ -45,8 +45,6 @@ public abstract class SeleniumFormatterConstants {
     public static final String RAW_WEBELEMENT_PASSED = "Raw WebElement passed, anything might happen" + CoreFormatterConstants.END_LINE;
     public static final String ELEMENT_LIST_EMPTY_OR_NULL = "No elements found, or element list " + CoreFormatterConstants.WAS_NULL;
     public static final String LOCATOR_WAS_NULL = "Locator" + CoreFormatterConstants.WAS_NULL;
-    public static final String FIND_ELEMENTS_SUCCESSFUL = "Find elements execution successful" + CoreFormatterConstants.END_LINE;
-    public static final String FIND_ELEMENTS_EXCEPTION = "Exception occurred during finding elements" + CoreFormatterConstants.END_LINE;
     public static final String SELECT_ALL = Keys.chord(Keys.CONTROL, "a", Keys.BACK_SPACE);
     public static final String NONE = "none";
     public static final String TYPE_NOT_IN_CACHE_MAP = "The parameter map didn't contain an expected, indexed selector-type" + CoreFormatterConstants.END_LINE;
@@ -54,4 +52,10 @@ public abstract class SeleniumFormatterConstants {
     public static final String CLEAR_CONSOLE = Keys.chord(Keys.CONTROL, "l");
 
     public static final String COLON_SINGLE_QUOTE = ", '";
+
+    public static final String FIND_ELEMENTS_SUCCESSFUL = "Find elements execution successful" + CoreFormatterConstants.END_LINE;
+    public static final String FIND_ELEMENTS_EXCEPTION = "Exception occurred during finding elements" + CoreFormatterConstants.END_LINE;
+
+    public static final String QUIT_DRIVER_SUCCESSFUL = "Driver quit successfully" + CoreFormatterConstants.END_LINE;
+    public static final String QUIT_DRIVER_EXCEPTION = "Exception occurred during quitting Driver" + CoreFormatterConstants.END_LINE;
 }

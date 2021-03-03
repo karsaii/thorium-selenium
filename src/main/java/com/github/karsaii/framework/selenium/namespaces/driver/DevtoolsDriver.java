@@ -7,10 +7,8 @@ import com.github.karsaii.framework.core.namespaces.validators.FrameworkCoreForm
 import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
 import com.github.karsaii.framework.selenium.namespaces.scripter.injectable.Actions;
 import com.github.karsaii.framework.selenium.namespaces.scripter.injectable.Conditions;
-import com.github.karsaii.framework.selenium.namespaces.utilities.LazyElementUtilities;
 import com.github.karsaii.framework.selenium.records.lazy.LazyElement;
 
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import static com.github.karsaii.framework.selenium.namespaces.ExecutionCore.ifDriver;
@@ -92,11 +90,11 @@ public interface DevtoolsDriver {
     }
 
     static DriverFunction<Boolean> elementAction(String name, LazyElement element, Function<LazyElement, String> action) {
-        return elementActionCore(name, element, action, DevtoolsDriverUtilities::doBooleanCommand, CoreDataConstants.NULL_BOOLEAN);
+        return elementActionCore(name, element, action, DevtoolsDriverFunctions::doBooleanCommand, CoreDataConstants.NULL_BOOLEAN);
     }
 
     static DriverFunction<String> elementStringAction(String name, LazyElement element, Function<LazyElement, String> action) {
-        return elementActionCore(name, element, action, DevtoolsDriverUtilities::doCommand, CoreDataConstants.NULL_STRING);
+        return elementActionCore(name, element, action, DevtoolsDriverFunctions::doCommand, CoreDataConstants.NULL_STRING);
     }
 
     static DriverFunction<Boolean> isElementPresent(LazyElement element) {
@@ -139,7 +137,7 @@ public interface DevtoolsDriver {
         return ifDriver(
             "setValue",
             FrameworkCoreFormatter.isNullLazyElementMessage(element) + CoreFormatter.isNullMessageWithName(value, "Value"),
-            DevtoolsDriverUtilities.doBooleanCommand(invokeSetValue(element, value)),
+            DevtoolsDriverFunctions.doBooleanCommand(invokeSetValue(element, value)),
             CoreDataConstants.NULL_BOOLEAN
         );
     }
@@ -152,7 +150,7 @@ public interface DevtoolsDriver {
                 CoreFormatter.isBlankMessageWithName(attribute, "attribute") +
                 CoreFormatter.isBlankMessageWithName(value, "Value")
             ),
-            DevtoolsDriverUtilities.doBooleanCommand(invokeSetAttribute(element, attribute, value)),
+            DevtoolsDriverFunctions.doBooleanCommand(invokeSetAttribute(element, attribute, value)),
             CoreDataConstants.NULL_BOOLEAN
         );
     }
@@ -173,7 +171,7 @@ public interface DevtoolsDriver {
         return ifDriver(
             "getAttribute",
             FrameworkCoreFormatter.isNullLazyElementMessage(element) + CoreFormatter.isNullMessageWithName(attribute, "Attribute"),
-            DevtoolsDriverUtilities.doCommand(invokeGetAttribute(element, attribute)),
+            DevtoolsDriverFunctions.doCommand(invokeGetAttribute(element, attribute)),
             CoreDataConstants.NULL_STRING
         );
     }
@@ -182,7 +180,7 @@ public interface DevtoolsDriver {
         return ifDriver(
             "getCssValue",
             FrameworkCoreFormatter.isNullLazyElementMessage(element) + CoreFormatter.isNullMessageWithName(value, "CSS Value"),
-            DevtoolsDriverUtilities.doCommand(invokeGetCssValue(element, value)),
+            DevtoolsDriverFunctions.doCommand(invokeGetCssValue(element, value)),
             CoreDataConstants.NULL_STRING
         );
     }

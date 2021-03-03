@@ -4,6 +4,7 @@ import com.github.karsaii.core.constants.CoreDataConstants;
 import com.github.karsaii.core.namespaces.DataExecutionFunctions;
 import com.github.karsaii.core.namespaces.validators.CoreFormatter;
 import com.github.karsaii.core.records.Data;
+import com.github.karsaii.framework.selenium.namespaces.driver.screenshotter.ScreenshotterFunctions;
 import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
 import com.github.karsaii.framework.selenium.namespaces.factories.DriverFunctionFactory;
 import org.apache.commons.io.FileUtils;
@@ -50,7 +51,7 @@ public interface Screenshotter {
         return DriverFunctionFactory.getFunction(ifDependency(
             "takeScreenShot",
             CoreFormatter.isBlankMessageWithName(path, "Path"),
-            DataExecutionFunctions.validChain(Driver.getScreenshotter(), Screenshotter.takeScreenshot(path), CoreDataConstants.NULL_BOOLEAN),
+            DataExecutionFunctions.validChain(ScreenshotterFunctions.getScreenshotter(), Screenshotter.takeScreenshot(path), CoreDataConstants.NULL_BOOLEAN),
             CoreDataConstants.NULL_BOOLEAN
         ));
     }

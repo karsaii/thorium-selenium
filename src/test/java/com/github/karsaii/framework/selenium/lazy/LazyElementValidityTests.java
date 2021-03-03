@@ -20,8 +20,9 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public class LazyElementValidityTests {
-    private static Predicate<String> blank = StringUtils::isBlank;
-    private static Predicate<String> notBlank = StringUtils::isNotBlank;
+    private static final Predicate<String> blank = StringUtils::isBlank;
+    private static final Predicate<String> notBlank = StringUtils::isNotBlank;
+
     @Test
     public void elementValidityTest() {
         final var data = LazyElementFactory.getWithFilterParameters("Whatever", new LazyLocator("X", "id"));
@@ -32,16 +33,12 @@ public class LazyElementValidityTests {
 
     @Test
     public void elementInvalidityTest() {
-        final var data = LazyElementFactory.getWith(null, null, null);
-        final var result = FrameworkCoreFormatter.isNullLazyElementMessage(data);
-
-        Assertions.assertTrue(isNotBlank(result), result);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> LazyElementFactory.getWith(null, null, null));
     }
 
     public static Stream<Arguments> elementProvider() {
         return Stream.of(
-            Arguments.of("Basic valid Lazy Element - a name, a lazy locator", LazyElementFactory.getWithFilterParameters("Whatever", new LazyLocator("X", "id")), blank, true, CoreFormatterConstants.EMPTY),
-            Arguments.of("Basic invalid Lazy Element - all nulls", LazyElementFactory.getWith(null, null, null), notBlank, true, "isNullLazyElementMessage: There were parameter issue(s):\nElement  name parameter was blank, empty or null.\nElement  parameters parameter was null.\n")
+            Arguments.of("Basic valid Lazy Element - a name, a lazy locator", LazyElementFactory.getWithFilterParameters("Whatever", new LazyLocator("X", "id")), blank, true, CoreFormatterConstants.EMPTY)
         );
     }
 

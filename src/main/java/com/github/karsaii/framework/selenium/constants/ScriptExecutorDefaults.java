@@ -6,6 +6,7 @@ import com.github.karsaii.core.namespaces.ExceptionHandlers;
 import com.github.karsaii.core.records.HandleResultData;
 import com.github.karsaii.framework.selenium.namespaces.Driver;
 import com.github.karsaii.framework.selenium.namespaces.ScriptExecuteFunctions;
+import com.github.karsaii.framework.selenium.namespaces.driver.executor.ExecutorFunctions;
 import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
 import com.github.karsaii.framework.selenium.namespaces.validators.ScriptExecutions;
 import com.github.karsaii.framework.selenium.namespaces.validators.SeleniumFormatter;
@@ -24,7 +25,7 @@ public abstract class ScriptExecutorDefaults {
     public static final ParametersFieldDefaultsData PARAMETERS_ASYNC_DEFAULTS = new ParametersFieldDefaultsData(AmountPredicates::isNonZero, ScriptExecuteFunctions.executeAsyncScriptWithParameters());
     public static final ExecutorWrappedResultFunctionsData<HandleResultData<String, Object>, Boolean, Object> OBJECT_RESULT_HANDLER = new ExecutorWrappedResultFunctionsData<>(SeleniumFormatter::getScriptExecutionMessage, ExceptionHandlers::classCastHandler);
     public static final ExecutorWrappedResultFunctionsData<HandleResultData<String, String>, Boolean, String> STRING_RESULT_HANDLER = new ExecutorWrappedResultFunctionsData<>(SeleniumFormatter::getScriptExecutionMessage, ExceptionHandlers::classCastHandler);
-    public static final DriverFunction<JavascriptExecutor> JAVASCRIPT_EXECUTOR_GETTER = Driver.getExecutorData();
+    public static final DriverFunction<JavascriptExecutor> JAVASCRIPT_EXECUTOR_GETTER = ExecutorFunctions.getExecutor();
     public static final RegularExecutorData<Object> OBJECT_REGULAR_DEFAULTS = new RegularExecutorData<>(
             JAVASCRIPT_EXECUTOR_GETTER,
             ExecuteRegularData::new,

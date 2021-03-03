@@ -36,11 +36,11 @@ public interface LocatorRepository {
     }
 
     static Data<LazyElement> getIfContains(By locator, SingleGetter getter) {
-        return getIfContains(RepositoryConstants.LOCATOR_ELEMENTS, RepositoryConstants.ELEMENTS, locator, getter);
+        return getIfContains(RepositoryConstants.LOCATOR_ELEMENTS, RepositoryConstants.CACHED_ELEMENTS, locator, getter);
     }
 
     static Data<LazyElement> getIfContains(By locator) {
-        return getIfContains(RepositoryConstants.LOCATOR_ELEMENTS, RepositoryConstants.ELEMENTS, locator, SingleGetter.DEFAULT);
+        return getIfContains(RepositoryConstants.LOCATOR_ELEMENTS, RepositoryConstants.CACHED_ELEMENTS, locator, SingleGetter.DEFAULT);
     }
 
     static Data<Boolean> cacheLocator(Map<By, String> locatorRepository, By locator, String name, Data<Boolean> defaultValue) {

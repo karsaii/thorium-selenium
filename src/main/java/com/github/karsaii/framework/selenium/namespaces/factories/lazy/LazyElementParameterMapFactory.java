@@ -1,5 +1,7 @@
 package com.github.karsaii.framework.selenium.namespaces.factories.lazy;
 
+import com.github.karsaii.framework.selenium.constants.SelectorStrategyNameConstants;
+import com.github.karsaii.framework.selenium.constants.SeleniumSelectorStrategyConstants;
 import com.github.karsaii.framework.selenium.records.lazy.filtered.LazyFilteredElementParameters;
 
 import java.util.Collections;
@@ -19,5 +21,9 @@ public interface LazyElementParameterMapFactory {
 
     static Map<String, LazyFilteredElementParameters> getWithLocatorAndParameters(String locator, LazyFilteredElementParameters parameters) {
         return getWithEntry(entry(locator, parameters));
+    }
+
+    static Map<String, LazyFilteredElementParameters> getWithNestedLocatorAndParameters(LazyFilteredElementParameters parameters) {
+        return getWithLocatorAndParameters(SelectorStrategyNameConstants.NESTED, parameters);
     }
 }

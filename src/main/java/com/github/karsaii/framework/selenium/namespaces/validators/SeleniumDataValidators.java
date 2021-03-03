@@ -27,7 +27,7 @@ public interface SeleniumDataValidators {
         return isConditionCore(element, "isNotNull", WebElementValidators::isInitialized);
     }
 
-    static DriverFunction<Boolean> isValidLazyElement(LazyElement element) {
+    static DriverFunction<Boolean> isValidElement(LazyElement element) {
         return isConditionCore(element, "isValidLazyElement", WebElementValidators::isValidWebElement);
     }
 }

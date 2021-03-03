@@ -9,4 +9,5 @@ public abstract class SelectorStrategyNameConstants {
     public static final String NAME = "name";
     public static final String PARTIAL_LINK_TEXT = "partialLinkText";
     public static final String LINK_TEXT = "linkText";
+    public static final String NESTED = "nested";
 }

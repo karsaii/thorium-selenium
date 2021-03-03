@@ -47,7 +47,6 @@ import com.github.karsaii.framework.selenium.constants.ElementFinderConstants;
 import com.github.karsaii.framework.selenium.constants.ElementFunctionConstants;
 import com.github.karsaii.framework.selenium.constants.ExecuteCoreDataConstants;
 import com.github.karsaii.framework.selenium.constants.ExecuteCoreFunctionDataConstants;
-import com.github.karsaii.framework.selenium.constants.FactoryConstants;
 import com.github.karsaii.framework.selenium.constants.MethodDefaults;
 import com.github.karsaii.framework.selenium.constants.RepositoryConstants;
 import com.github.karsaii.framework.selenium.constants.SeleniumCoreConstants;
@@ -56,9 +55,11 @@ import com.github.karsaii.framework.selenium.constants.SeleniumGetOrderConstants
 import com.github.karsaii.framework.selenium.constants.SeleniumInvokeConstants;
 import com.github.karsaii.framework.selenium.constants.SeleniumInvokeFunctionDefaults;
 import com.github.karsaii.framework.selenium.constants.SeleniumMethodDefaults;
+import com.github.karsaii.framework.selenium.constants.driver.quit.QuitFunctionConstants;
 import com.github.karsaii.framework.selenium.constants.lazy.GetLazyElementConstants;
 import com.github.karsaii.framework.selenium.constants.validators.SeleniumFormatterConstants;
 import com.github.karsaii.framework.selenium.enums.SingleGetter;
+import com.github.karsaii.framework.selenium.namespaces.driver.searchcontext.SearchContextFunctions;
 import com.github.karsaii.framework.selenium.namespaces.element.ElementFilterFunctions;
 import com.github.karsaii.framework.selenium.namespaces.element.validators.WebElementListValidators;
 import com.github.karsaii.framework.selenium.namespaces.element.validators.WebElementValidators;
@@ -101,10 +102,8 @@ import com.github.karsaii.framework.selenium.records.scripter.ExecutorParameters
 import com.github.karsaii.framework.selenium.records.scripter.ParametersFieldDefaultsData;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchFrameException;
 import org.openqa.selenium.SearchContext;
-import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriver.TargetLocator;
 import org.openqa.selenium.WebElement;
@@ -122,7 +121,6 @@ import static com.github.karsaii.core.extensions.namespaces.CoreUtilities.isNonE
 import static com.github.karsaii.core.extensions.namespaces.NullableFunctions.isNotNull;
 import static com.github.karsaii.core.extensions.namespaces.NullableFunctions.isNull;
 import static com.github.karsaii.core.namespaces.DataExecutionFunctions.ifDependency;
-import static com.github.karsaii.core.namespaces.DataExecutionFunctions.validUnwrapChain;
 import static com.github.karsaii.core.namespaces.DataFactoryFunctions.appendMessage;
 import static com.github.karsaii.core.namespaces.DataFactoryFunctions.prependMessage;
 import static com.github.karsaii.core.namespaces.DataFactoryFunctions.replaceMessage;
@@ -133,7 +131,6 @@ import static com.github.karsaii.core.namespaces.predicates.DataPredicates.isVal
 import static com.github.karsaii.core.namespaces.validators.CoreFormatter.getValidNonFalseAndValidContainedMessage;
 import static com.github.karsaii.core.namespaces.validators.CoreFormatter.isBlankMessageWithName;
 import static com.github.karsaii.core.namespaces.validators.CoreFormatter.isInvalidOrFalseMessage;
-import static com.github.karsaii.core.namespaces.validators.CoreFormatter.isInvalidOrFalseMessageWithName;
 import static com.github.karsaii.core.namespaces.validators.CoreFormatter.isNegativeMessage;
 import static com.github.karsaii.core.namespaces.validators.CoreFormatter.isNullMessage;
 import static com.github.karsaii.core.namespaces.validators.CoreFormatter.isNullMessageWithName;
@@ -154,60 +151,6 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public interface Driver {
-    private static JavascriptExecutor getExecutor(WebDriver driver) {
-        return (JavascriptExecutor)driver;
-    }
-
-    private static TakesScreenshot getScreenshotter(WebDriver driver) {
-        return (TakesScreenshot)driver;
-    }
-
-    private static TargetLocator getTargetLocator(WebDriver driver) {
-        return driver.switchTo();
-    }
-
-    private static <T extends SearchContext> SearchContext getSearchContextOf(T object) {
-        return object;
-    }
-
-    private static <T, U> Data<U> getSubtypeOf(String dependencyName, T dependency, Function<T, U> getter, U defaultValue) {
-        final var lDependencyName = isNotBlank(dependencyName) ? dependencyName : "Dependency";
-        final var status = isNotNull(dependency);
-        final var object = status ? getter.apply(dependency) : defaultValue;
-        final var message = lDependencyName + (status ? CoreFormatterConstants.WASNT_NULL : CoreFormatterConstants.WAS_NULL);
-        return DataFactoryFunctions.getWithNameAndMessage(object, status, "getSubtypeOf", message);
-    }
-
-    static <T extends SearchContext> Data<SearchContext> getSearchContextOf(String dependencyName, Data<T> data) {
-        return (isValidNonFalse(data)) ? (
-            getSubtypeOf(dependencyName, data.object, Driver::getSearchContextOf, FactoryConstants.NULL_SEARCH_CONTEXT)
-        ) : FactoryConstants.NULL_SEARCH_CONTEXT_DATA;
-    }
-
-    static Data<SearchContext> getSearchContext(WebElement element) {
-        return getSubtypeOf("Search Context (Element)", element, Driver::getSearchContextOf, FactoryConstants.NULL_SEARCH_CONTEXT);
-    }
-
-    static Data<SearchContext> getSearchContext(WebDriver driver) {
-        return getSubtypeOf("Search Context (Driver)", driver, Driver::getSearchContextOf, FactoryConstants.NULL_SEARCH_CONTEXT);
-    }
-
-    private static <T> DriverFunction<T> getSubtypeOfDriver(Function<WebDriver, T> getter, T defaultValue) {
-        return driver -> getSubtypeOf("Driver", driver, getter, defaultValue);
-    }
-
-    static DriverFunction<JavascriptExecutor> getExecutorData() {
-        return getSubtypeOfDriver(Driver::getExecutor, FactoryConstants.NULL_JAVASCRIPT_EXECUTOR);
-    }
-
-    static DriverFunction<TakesScreenshot> getScreenshotter() {
-        return getSubtypeOfDriver(Driver::getScreenshotter, FactoryConstants.NULL_TAKES_SCREENSHOT);
-    }
-
-    static DriverFunction<TargetLocator> getTargetLocator() {
-        return getSubtypeOfDriver(Driver::getTargetLocator, FactoryConstants.NULL_TARGET_LOCATOR);
-    }
-
     private static <HandlerType, ReturnType> Data<ReturnType> executeCore(WebDriver driver, ExecutorData<HandlerType, String, Boolean, ReturnType> data, HandlerType handler, String script) {
         final var nameof = "executeCore";
         final var castData = data.castData;
@@ -892,11 +835,11 @@ public interface Driver {
     }
 
     static DriverFunction<WebElementList> getElements(LazyLocator locator) {
-        return getElementsIf(FrameworkCoreFormatter.isInvalidLazyLocatorMessage(locator, SeleniumUtilities::getLocator), getElements(Driver::getSearchContext, locator));
+        return getElementsIf(FrameworkCoreFormatter.isInvalidLazyLocatorMessage(locator, SeleniumUtilities::getLocator), getElements(SearchContextFunctions::getSearchContext, locator));
     }
 
     static DriverFunction<WebElementList> getElements(By locator) {
-        return getElementsIf(CoreFormatter.isNullMessageWithName(locator, "Locator"), getElements(Driver::getSearchContext, SeleniumLazyLocatorFactory.get(locator)));
+        return getElementsIf(CoreFormatter.isNullMessageWithName(locator, "Locator"), getElements(SearchContextFunctions::getSearchContext, SeleniumLazyLocatorFactory.get(locator)));
     }
 
     static DriverFunction<WebElementList> getElements(LazyLocatorList locators, Function<LazyLocator, DriverFunction<WebElementList>> getter) {
@@ -1072,7 +1015,7 @@ public interface Driver {
         return ifDriver(
             nameof,
             isNotNull(locator) && isValidNonFalse(data),
-            getShadowRootElement(invokeGetElement(locator).apply(getSearchContextOf("Element data", data))),
+            getShadowRootElement(invokeGetElement(locator).apply(SearchContextFunctions.getSearchContextOf("Element data", data))),
             replaceMessage(SeleniumDataConstants.NULL_ELEMENT, nameof, "Parameters were wrong: locator or data.")
         );
     }
@@ -1092,7 +1035,7 @@ public interface Driver {
         return ifDriver(
             nameof,
             isNotNullWebElement(data) && isNotNullLazyLocator(locator),
-            getShadowRootElement(invokeGetElement(getLocator(locator).object).apply(getSearchContextOf("Element data", data))),
+            getShadowRootElement(invokeGetElement(getLocator(locator).object).apply(SearchContextFunctions.getSearchContextOf("Element data", data))),
             replaceMessage(SeleniumDataConstants.NULL_ELEMENT, nameof, "Parameters were wrong: locator or data.")
         );
     }
@@ -1101,7 +1044,7 @@ public interface Driver {
         return ifDriver(
             "getRootElementByInvokedElement",
             isNotNullLazyElement(element) && isNotNullLazyLocator(locator),
-            driver -> getShadowRootElement(invokeGetElement(getLocator(locator).object).apply(getSearchContextOf("Element data", element.get().apply(driver)))).apply(driver),
+            driver -> getShadowRootElement(invokeGetElement(getLocator(locator).object).apply(SearchContextFunctions.getSearchContextOf("Element data", element.get().apply(driver)))).apply(driver),
             SeleniumDataConstants.NULL_ELEMENT//, nameof, "Parameters were wrong: locator or data.")
         );
     }
@@ -1212,7 +1155,7 @@ public interface Driver {
             final var nameof = "getNestedElements";
             final var message = SeleniumFormatter.getNestedElementsErrorMessage(locator, context);
             return isBlank(message) ? (
-                replaceName(getElementsCore(getSearchContextOf("Search Context", context), SeleniumLazyLocatorFactory.get(locator)), nameof)
+                replaceName(getElementsCore(SearchContextFunctions.getSearchContextOf("Search Context", context), SeleniumLazyLocatorFactory.get(locator)), nameof)
             ) : replaceMessage(SeleniumDataConstants.NULL_LIST, nameof, message);
         };
     }
@@ -1261,7 +1204,7 @@ public interface Driver {
             return replaceObject(shadowRoot, defaultValue);
         }
 
-        final var context = getSearchContext(shadowRoot.object);
+        final var context = SearchContextFunctions.getSearchContext(shadowRoot.object);
         if (isInvalidOrFalse(context)) {
             return replaceObject(context, defaultValue);
         }
@@ -1456,15 +1399,15 @@ public interface Driver {
     }
 
     static DriverFunction<Boolean> switchToParentFrame() {
-        return driver -> switchTo(driver.switchTo(), TargetLocator::parentFrame, SeleniumFormatter::getSwitchToMessage, new SwitchResultMessageData<Void>(null, "parent frame", "switchToParentFrame: "));
+        return driver -> switchTo(driver.switchTo(), TargetLocator::parentFrame, SeleniumFormatter::getSwitchToMessage, new SwitchResultMessageData<>(null, "parent frame", "switchToParentFrame: "));
     }
 
     static DriverFunction<Boolean> switchToAlert() {
-        return driver -> switchTo(driver.switchTo(), TargetLocator::alert, SeleniumFormatter::getSwitchToMessage, new SwitchResultMessageData<Void>(null, "alert.", "switchToAlert: "));
+        return driver -> switchTo(driver.switchTo(), TargetLocator::alert, SeleniumFormatter::getSwitchToMessage, new SwitchResultMessageData<>(null, "alert.", "switchToAlert: "));
     }
 
     static DriverFunction<Boolean> switchToDefaultContent() {
-        return driver -> switchTo(driver.switchTo(), TargetLocator::defaultContent, SeleniumFormatter::getSwitchToMessage, new SwitchResultMessageData<Void>(null, "default content.", "switchToDefaultContent: "));
+        return driver -> switchTo(driver.switchTo(), TargetLocator::defaultContent, SeleniumFormatter::getSwitchToMessage, new SwitchResultMessageData<>(null, "default content.", "switchToDefaultContent: "));
     }
 
     static <T> DriverFunction<T> switchToDefaultContentWith(DriverFunction<T> action) {
@@ -1578,8 +1521,6 @@ public interface Driver {
 
         final var element = locators.last();
         final var nests = locators.initials();
-        final var notNullTail = isNotNull(nests);
-        final var validLocator = isNotNullLazyLocator(element);
         return isNotNullLazyLocator(element) && isNotNull(nests) ? (
             getShadowNestedElement(nests, element)
         ) : DriverFunctionFactory.get(prependMessage(SeleniumDataConstants.NULL_ELEMENT, "Lazy locator item issues" + CoreFormatterConstants.END_LINE));
@@ -1626,7 +1567,7 @@ public interface Driver {
                         break;
                     }
 
-                    data = getNestedElement(locator).apply(getSearchContext(data.object));
+                    data = getNestedElement(locator).apply(SearchContextFunctions.getSearchContext(data.object));
                     if (isNullWebElement(data)) {
                         break;
                     }
@@ -1692,7 +1633,7 @@ public interface Driver {
                     return replaceMessage(SeleniumDataConstants.NULL_LIST, "Locator was null" + CoreFormatterConstants.END_LINE);
                 }
 
-                final var data = getNestedElements(locator).apply(getSearchContext(element.object));
+                final var data = getNestedElements(locator).apply(SearchContextFunctions.getSearchContext(element.object));
                 final var nested = locators.hasAtleast(2);
                 return isValidNonFalse(data) ? data : prependMessage(data, (nested ? "Nested " : "") + "Elements weren't found by locator: " + locator);
             },
@@ -1764,7 +1705,7 @@ public interface Driver {
     }
 
     private static <T> Data<CachedLookupKeysData> getNextCachedKeyCore(DecoratedList<String> selectorTypes, CachedLookupKeysData data) {
-        final var selectorKeys = RepositoryConstants.ELEMENTS.get(data.name).typeKeys;
+        final var selectorKeys = RepositoryConstants.CACHED_ELEMENTS.get(data.name).typeKeys;
         var selectorType = isNotBlank(data.entryName) ? data.entryName : selectorTypes.first();
         var selectorList = selectorKeys.get(selectorType);
         var index = data.index;
@@ -1890,39 +1831,27 @@ public interface Driver {
     }
 
     static DriverFunction<WebElement> getLazyElement(LazyElement element, InternalSelectorData internalData, ExternalSeleniumSelectorData externalData, DecoratedList<String> getOrder, ProbabilityData probabilityData) {
-        return getLazyElement(new LazyElementWithOptionsData(element, internalData, externalData, getOrder, probabilityData));
+        final var data = new LazyElementWithOptionsData(element, internalData, externalData, getOrder, probabilityData);
+        return getLazyElement(data);
     }
 
     static DriverFunction<WebElement> getLazyElement(LazyElement element, InternalSelectorData internalData, ExternalSeleniumSelectorData externalData, DecoratedList<String> getOrder) {
-        return getLazyElement(new LazyElementWithOptionsData(element, internalData, externalData, getOrder, AdjusterConstants.PROBABILITY_DATA));
+        final var data = new LazyElementWithOptionsData(element, internalData, externalData, getOrder, AdjusterConstants.PROBABILITY_DATA);
+        return getLazyElement(data);
     }
 
     static DriverFunction<WebElement> getLazyElement(LazyElement element, InternalSelectorData internalData, ExternalSeleniumSelectorData externalData, ProbabilityData probabilityData) {
-        return getLazyElement(new LazyElementWithOptionsData(element, internalData, externalData, SeleniumGetOrderConstants.DEFAULT, probabilityData));
+        final var data = new LazyElementWithOptionsData(element, internalData, externalData, SeleniumGetOrderConstants.DEFAULT, probabilityData);
+        return getLazyElement(data);
     }
 
     static DriverFunction<WebElement> getLazyElement(LazyElement element, InternalSelectorData internalData, ExternalSeleniumSelectorData externalData) {
-        return getLazyElement(new LazyElementWithOptionsData(element, internalData, externalData, SeleniumGetOrderConstants.DEFAULT, AdjusterConstants.PROBABILITY_DATA));
+        final var data = new LazyElementWithOptionsData(element, internalData, externalData, SeleniumGetOrderConstants.DEFAULT, AdjusterConstants.PROBABILITY_DATA);
+        return getLazyElement(data);
     }
 
     static DriverFunction<WebElement> getLazyElement(LazyElement element) {
         return getLazyElement(LazyElementWithOptionsDataFactory.getWithSpecificLazyElement(element));
-    }
-
-    private static Data<Boolean> quitDriverCore(WebDriver driver) {
-        var exception = CoreConstants.EXCEPTION;
-        try {
-            driver.quit();
-        } catch (NullPointerException ex) {
-            exception = ex;
-        }
-
-        final var status = isNonException(exception);
-        final var message = (
-            status ? "Driver quit successfully" + CoreFormatterConstants.END_LINE
-                    : "Exception occurred while closing Driver. Exception:" + exception.getClass() + " Message: " + exception.getMessage()
-        );
-        return DataFactoryFunctions.getBoolean(status, message, exception);
     }
 
     private static Data<Boolean> navigateCore(WebDriver driver, String url, String query) {
@@ -1948,7 +1877,7 @@ public interface Driver {
     }
 
     static DriverFunction<Boolean> quitDriver() {
-        return ifDriver("quitDriver", Driver::quitDriverCore, SeleniumDataConstants.DRIVER_WAS_NULL);
+        return QuitFunctionConstants.QUIT_DRIVER;
     }
 
     static DriverFunction<Boolean> navigate(String url, String query) {

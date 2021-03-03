@@ -9,7 +9,7 @@ import com.github.karsaii.framework.selenium.records.element.is.regular.ElementP
 import com.github.karsaii.framework.selenium.records.element.is.regular.ElementStringValueParameters;
 
 public abstract class ElementFunctionConstants {
-    public static final ElementConditionParameters<Boolean> PRESENT = new ElementConditionParameters<>(ExecutionCore::validChain, ElementFormatDataConstants.PRESENT_DATA, SeleniumDataValidators::isValidLazyElement, CardinalitiesFunctions::noopBoolean);
+    public static final ElementConditionParameters<Boolean> PRESENT = new ElementConditionParameters<>(ExecutionCore::validChain, ElementFormatDataConstants.PRESENT_DATA, SeleniumDataValidators::isValidElement, CardinalitiesFunctions::noopBoolean);
     public static final ElementConditionParameters<Boolean> DISPLAYED = new ElementConditionParameters<>(ExecutionCore::validChain, ElementFormatDataConstants.DISPLAYED_DATA, Driver::invokeElementDisplayed, CardinalitiesFunctions::noopBoolean);
     public static final ElementConditionParameters<Boolean> ENABLED = new ElementConditionParameters<>(ExecutionCore::validChain, ElementFormatDataConstants.ENABLED_DATA, Driver::invokeElementEnabled, CardinalitiesFunctions::noopBoolean);
     public static final ElementConditionParameters<Boolean> CLICKABLE = new ElementConditionParameters<>(ExecutionCore::validChain, ElementFormatDataConstants.CLICKABLE_DATA, Driver::invokeElementClickable, CardinalitiesFunctions::noopBoolean);
