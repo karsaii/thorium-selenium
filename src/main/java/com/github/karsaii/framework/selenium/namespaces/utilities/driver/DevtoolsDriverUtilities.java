@@ -20,7 +20,7 @@ public interface DevtoolsDriverUtilities {
     }
 
     static Data<Boolean> getBooleanConsoleResultCore(WebDriver driver) {
-        final var result = DevtoolsDriverFunctionConstants.CONSOLE_RESULT_DISPLAYED.apply(driver);
+        final var result = DevtoolsDriverFunctionConstants.GET_CONSOLE_RESULT.apply(driver);
         final var status = BooleanUtils.toBoolean(result.object);
         return DataFactoryFunctions.getBoolean(status, "getBooleanConsoleResultCore", result.message.toString(), result.exception, result.exceptionMessage);
     }
