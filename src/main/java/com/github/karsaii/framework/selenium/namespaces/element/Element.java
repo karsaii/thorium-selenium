@@ -140,7 +140,7 @@ public interface Element {
             "actionWhenCore",
             FrameworkCoreFormatter.isNullLazyElementMessage(data),
             SeleniumExecutor.execute(CoreFormatter::getExecutionEndMessageAggregate, condition.apply(data), action.apply(data)),
-            DataFactoryFunctions.getWithMessage(null, false, "")
+            DataFactoryFunctions.getWith(null, false, "")
         );
     }
 
@@ -149,7 +149,7 @@ public interface Element {
             "actionWhenCore",
             isNotNullLazyElementWaitParametersData(data),
             SeleniumExecutor.execute(CoreFormatter::getExecutionEndMessageAggregate, condition.apply(data), action.apply(data.object)),
-            DataFactoryFunctions.getWithMessage(null, false, SeleniumFormatterConstants.LAZY_ELEMENT_WAIT_PARAMETERS_WERE_NULL)
+            DataFactoryFunctions.getWith(null, false, SeleniumFormatterConstants.LAZY_ELEMENT_WAIT_PARAMETERS_WERE_NULL)
         );
     }
 

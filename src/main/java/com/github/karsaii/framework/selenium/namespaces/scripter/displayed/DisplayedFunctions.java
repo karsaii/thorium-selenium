@@ -16,7 +16,7 @@ import com.github.karsaii.framework.selenium.records.lazy.LazyElement;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-import static com.github.karsaii.core.namespaces.DataFactoryFunctions.getWithDefaultExceptionData;
+import static com.github.karsaii.core.namespaces.DataFactoryFunctions.getWith;
 import static com.github.karsaii.core.namespaces.DataFactoryFunctions.replaceMessage;
 import static com.github.karsaii.core.namespaces.predicates.DataPredicates.isInvalidOrFalse;
 import static com.github.karsaii.core.namespaces.predicates.DataPredicates.isValidNonFalse;
@@ -38,7 +38,7 @@ public interface DisplayedFunctions {
 
                 final var result = Driver.executeSingleParameter(Displayed.IS_DISPLAYED_DISPATCHER, parameter.object).apply(driver);
                 return isValidNonFalse(result) ? (
-                    getWithDefaultExceptionData(CoreUtilities.castToBoolean(result.object), result.status, result.message)
+                    getWith(CoreUtilities.castToBoolean(result.object), result.status, result.message)
                 ) : replaceMessage(CoreDataConstants.NULL_BOOLEAN, result.message.toString());
             },
             CoreDataConstants.NULL_BOOLEAN

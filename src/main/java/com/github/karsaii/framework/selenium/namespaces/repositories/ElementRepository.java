@@ -86,7 +86,7 @@ public interface ElementRepository {
         final var object = elementRepository.containsKey(name);
         final var message = SeleniumFormatterConstants.LAZY_ELEMENT + CoreFormatter.getOptionMessage(object) + " found by name(\"" + name + "\")" + CoreFormatterConstants.END_LINE;
 
-        return DataFactoryFunctions.getWithNameAndMessage(object, true, nameof, message);
+        return DataFactoryFunctions.getWith(object, true, nameof, message);
     }
 
     static Data<Boolean> containsElement(String name, Data<Boolean> defaultValue) {
@@ -101,19 +101,19 @@ public interface ElementRepository {
         final var guardName = "getElement";
         var errorMessage = GetCachedElementDataValidators.getValidCachedElementDataMessage(data);
         if (isNotBlank(errorMessage)) {
-            return DataFactoryFunctions.getInvalidWithNameAndMessage(SeleniumCoreConstants.NULL_CACHED_LAZY_ELEMENT_DATA, guardName, errorMessage);
+            return DataFactoryFunctions.getInvalidWith(SeleniumCoreConstants.NULL_CACHED_LAZY_ELEMENT_DATA, guardName, errorMessage);
         }
 
         final var nameof = data.nameof;
         errorMessage = data.validator.apply(data.repository, elementName);
         if (isNotBlank(errorMessage)) {
-            return DataFactoryFunctions.getInvalidWithNameAndMessage(data.defaultValue, nameof, errorMessage);
+            return DataFactoryFunctions.getInvalidWith(data.defaultValue, nameof, errorMessage);
         }
 
         final var object = data.getter.apply(elementName, data.defaultValue);
         final var status = CoreUtilities.isNotEqual(object, data.defaultValue);
         final var message = data.formatter.apply(status, elementName);
-        return DataFactoryFunctions.getWithNameAndMessage(object, status, nameof, message);
+        return DataFactoryFunctions.getWith(object, status, nameof, message);
     }
 
     static Data<CachedLazyElementData> getElement(String name) {

@@ -150,7 +150,8 @@ public interface SeleniumUtilities {
 
         final var locator = data.locator;
         final var strategy = data.strategy;
-        return DataFactoryFunctions.getWithMessage(strategyMap.get(SeleniumSelectorStrategy.getValueOf(strategy)).apply(locator), true, "Locator: By " + strategy + " with locator: " + locator);
+        final var object = strategyMap.get(SeleniumSelectorStrategy.getValueOf(strategy)).apply(locator);
+        return DataFactoryFunctions.getValidWith(object, "getLocator", "Locator: By " + strategy + " with locator: " + locator);
     }
 
     static Data<By> getLocator(LazyLocator data) {

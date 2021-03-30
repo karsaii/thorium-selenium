@@ -17,7 +17,7 @@ public interface DriverTypeConversionFunctions {
         final var status = isNotNull(dependency);
         final var object = status ? getter.apply(dependency) : defaultValue;
         final var message = lDependencyName + (status ? CoreFormatterConstants.WASNT_NULL : CoreFormatterConstants.WAS_NULL);
-        return DataFactoryFunctions.getWithNameAndMessage(object, status, "getSubtypeOf", message);
+        return DataFactoryFunctions.getWith(object, status, "getSubtypeOf", message);
     }
 
     static <T> DriverFunction<T> getSubtypeOfDriver(Function<WebDriver, T> getter, T defaultValue) {

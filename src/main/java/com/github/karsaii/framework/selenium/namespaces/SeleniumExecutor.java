@@ -44,7 +44,7 @@ public interface SeleniumExecutor {
         ExecutionStateData stateData,
         Function<WebDriver, Data<?>>... steps
     ) {
-        final var negative = DataFactoryFunctions.getWithMessage(ExecutionResultDataFactory.getWithDefaultState((ReturnType) CoreConstants.STOCK_OBJECT), false, CoreFormatterConstants.EMPTY);
+        final var negative = DataFactoryFunctions.getWith(ExecutionResultDataFactory.getWithDefaultState((ReturnType) CoreConstants.STOCK_OBJECT), false, CoreFormatterConstants.EMPTY);
         return executeGuardCore(execution, DriverFunctionFactory.getFunction(execution.executor.apply(execution.functionData, stateData, steps)), negative, steps.length);
     }
 
@@ -64,7 +64,7 @@ public interface SeleniumExecutor {
     }
 
     static <ReturnType> DriverFunction<ReturnType> execute(ExecutionParametersData<Function<WebDriver, Data<?>>, DriverFunction<ExecutionResultData<ReturnType>>> execution, DriverFunction<?>... steps) {
-        final var negative = DataFactoryFunctions.getWithMessage((ReturnType) CoreConstants.STOCK_OBJECT, false, CoreFormatterConstants.EMPTY);
+        final var negative = DataFactoryFunctions.getWith((ReturnType) CoreConstants.STOCK_OBJECT, false, CoreFormatterConstants.EMPTY);
         return executeGuardCore(execution, executeData(execution, steps), negative, steps.length);
     }
 

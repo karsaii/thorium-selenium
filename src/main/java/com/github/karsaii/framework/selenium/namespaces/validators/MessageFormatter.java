@@ -11,7 +11,7 @@ import java.util.function.Function;
 
 public interface MessageFormatter {
     static Data<WebElement> getInvalidIndexMessageFunction(int index) {
-        return DataFactoryFunctions.getWithMessage(SeleniumCoreConstants.STOCK_ELEMENT, false, "Index(\"" + index +"\") was negative" + CoreFormatterConstants.END_LINE);
+        return DataFactoryFunctions.getWith(SeleniumCoreConstants.STOCK_ELEMENT, false, "Index(\"" + index +"\") was negative" + CoreFormatterConstants.END_LINE);
     }
 
     static Function<Data<WebElementList>, Data<WebElement>> getElementIndexWasNegative(int index) {
@@ -19,6 +19,6 @@ public interface MessageFormatter {
     }
 
     static Data<WebElement> getInvalidTextMessageFunction(String message) {
-        return DataFactoryFunctions.getWithMessage(SeleniumCoreConstants.STOCK_ELEMENT, false, "Text(\"" + message + "\") was blank" + CoreFormatterConstants.END_LINE);
+        return DataFactoryFunctions.getWith(SeleniumCoreConstants.STOCK_ELEMENT, false, "Text(\"" + message + "\") was blank" + CoreFormatterConstants.END_LINE);
     }
 }

@@ -54,14 +54,14 @@ public interface SeleniumFormatter {
         );
 
         if (isNotBlank(errorMessage)) {
-            return DataFactoryFunctions.getWithMessage(CoreFormatterConstants.EMPTY, false, defaultMessage + " " + conditionDescriptor + CoreFormatterConstants.PARAMETER_ISSUES + CoreFormatterConstants.DEFAULT_ERROR_MESSAGE_STRING + errorMessage);
+            return DataFactoryFunctions.getWith(CoreFormatterConstants.EMPTY, false, defaultMessage + " " + conditionDescriptor + CoreFormatterConstants.PARAMETER_ISSUES + CoreFormatterConstants.DEFAULT_ERROR_MESSAGE_STRING + errorMessage);
         }
 
         final var key = String.valueOf(keyCondition);
         final var localObject = map.getOrDefault(key, CoreFormatterConstants.EMPTY);
         final var status = isNotBlank(localObject);
         final var message = defaultMessage + (descriptor + "(" + object + ") " + localObject + conditionDescriptor + " expected (\"" + expected + "\")" + CoreFormatterConstants.END_LINE);
-        return DataFactoryFunctions.getWithMessage(message, status, message);
+        return DataFactoryFunctions.getWith(message, status, message);
     }
 
     static String isValidElementFormatData(ElementFormatData<?> parameters) {

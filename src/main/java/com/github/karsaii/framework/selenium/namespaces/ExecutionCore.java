@@ -1,6 +1,5 @@
 package com.github.karsaii.framework.selenium.namespaces;
 
-import com.github.karsaii.core.constants.CoreConstants;
 import com.github.karsaii.core.extensions.DecoratedList;
 import com.github.karsaii.core.extensions.namespaces.NullableFunctions;
 import com.github.karsaii.core.namespaces.DataExecutionFunctions;
@@ -39,7 +38,7 @@ public interface ExecutionCore {
     private static <T> Data<T> ifDriverAnyWrappedCore(WebDriver driver, String nameof, DriverFunction<T> function) {
         return isNotNull(driver) ? (
             DataExecutionFunctions.ifDependencyAnyCore(nameof, function.apply(driver))
-        ) : DataFactoryFunctions.getWithNameAndMessage(null, false, nameof, SeleniumFormatterConstants.DRIVER_WAS_NULL, CoreConstants.EXCEPTION);
+        ) : DataFactoryFunctions.getWith(null, false, nameof, SeleniumFormatterConstants.DRIVER_WAS_NULL);
     }
 
     private static <T> Function<WebDriver, Data<T>> ifDriverAnyWrappedCore(String nameof, DriverFunction<T> function) {

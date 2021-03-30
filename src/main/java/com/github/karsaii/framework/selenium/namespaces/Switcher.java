@@ -11,7 +11,7 @@ import org.openqa.selenium.WebElement;
 
 public interface Switcher {
     static DriverFunction<Boolean> switchToFrame(WebElement element) {
-        return switchToFrame(DataFactoryFunctions.getWithMessage(element, true, SeleniumFormatterConstants.RAW_WEBELEMENT_PASSED));
+        return switchToFrame(DataFactoryFunctions.getWith(element, true, SeleniumFormatterConstants.RAW_WEBELEMENT_PASSED));
     }
 
     static DriverFunction<Boolean> switchToFrame(LazyElement element) {

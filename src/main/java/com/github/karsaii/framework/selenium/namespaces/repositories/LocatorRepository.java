@@ -27,7 +27,7 @@ public interface LocatorRepository {
         final var result = cacheLocator(locatorRepository, locator, element.name, CoreDataConstants.NULL_BOOLEAN);
         final var status = result.object;
         return status ?
-            DataFactoryFunctions.getWithMethodMessage(element, result.status, nameof, result.message) :
+            DataFactoryFunctions.getWith(element, result.status, nameof, result.message.formatter.apply(result.message.nameof, result.message.message)) :
             replaceMessage(SeleniumDataConstants.NULL_LAZY_ELEMENT, nameof, "Locator was " + CoreFormatter.getOptionMessage(status) + " found" + CoreFormatterConstants.END_LINE);
     }
 
@@ -50,7 +50,7 @@ public interface LocatorRepository {
         }
 
         if (locatorRepository.containsKey(locator)) {
-            return DataFactoryFunctions.getWithNameAndMessage(true, false, nameof, SeleniumFormatterConstants.LOCATOR + " with name(\"" + name + "\") was already stored" + CoreFormatterConstants.END_LINE);
+            return DataFactoryFunctions.getWith(true, false, nameof, SeleniumFormatterConstants.LOCATOR + " with name(\"" + name + "\") was already stored" + CoreFormatterConstants.END_LINE);
         }
 
         locatorRepository.putIfAbsent(locator, name);

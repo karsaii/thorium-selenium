@@ -32,16 +32,18 @@ import com.github.karsaii.framework.selenium.records.lazy.LazyElement;
 import com.github.karsaii.framework.selenium.records.scripter.ScriptParametersData;
 import org.apache.commons.lang3.ArrayUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import java.util.Objects;
+import java.util.function.Function;
 
 import static com.github.karsaii.core.extensions.namespaces.CoreUtilities.areNotBlank;
 import static com.github.karsaii.core.extensions.namespaces.CoreUtilities.areNotNull;
 import static com.github.karsaii.core.extensions.namespaces.NullableFunctions.isNotNull;
 import static com.github.karsaii.core.extensions.namespaces.NullableFunctions.isNull;
 import static com.github.karsaii.core.namespaces.DataFactoryFunctions.getArrayWithName;
-import static com.github.karsaii.core.namespaces.DataFactoryFunctions.getWithDefaultExceptionData;
+import static com.github.karsaii.core.namespaces.DataFactoryFunctions.getWith;
 import static com.github.karsaii.core.namespaces.DataFactoryFunctions.replaceMessage;
 import static com.github.karsaii.core.namespaces.predicates.DataPredicates.isInvalidOrFalse;
 import static com.github.karsaii.core.namespaces.predicates.DataPredicates.isValidNonFalse;
@@ -52,35 +54,47 @@ import static com.github.karsaii.framework.selenium.namespaces.utilities.Seleniu
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public interface Execute {
+    private static <T> Data<T> isCommonExistsCore(WebDriver driver, String nameof, String isExists, Data<T> defaultValue) {
+        final var result = Driver.execute(isExists).apply(driver);
+        return getWith((T)result.object, result.status, result.message);
+    }
+
+    private static <T> DriverFunction<T> isCommonExistsCore(String nameof, String isExists, Data<T> defaultValue) {
+        return driver -> isCommonExistsCore(driver, nameof, isExists, defaultValue);
+    }
+
     static <T> DriverFunction<T> isCommonExists(String nameof, String isExists, Data<T> defaultValue) {
         return ifDriver(
             nameof,
             isNotBlank(isExists) && isNotNull(defaultValue),
-            driver -> {
-                final var result = Driver.execute(isExists).apply(driver);
-                return getWithDefaultExceptionData((T)result.object, result.status, result.message);
-            },
+            isCommonExistsCore(nameof, isExists, defaultValue),
             defaultValue
         );
+    }
+
+    private static Data<Boolean> setCommonCore(WebDriver driver, DriverFunction<Boolean> precondition, String function, Data<Boolean> defaultValue) {
+        Data<?> result = precondition.apply(driver);
+        if (CoreUtilities.isFalse(result.status)) {
+            return defaultValue;
+        }
+
+        if (CoreUtilities.isFalse(result.object)) {
+            result = Driver.execute(function).apply(driver);
+        }
+
+        final var status = isValidNonFalse(result);
+        return DataFactoryFunctions.getBoolean(status, CoreFormatter.getExecuteFragment(status) + " Scroll into view: " + result.message.toString() + CoreFormatterConstants.END_LINE);
+    }
+
+    private static DriverFunction<Boolean> setCommonCore(DriverFunction<Boolean> preconditon, String function, Data<Boolean> defaultValue) {
+        return driver -> setCommonCore(driver, preconditon, function, defaultValue);
     }
 
     static DriverFunction<Boolean> setCommon(String nameof, DriverFunction<Boolean> precondition, String function, Data<Boolean> defaultValue) {
         return ifDriver(
             nameof,
             areNotNull(precondition, defaultValue) && isNotBlank(function),
-            driver -> {
-                Data<?> result = precondition.apply(driver);
-                if (!result.status) {
-                    return defaultValue;
-                }
-
-                if (CoreUtilities.isFalse(result.object)) {
-                    result = Driver.execute(function).apply(driver);
-                }
-
-                final var status = isValidNonFalse(result);
-                return DataFactoryFunctions.getBoolean(status, CoreFormatter.getExecuteFragment(status) + " Scroll into view: " + result.message.toString() + CoreFormatterConstants.END_LINE);
-            },
+            setCommonCore(precondition, function, defaultValue),
             defaultValue
         );
     }
@@ -92,7 +106,7 @@ public interface Execute {
             isNotNull(getter),
             driver -> {
                 final var result = Driver.executeSingleParameter(function, ScriptExecuteFunctions.handleDataParameterWithDefaults(getter.apply(driver))).apply(driver);
-                return getWithDefaultExceptionData((T)result.object, result.status, result.message);
+                return getWith((T)result.object, result.status, result.message);
             },
             defaultValue
         );
@@ -103,7 +117,7 @@ public interface Execute {
             "isScrollIntoViewExistsData",
             driver -> {
                 final var result = Driver.execute(ScrollIntoView.IS_EXISTS).apply(driver);
-                return getWithDefaultExceptionData(Boolean.valueOf(result.object.toString()), result.status, result.message);
+                return getWith(Boolean.valueOf(result.object.toString()), result.status, result.message);
             },
             CoreDataConstants.NULL_BOOLEAN
         );
@@ -120,7 +134,7 @@ public interface Execute {
             driver -> {
                 final var parameters = new ScriptParametersData<>(getter.apply(driver), DataPredicates::isValidNonFalse, SeleniumUtilities::unwrapToArray);
                 final var result = Driver.executeSingleParameter(ScrollIntoView.EXECUTE, ScriptExecuteFunctions.handleDataParameter(parameters)).apply(driver);
-                return getWithDefaultExceptionData(isNotNull(result.object), result.status, result.message);
+                return getWith(isNotNull(result.object), result.status, result.message);
             },
             CoreDataConstants.NULL_BOOLEAN
         );
@@ -155,7 +169,7 @@ public interface Execute {
     }
 
     static <T> Data<Object[]> handleDataParameterDefault(Data<T> parameter) {
-        return DataFactoryFunctions.getWithMessage(
+        return DataFactoryFunctions.getWith(
             ScriptExecuteFunctions.handleDataParameter(new ScriptParametersData<>(parameter, DataPredicates::isValidNonFalse, SeleniumUtilities::unwrapToArray)),
             true,
             "Handle Data parameter default message"
@@ -188,7 +202,7 @@ public interface Execute {
 
                 final var result = Driver.executeSingleParameter(ShadowRoot.GET_SHADOW_ROOT, parameter.object).apply(driver);
                 return isValidNonFalse(result) ? (
-                    getWithDefaultExceptionData((WebElement)result.object, result.status, result.message)
+                    getWith((WebElement)result.object, result.status, result.message)
                 ) : replaceMessage(SeleniumDataConstants.NULL_ELEMENT, result.message.toString());
             },
             SeleniumDataConstants.NULL_ELEMENT
@@ -247,7 +261,8 @@ public interface Execute {
                 final var result = Driver.executeParameters(Attribute.SET_ATTRIBUTE, parametersData.object).apply(driver);
                 final var returnedValue = String.valueOf(result.object);
                 final var status = isValidNonFalse(result) && Objects.equals(value, returnedValue);
-                return DataFactoryFunctions.getWithMessage(returnedValue, status, "Value \"" + value + "\" was " + CoreFormatter.getOptionMessage(status) + "set" + CoreFormatterConstants.END_LINE);
+                final var message = "Value \"" + value + "\" was " + CoreFormatter.getOptionMessage(status) + "set" + CoreFormatterConstants.END_LINE;
+                return DataFactoryFunctions.getWith(returnedValue, status, message);
             },
             CoreDataConstants.NULL_STRING
         );
@@ -297,7 +312,7 @@ public interface Execute {
                 final var result = Driver.executeParameters(ClickFunctions.CLICK_DISPATCHER, parametersData).apply(driver);
                 final var returnedValue = String.valueOf(result.object);
                 final var status = isValidNonFalse(result);
-                return DataFactoryFunctions.getWithMessage(CoreUtilities.castToBoolean(returnedValue), status, "Element was " + CoreFormatter.getOptionMessage(status) + "clicked" + CoreFormatterConstants.END_LINE);
+                return DataFactoryFunctions.getWith(CoreUtilities.castToBoolean(returnedValue), status, "Element was " + CoreFormatter.getOptionMessage(status) + "clicked" + CoreFormatterConstants.END_LINE);
             },
             CoreDataConstants.NULL_BOOLEAN
         );

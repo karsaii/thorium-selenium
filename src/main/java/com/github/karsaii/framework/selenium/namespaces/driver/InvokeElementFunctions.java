@@ -70,7 +70,7 @@ public interface InvokeElementFunctions {
                 .apply(result.exception)
         ) : result.message.toString();
 
-        return DataFactoryFunctions.getWithNameAndMessage(result.object, status, nameof, message, result.exception);
+        return DataFactoryFunctions.getWith(result.object, status, nameof, message, result.exception);
     }
 
     private static <HandlerType, ParameterType, ReturnType> Data<ReturnType> invokeCore(
@@ -104,7 +104,7 @@ public interface InvokeElementFunctions {
         final var errorMessage = InvokeCoreValidator.isInvalidInvokeCoreParametersMessage(data, defaults, messageHandler, handler, parameter);
         return isBlank(errorMessage) ? (
             replaceName(invokeCore(data, defaults, messageHandler, handler, parameter), nameof)
-        ) : DataFactoryFunctions.getWithNameAndMessage(null, false, nameof, errorMessage);
+        ) : DataFactoryFunctions.getWith(null, false, nameof, errorMessage);
     }
 
     private static <ParameterType, HandlerType, ReturnType> DriverFunction<ReturnType> invokeCore(
@@ -117,7 +117,7 @@ public interface InvokeElementFunctions {
     ) {
         final var nameof = isNotBlank(name) ? name : "invokeCore";
         final var errorMessage = InvokeCoreValidator.isInvalidInvokeCoreParametersMessage(data, defaults, messageHandler, handler, getter);
-        final var negative = DataFactoryFunctions.getWithMessage((ReturnType)null, false, errorMessage);
+        final var negative = DataFactoryFunctions.getWith((ReturnType)null, false, errorMessage);
         return DriverFunctionFactory.getFunction(ifDependency(nameof, errorMessage, DataExecutionFunctions.validChain(getter, invokeCore(data, defaults, messageHandler, handler), negative), negative));
     }
 
@@ -136,14 +136,14 @@ public interface InvokeElementFunctions {
         final var message = CoreFormatter.isNullMessageWithName(locator, "Locator");
         return isBlank(message) ? (
             context -> invokeGetElement(context, locator)
-        ) : context -> DataFactoryFunctions.getInvalidWithNameAndMessage(SeleniumCoreConstants.STOCK_ELEMENT, "invokeGetElement", message);
+        ) : context -> DataFactoryFunctions.getInvalidWith(SeleniumCoreConstants.STOCK_ELEMENT, "invokeGetElement", message);
     }
 
     private static DriverFunction<Void> invokeElementVoidMethod(String name, LazyElement element, MethodParametersData parameterData) {
         final var nameof = isNotBlank(name) ? name : "invokeElementVoidMethod";
         final var errorMessage = FrameworkCoreFormatter.isNullLazyElementMessage(element) + MethodParametersDataValidators.isValid(parameterData);
         if (isNotBlank(errorMessage)) {
-            return driver -> DataFactoryFunctions.getInvalidWithNameAndMessage(null, nameof, errorMessage);
+            return driver -> DataFactoryFunctions.getInvalidWith(null, nameof, errorMessage);
         }
 
         final var methodData = MethodRepository.getMethod(SeleniumCoreConstants.DEFAULT_WEB_ELEMENT_METHOD_PARAMETERS, parameterData);
@@ -156,7 +156,7 @@ public interface InvokeElementFunctions {
         final var nameof = isNotBlank(name) ? name : "invokeElementBooleanMethod";
         final var errorMessage = FrameworkCoreFormatter.isNullLazyElementMessage(element) + MethodParametersDataValidators.isValid(parameterData);
         if (isNotBlank(errorMessage)) {
-            return driver -> DataFactoryFunctions.getInvalidWithNameAndMessage(false, nameof, errorMessage);
+            return driver -> DataFactoryFunctions.getInvalidBooleanWith(nameof, errorMessage);
         }
 
         final var methodData = MethodRepository.getMethod(SeleniumCoreConstants.DEFAULT_WEB_ELEMENT_METHOD_PARAMETERS, parameterData);
@@ -169,7 +169,7 @@ public interface InvokeElementFunctions {
         final var nameof = isNotBlank(name) ? name : "invokeElementStringMethod";
         final var errorMessage = FrameworkCoreFormatter.isNullLazyElementMessage(element) + MethodParametersDataValidators.isValid(parameterData);
         if (isNotBlank(errorMessage)) {
-            return driver -> DataFactoryFunctions.getInvalidWithNameAndMessage(CoreFormatterConstants.EMPTY, nameof, errorMessage);
+            return driver -> DataFactoryFunctions.getInvalidWith(CoreFormatterConstants.EMPTY, nameof, errorMessage);
         }
 
         final var methodData = MethodRepository.getMethod(SeleniumCoreConstants.DEFAULT_WEB_ELEMENT_METHOD_PARAMETERS, parameterData);
@@ -182,7 +182,7 @@ public interface InvokeElementFunctions {
         final var nameof = isNotBlank(name) ? name : "invokeElementStringMethod";
         final var errorMessage = FrameworkCoreFormatter.isNullLazyElementMessage(element) + MethodParametersDataValidators.isValid(parameterData) + isBlankMessageWithName(parameter, "Execution parameter value");
         if (isNotBlank(errorMessage)) {
-            return driver -> DataFactoryFunctions.getInvalidWithNameAndMessage(CoreFormatterConstants.EMPTY, nameof, errorMessage);
+            return driver -> DataFactoryFunctions.getInvalidWith(CoreFormatterConstants.EMPTY, nameof, errorMessage);
         }
 
         final var methodData = MethodRepository.getMethod(SeleniumCoreConstants.DEFAULT_WEB_ELEMENT_METHOD_PARAMETERS, parameterData);
@@ -241,7 +241,7 @@ public interface InvokeElementFunctions {
         final var nameof = "invokeElementSendKeys";
         final var errorMessage = FrameworkCoreFormatter.isNullLazyElementMessage(element) + isBlankMessageWithName(parameter, "Send keys value");
         if (isNotBlank(errorMessage)) {
-            return driver -> DataFactoryFunctions.getInvalidWithNameAndMessage(null, nameof, errorMessage);
+            return driver -> DataFactoryFunctions.getInvalidWith(null, nameof, errorMessage);
         }
 
         final var methodParameterData = MethodDefaults.SEND_KEYS;

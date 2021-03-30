@@ -21,7 +21,7 @@ public interface SeleniumExceptionHandlers {
         final var defaultValue = data.defaultValue;
         final var errorMessage = HandlerResultDataValidator.isInvalidHandlerResultDataMessage(data);
         if (isNotBlank(errorMessage)) {
-            return DataFactoryFunctions.getInvalidWithNameAndMessage(defaultValue, nameof, errorMessage);
+            return DataFactoryFunctions.getInvalidWith(defaultValue, nameof, errorMessage);
         }
 
         var exception = CoreConstants.EXCEPTION;
@@ -39,7 +39,7 @@ public interface SeleniumExceptionHandlers {
 
         final var status = isNonException(exception);
         final var message = status ? CoreFormatterConstants.INVOCATION_SUCCESSFUL : CoreFormatterConstants.INVOCATION_EXCEPTION;
-        return DataFactoryFunctions.getWithNameAndMessage(result, status, nameof, message, exception);
+        return DataFactoryFunctions.getWith(result, status, nameof, message, exception);
     }
 
     static <CastParameterType, ReturnType> Data<ReturnType> findElementsHandler(HandleResultData<CastParameterType, ReturnType> data) {
@@ -47,7 +47,7 @@ public interface SeleniumExceptionHandlers {
         final var defaultValue = data.defaultValue;
         final var errorMessage = HandlerResultDataValidator.isInvalidHandlerResultDataMessage(data);
         if (isNotBlank(errorMessage)) {
-            return DataFactoryFunctions.getInvalidWithNameAndMessage(defaultValue, nameof, errorMessage);
+            return DataFactoryFunctions.getInvalidWith(defaultValue, nameof, errorMessage);
         }
 
         var exception = CoreConstants.EXCEPTION;
@@ -60,7 +60,7 @@ public interface SeleniumExceptionHandlers {
 
         final var status = isNonException(exception);
         final var message = status ? SeleniumFormatterConstants.FIND_ELEMENTS_SUCCESSFUL : SeleniumFormatterConstants.FIND_ELEMENTS_EXCEPTION;
-        return DataFactoryFunctions.getWithNameAndMessage(result, status, nameof, message, exception);
+        return DataFactoryFunctions.getWith(result, status, nameof, message, exception);
     }
 
     static <CastParameterType, ReturnType> Data<ReturnType> quitHandler(HandleResultData<CastParameterType, ReturnType> data) {
@@ -68,7 +68,7 @@ public interface SeleniumExceptionHandlers {
         final var defaultValue = data.defaultValue;
         final var errorMessage = HandlerResultDataValidator.isInvalidHandlerResultDataMessage(data);
         if (isNotBlank(errorMessage)) {
-            return DataFactoryFunctions.getInvalidWithNameAndMessage(defaultValue, nameof, errorMessage);
+            return DataFactoryFunctions.getInvalidWith(defaultValue, nameof, errorMessage);
         }
 
         var exception = CoreConstants.EXCEPTION;
@@ -81,6 +81,6 @@ public interface SeleniumExceptionHandlers {
 
         final var status = isNonException(exception);
         final var message = status ? SeleniumFormatterConstants.QUIT_DRIVER_SUCCESSFUL : SeleniumFormatterConstants.QUIT_DRIVER_EXCEPTION;
-        return DataFactoryFunctions.getWithNameAndMessage(result, status, nameof, message, exception);
+        return DataFactoryFunctions.getWith(result, status, nameof, message, exception);
     }
 }

@@ -34,18 +34,18 @@ public interface LazyElementUtilities {
         final var nameof = "getIndexedData";
         final var errorMessage = FrameworkCoreFormatter.isNullLazyElementMessage(element);
         if (isNotBlank(errorMessage)) {
-            return DataFactoryFunctions.getInvalidWithNameAndMessage("", nameof, "TU.GE");
+            return DataFactoryFunctions.getInvalidWith("", nameof, "TU.GE");
         }
 
         final var parameters = element.parameters;
         final var selectorData = parameters.get(SelectorStrategyNameConstants.CSS_SELECTOR);
         if (NullableFunctions.isNull(selectorData)) {
-            return DataFactoryFunctions.getInvalidWithNameAndMessage("", nameof, "TU.GE");
+            return DataFactoryFunctions.getInvalidWith("", nameof, "TU.GE");
         }
 
         final var status = selectorData.elementFilterData.isFiltered;
         if (!status) {
-            return DataFactoryFunctions.getInvalidWithNameAndMessage("", nameof, "TU.GE");
+            return DataFactoryFunctions.getInvalidWith("", nameof, "TU.GE");
         }
 
         final String object = String.valueOf(selectorData.elementFilterData.filterParameter);
@@ -55,7 +55,7 @@ public interface LazyElementUtilities {
         } catch (NumberFormatException ex) {
             handler = "TU.GEBT";
         }
-        return DataFactoryFunctions.getWithNameAndMessage(object, true, nameof, handler);
+        return DataFactoryFunctions.getWith(object, true, nameof, handler);
     }
 
     static String getCSSSelectorFromElement(LazyElement element) {

@@ -46,14 +46,14 @@ public interface ExpectedConditions {
 
     private static <T, V> Data<T> is(Data<T> data, T expected, BiFunction<T, T, V> checker) {
         if (isInvalidOrFalse(data) || areAnyNull(expected, checker)) {
-            return DataFactoryFunctions.getWithMessage(null, false, CoreFormatterConstants.PARAMETER_ISSUES);
+            return DataFactoryFunctions.getWith(null, false, CoreFormatterConstants.PARAMETER_ISSUES);
         }
 
         final var object = data.object;
         var status = data.status;
         final var result = status ? object : expected;
         status = status && (Boolean) checker.apply(object, expected);
-        return DataFactoryFunctions.getWithMessage(result, status, "Checker with value(\"" + result + "\") against expected(\"" + expected + "\") was " + status + CoreFormatterConstants.END_LINE);
+        return DataFactoryFunctions.getWith(result, status, "Checker with value(\"" + result + "\") against expected(\"" + expected + "\") was " + status + CoreFormatterConstants.END_LINE);
     }
 
     private static <T, V> Function<Data<T>, Data<T>> is(T expected, BiFunction<T, T, V> checker) {
@@ -66,7 +66,7 @@ public interface ExpectedConditions {
 
     private static <T, V> DriverFunction<T> is(DriverFunction<T> getter, T expected, BiFunction<T, T, V> checker) {
         final var nameof = "is";
-        final var negative = DataFactoryFunctions.getWithNameAndMessage(expected, false, nameof, "expected guard");
+        final var negative = DataFactoryFunctions.getInvalidWith(expected, nameof, "expected guard");
         return ifDriver(nameof, areNotNull(expected, getter, checker), ExecutionCore.validChain(getter, is(expected, checker), negative), negative);
     }
 
