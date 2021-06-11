@@ -55,7 +55,7 @@ public interface LocatorRepository {
 
         locatorRepository.putIfAbsent(locator, name);
         final var status = locatorRepository.containsKey(locator);
-        final var message = "New Lazy Element, by locator, with name(\"" + name + "\") " + CoreFormatter.getOptionMessage(status) + " added to cache" + CoreFormatterConstants.END_LINE;
+        final var message = "New Lazy Element, by locator, with name(\""    + name + "\") " + CoreFormatter.getOptionMessage(status) + " added to cache" + CoreFormatterConstants.END_LINE;
         return DataFactoryFunctions.getBoolean(status, nameof, message);
     }
 

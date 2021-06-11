@@ -10,6 +10,7 @@ import com.github.karsaii.core.namespaces.validators.CoreFormatter;
 import com.github.karsaii.core.records.Data;
 import com.github.karsaii.framework.selenium.constants.ExpectedConditionConstants;
 import com.github.karsaii.framework.selenium.constants.validators.SeleniumFormatterConstants;
+import com.github.karsaii.framework.selenium.namespaces.driver.properties.DriverPropertyFunctions;
 import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
 import com.github.karsaii.framework.selenium.namespaces.validators.SeleniumFormatter;
 import com.github.karsaii.framework.selenium.records.lazy.LazyElement;
@@ -35,7 +36,7 @@ public interface ExpectedConditions {
     private static Data<Boolean> isValuesDataCore(Data<String> data, String expected, String descriptor, String conditionDescriptor) {
         final var status = data.status;
         final var messageData = SeleniumFormatter.getIsValuesMessage(CoreFormatterConstants.isMessageMap, data, expected, status, descriptor, conditionDescriptor);
-        return DataFactoryFunctions.getBoolean(status, messageData.message.getMessage());
+        return DataFactoryFunctions.getBoolean(status, messageData.message.formatter.apply(messageData.message.nameof, messageData.message.message));
     }
 
     private static Data<Boolean> isNumberOfWindowsEqualToCore(Data<Integer> handleData, int expected) {
@@ -136,7 +137,7 @@ public interface ExpectedConditions {
     }
 
     static DriverFunction<Boolean> isUrlData(BiFunction<String, String, Boolean> checker, String expected, String conditionDescriptor) {
-        return isValuesData("Current url ", expected, Driver.getUrl(), checker, conditionDescriptor);
+        return isValuesData("Current url ", expected, ExpectedConditionConstants.GET_URL, checker, conditionDescriptor);
     }
 
     static DriverFunction<Boolean> isTitleEqualsData(String expected) {
@@ -316,7 +317,7 @@ public interface ExpectedConditions {
         return ifDriver(
             "isNumberOfWindowsEqualTo",
             BasicPredicates.isPositiveNonZero(expected),
-            ExecutionCore.validChain(Driver.getWindowHandleAmount(), ExpectedConditions.isNumberOfWindowsEqualToCore(expected), CoreDataConstants.NULL_BOOLEAN),
+            ExecutionCore.validChain(DriverPropertyFunctions.getWindowHandleAmount(), ExpectedConditions.isNumberOfWindowsEqualToCore(expected), CoreDataConstants.NULL_BOOLEAN),
             CoreDataConstants.NULL_BOOLEAN
         );
     }

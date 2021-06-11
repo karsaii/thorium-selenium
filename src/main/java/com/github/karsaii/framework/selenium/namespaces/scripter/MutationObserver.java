@@ -3,9 +3,7 @@ package com.github.karsaii.framework.selenium.namespaces.scripter;
 import com.github.karsaii.core.constants.CoreDataConstants;
 import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
 import com.github.karsaii.core.extensions.namespaces.CoreUtilities;
-import com.github.karsaii.core.extensions.namespaces.predicates.ExecutorPredicates;
 import com.github.karsaii.core.namespaces.DataFactoryFunctions;
-import com.github.karsaii.core.namespaces.predicates.DataPredicates;
 import com.github.karsaii.core.records.Data;
 import com.github.karsaii.framework.core.namespaces.validators.FrameworkCoreFormatter;
 import com.github.karsaii.framework.selenium.constants.driver.devtools.DevtoolsViewConstants;
@@ -21,9 +19,7 @@ import org.openqa.selenium.WebDriver;
 
 import java.util.function.Function;
 
-import static com.github.karsaii.core.namespaces.DataExecutionFunctions.conditionalChain;
 import static com.github.karsaii.core.namespaces.DataExecutionFunctions.ifDependency;
-import static com.github.karsaii.core.namespaces.DataExecutionFunctions.validChain;
 
 public interface MutationObserver {
     private static String getMutationObserverScript(String locator) {
@@ -82,7 +78,7 @@ public interface MutationObserver {
     }
 
     static DriverFunction<Boolean> setConsoleFocusedFunction(LazyElement element) {
-        return DriverFunctionFactory.getFunction(ifDependency(
+        return ifDependency(
             "setConsoleFocusedFunction",
             FrameworkCoreFormatter.isNullLazyElementMessage(element),
             SeleniumExecutor.execute(
@@ -90,7 +86,7 @@ public interface MutationObserver {
                 DriverFunctionFactory.getFunction(setConsoleFocusedFunctionCore(element))
             ),
             CoreDataConstants.NULL_BOOLEAN
-        ));
+        )::apply;
     }
 
     static DriverFunction<Boolean> setConsoleFocusedFunction() {

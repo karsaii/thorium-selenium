@@ -31,7 +31,6 @@ public abstract class SeleniumCoreConstants {
     public static final Method[] WEBELEMENT_METHODS = WebElement.class.getMethods();
     public static final WebElement STOCK_ELEMENT = BasicTypeUtilities.getStockElement();
     public static final WebElementList NULL_ELEMENT_LIST = WebElementListFactory.getWithEmptyList();
-    public static final List<Method> WEB_ELEMENT_METHOD_LIST = Arrays.asList(WEBELEMENT_METHODS);
 
     public static AtomicInteger ATOMIC_COUNT = new AtomicInteger();
     public static AtomicInteger ELEMENT_ATOMIC_COUNT = new AtomicInteger();
@@ -42,6 +41,8 @@ public abstract class SeleniumCoreConstants {
     public static final ExternalElementData NULL_EXTERNAL_ELEMENT_DATA = new ExternalElementData(NULL_CACHED_KEYS, SeleniumDataConstants.NULL_ELEMENT);
 
     public static final List<Class<?>> CLASSES_OF_GET_MECHANISMS = Arrays.asList(WebElementList.class, WebElement.class);
+
+    public static final List<Method> WEB_ELEMENT_METHOD_LIST = Arrays.asList(WEBELEMENT_METHODS);
     public static final MethodSourceData DEFAULT_WEB_ELEMENT_METHOD_PARAMETERS = new MethodSourceData(CoreConstants.METHODS, SeleniumCoreConstants.WEB_ELEMENT_METHOD_LIST, CoreDataConstants.NULL_METHODDATA);
     public static final Function<Object, WebElement> WEB_ELEMENT_CASTER_FUNCTION = WebElement.class::cast;
 

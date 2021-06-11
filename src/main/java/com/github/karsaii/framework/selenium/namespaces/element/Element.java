@@ -14,6 +14,7 @@ import com.github.karsaii.framework.selenium.constants.validators.SeleniumFormat
 import com.github.karsaii.framework.selenium.enums.SingleGetter;
 import com.github.karsaii.framework.selenium.namespaces.Driver;
 import com.github.karsaii.framework.selenium.namespaces.SeleniumExecutor;
+import com.github.karsaii.framework.selenium.namespaces.driver.invoke.ElementInvokeFunctions;
 import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
 import com.github.karsaii.framework.selenium.namespaces.factories.DriverFunctionFactory;
 import com.github.karsaii.framework.selenium.namespaces.repositories.LocatorRepository;
@@ -39,7 +40,7 @@ public interface Element {
     private static Data<Boolean> actionCore(Data<Void> data, String message) {
         final var nameof = "action";
         final var status = data.status;
-        final var lMessage = SeleniumFormatter.getActionMessage(message, data.message.getMessage(), status);
+        final var lMessage = SeleniumFormatter.getActionMessage(message, data.message.formatter.apply(data.message.nameof, data.message.message), status);
         final var exception = data.exception;
         return DataFactoryFunctions.getBoolean(status, nameof, lMessage, exception);
     }
@@ -77,21 +78,21 @@ public interface Element {
     static DriverFunction<Boolean> sendKeys(LazyElement element, String input) {
         return ifDriver(
             SeleniumFormatter.getSendKeysNotSendingMessage(element, input),
-            DriverFunctionFactory.getFunction(DataExecutionFunctions.validChain(Driver.invokeElementSendKeys(element, input), Element.actionCore("sent keys to"), CoreDataConstants.NULL_BOOLEAN))
+            DriverFunctionFactory.getFunction(DataExecutionFunctions.validChain(ElementInvokeFunctions.sendKeys(element, input), Element.actionCore("sent keys to"), CoreDataConstants.NULL_BOOLEAN))
         );
     }
 
     static DriverFunction<Boolean> click(LazyElement element) {
         return ifDriver(
             FrameworkCoreFormatter.isNullLazyElementMessage(element),
-            DriverFunctionFactory.getFunction(DataExecutionFunctions.validChain(Driver.invokeElementClick(element), Element.actionCore("clicked"), CoreDataConstants.NULL_BOOLEAN))
+            DriverFunctionFactory.getFunction(DataExecutionFunctions.validChain(ElementInvokeFunctions.click(element), Element.actionCore("clicked"), CoreDataConstants.NULL_BOOLEAN))
         );
     }
 
     static DriverFunction<Boolean> clear(LazyElement element) {
         return ifDriver(
             FrameworkCoreFormatter.isNullLazyElementMessage(element),
-            DriverFunctionFactory.getFunction(DataExecutionFunctions.validChain(Driver.invokeElementClear(element), Element.actionCore("cleared"), CoreDataConstants.NULL_BOOLEAN))
+            DriverFunctionFactory.getFunction(DataExecutionFunctions.validChain(ElementInvokeFunctions.clear(element), Element.actionCore("cleared"), CoreDataConstants.NULL_BOOLEAN))
         );
     }
 

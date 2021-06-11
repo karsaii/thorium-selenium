@@ -1,5 +1,7 @@
 package com.github.karsaii.framework.selenium.records.element.regular;
 
+import com.github.karsaii.core.extensions.namespaces.CoreUtilities;
+import com.github.karsaii.core.extensions.namespaces.NullableFunctions;
 import com.github.karsaii.framework.selenium.enums.SingleGetter;
 import com.github.karsaii.framework.selenium.namespaces.element.Element;
 import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
@@ -33,10 +35,20 @@ public class ClearData {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        var clearData = (ClearData) o;
-        return Objects.equals(clearLazy, clearData.clearLazy) && Objects.equals(clearByWithGetter, clearData.clearByWithGetter) && Objects.equals(clearBy, clearData.clearBy);
+        if (CoreUtilities.isEqual(this, o)) {
+            return true;
+        }
+
+        if (NullableFunctions.isNull(o) || CoreUtilities.isNotEqual(getClass(), o.getClass())) {
+            return false;
+        }
+
+        final var clearData = (ClearData) o;
+        return (
+            CoreUtilities.isEqual(clearLazy, clearData.clearLazy) &&
+            CoreUtilities.isEqual(clearByWithGetter, clearData.clearByWithGetter) &&
+            CoreUtilities.isEqual(clearBy, clearData.clearBy)
+        );
     }
 
     @Override

@@ -146,7 +146,7 @@ public interface Execute {
             driver -> {
                 final var result = SeleniumExecutor.conditionalSequence(ExecutorPredicates::isFalseStatus, isScrollIntoViewExistsData(), Driver.execute(ScrollIntoView.SET_FUNCTIONS)).apply(driver);
                 final var status = isValidNonFalse(result);
-                return DataFactoryFunctions.getBoolean(status, SeleniumFormatter.getScrollIntoViewMessage(result.message.getMessage(), status));
+                return DataFactoryFunctions.getBoolean(status, SeleniumFormatter.getScrollIntoViewMessage(result.message.formatter.apply(result.message.nameof, result.message.message), status));
             },
             CoreDataConstants.NULL_BOOLEAN
         );

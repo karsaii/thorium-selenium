@@ -94,7 +94,7 @@ public abstract class DriverFunctionConstants {
         "Text"
     );
 
-    public static final GetElementByData<Integer, WebElementList> BY_CONTAINED_INTEGER_CONSTANTS = new GetElementByData<>(
+    public static final GetElementByData<Integer, WebElementList> BY_INDEX_CONSTANTS = new GetElementByData<>(
         "getElementByIndex",
         ElementGetterValidators::isInvalidElementByIndexParameters,
         DriverFunctionConstants::getByIndex,
