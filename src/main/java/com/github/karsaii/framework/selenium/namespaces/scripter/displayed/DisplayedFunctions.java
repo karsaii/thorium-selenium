@@ -4,21 +4,21 @@ import com.github.karsaii.core.constants.CoreDataConstants;
 import com.github.karsaii.core.constants.validators.CoreFormatterConstants;
 import com.github.karsaii.core.extensions.namespaces.CoreUtilities;
 import com.github.karsaii.core.extensions.namespaces.NullableFunctions;
+import com.github.karsaii.core.namespaces.DataFunctions;
 import com.github.karsaii.core.records.Data;
 import com.github.karsaii.framework.selenium.constants.scripts.element.Displayed;
 import com.github.karsaii.framework.selenium.enums.SingleGetter;
 import com.github.karsaii.framework.selenium.namespaces.Driver;
+import com.github.karsaii.framework.selenium.namespaces.ScriptExecuteFunctions;
 import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
 import com.github.karsaii.framework.selenium.namespaces.factories.DriverFunctionFactory;
 import com.github.karsaii.framework.selenium.namespaces.repositories.LocatorRepository;
-import com.github.karsaii.framework.selenium.namespaces.scripter.Execute;
 import com.github.karsaii.framework.selenium.records.lazy.LazyElement;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import static com.github.karsaii.core.namespaces.DataFactoryFunctions.getWith;
 import static com.github.karsaii.core.namespaces.DataFactoryFunctions.replaceMessage;
-import static com.github.karsaii.core.namespaces.predicates.DataPredicates.isInvalidOrFalse;
 import static com.github.karsaii.core.namespaces.predicates.DataPredicates.isValidNonFalse;
 import static com.github.karsaii.framework.selenium.namespaces.ExecutionCore.ifDriver;
 import static com.github.karsaii.framework.selenium.namespaces.ExecutionCore.ifDriverFunction;
@@ -31,20 +31,15 @@ public interface DisplayedFunctions {
             "isDisplayed",
             isNotNullWebElement(data),
             driver -> {
-                final var parameter = Execute.handleDataParameterDefault(data);
-                if(isInvalidOrFalse(parameter)) {
-                    return replaceMessage(CoreDataConstants.NULL_BOOLEAN, parameter.message.toString());
-                }
-
-                final var result = Driver.executeSingleParameter(Displayed.IS_DISPLAYED_DISPATCHER, parameter.object).apply(driver);
+                final var parameter = ScriptExecuteFunctions.handleDataParameterWithDefaults(data);
+                final var result = Driver.executeSingleParameter(Displayed.IS_DISPLAYED_DISPATCHER, parameter).apply(driver);
                 return isValidNonFalse(result) ? (
                     getWith(CoreUtilities.castToBoolean(result.object), result.status, result.message)
-                ) : replaceMessage(CoreDataConstants.NULL_BOOLEAN, result.message.toString());
+                ) : replaceMessage(CoreDataConstants.NULL_BOOLEAN, DataFunctions.getFormattedMessage(result));
             },
             CoreDataConstants.NULL_BOOLEAN
         );
     }
-
 
     static DriverFunction<Boolean> isDisplayed(DriverFunction<WebElement> getter) {
         return ifDriverFunction("isDisplayed", NullableFunctions::isNotNull, getter, DisplayedFunctions::isDisplayedCore, CoreDataConstants.NULL_BOOLEAN);

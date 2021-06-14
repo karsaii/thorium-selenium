@@ -1,6 +1,6 @@
 package common;
 
-import com.github.karsaii.core.namespaces.asserts.JUnit5StatusAdapter;
+import com.github.karsaii.core.extensions.namespaces.asserts.JUnit5StatusAdapter;
 import com.github.karsaii.core.records.Data;
 import org.junit.jupiter.api.Assertions;
 

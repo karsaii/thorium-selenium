@@ -12,6 +12,7 @@ import com.github.karsaii.core.extensions.namespaces.predicates.BasicPredicates;
 import com.github.karsaii.core.extensions.namespaces.predicates.SizablePredicates;
 import com.github.karsaii.core.namespaces.BaseExecutionFunctions;
 import com.github.karsaii.core.namespaces.DataFactoryFunctions;
+import com.github.karsaii.core.namespaces.DataFunctions;
 import com.github.karsaii.core.namespaces.factories.MethodMessageDataFactory;
 import com.github.karsaii.core.namespaces.validators.CoreFormatter;
 import com.github.karsaii.core.namespaces.validators.DataValidators;
@@ -502,7 +503,7 @@ public interface Driver {
             }
 
             data = getter.apply(locator).apply(driver);
-            message.append(index + data.message.toString() + CoreFormatterConstants.END_LINE);
+            message.append(index + DataFunctions.getFormattedMessage(data) + CoreFormatterConstants.END_LINE);
             if (isInvalidOrFalse(data)) {
                 continue;
             }
@@ -554,7 +555,7 @@ public interface Driver {
 
         final var object = defaults.getter.apply(data, filter);
         final var status = WebElementValidators.isNotNull(object);
-        final var message = defaults.formatter.apply(new GetByFilterFormatterData<>(filter, defaults.filterName, status, data.object.size(), data.message.toString()));
+        final var message = defaults.formatter.apply(new GetByFilterFormatterData<>(filter, defaults.filterName, status, data.object.size(), DataFunctions.getFormattedMessage(data)));
         return DataFactoryFunctions.getWith(object, status, nameof, message);
     }
 
@@ -778,7 +779,7 @@ public interface Driver {
         final var currentBy = locators.first();
         final var current = getShadowRootElement(getLocator(currentBy).object).apply(driver);
         if (isInvalidOrFalse(current) || NullableFunctions.isNull(current.object)) {
-            return prependMessage(SeleniumDataConstants.NULL_ELEMENT, "Current " + CoreFormatterConstants.WAS_NULL + current.message.toString());
+            return prependMessage(SeleniumDataConstants.NULL_ELEMENT, "Current " + CoreFormatterConstants.WAS_NULL + DataFunctions.getFormattedMessage(current));
         }
 
         return locators.isMany() ? getShadowRootElement(current, locators.tail()).apply(driver) : current;
@@ -1243,7 +1244,7 @@ public interface Driver {
                 var locator = locators.first();
                 var data = Driver.getElement(locator).apply(driver);
                 if (isNullWebElement(data)) {
-                    return DataFactoryFunctions.getWith(SeleniumCoreConstants.STOCK_ELEMENT, false, nameof, data.message.toString());
+                    return DataFactoryFunctions.getWith(SeleniumCoreConstants.STOCK_ELEMENT, false, nameof, DataFunctions.getFormattedMessage(data));
                 }
 
                 final var sublist = locators.tail();
@@ -1386,7 +1387,7 @@ public interface Driver {
                 final var update = ElementRepository.updateTypeKeys(element.name, lep.lazyLocators, typeKeys, parameterKey);
                 return isNotNullWebElement(currentElement) ? (
                     DataFactoryFunctions.getWith(new ExternalElementData(typeKeys, currentElement), true, nameof, "External function element" + CoreFormatterConstants.END_LINE)
-                ) : replaceMessage(defaultValue, nameof, "All(\"" + length + "\") approaches were tried" + CoreFormatterConstants.END_LINE + currentElement.message.toString());
+                ) : replaceMessage(defaultValue, nameof, "All(\"" + length + "\") approaches were tried" + CoreFormatterConstants.END_LINE + DataFunctions.getFormattedMessage(currentElement));
             },
             defaultValue
         );
@@ -1466,7 +1467,7 @@ public interface Driver {
         while (exitCondition.apply(current, index++, length)) {
             switchData = switchToDefaultContent().apply(driver);
             if (isInvalidOrFalse(switchData)) {
-                return replaceMessage(current, nameof, switchData.message.toString());
+                return replaceMessage(current, nameof, DataFunctions.getFormattedMessage(switchData));
             }
 
             var keyData = keyGetter.apply(cacheKeyData);
@@ -1487,8 +1488,8 @@ public interface Driver {
             }
 
             current = defaults.getter.apply(parameters.elementFilterData, locators, parameters.getter).apply(driver);
-            message.append(current.message.toString());
-            message.append(Adjuster.adjustProbability(parameters, typeKeys, key, isValidNonFalse(current), data.probabilityData).message.toString());
+            message.append(DataFunctions.getFormattedMessage(current));
+            message.append(DataFunctions.getFormattedMessage(Adjuster.adjustProbability(parameters, typeKeys, key, isValidNonFalse(current), data.probabilityData)));
             cacheKeyData = new CachedLookupKeysData(name, keyData.object.entryName, keyData.object.strategy, isCached ? keyData.object.index : ++parameterIndex);
         }
 

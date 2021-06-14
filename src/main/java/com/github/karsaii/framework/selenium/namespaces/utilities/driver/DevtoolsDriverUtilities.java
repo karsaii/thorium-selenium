@@ -1,6 +1,7 @@
 package com.github.karsaii.framework.selenium.namespaces.utilities.driver;
 
 import com.github.karsaii.core.namespaces.DataFactoryFunctions;
+import com.github.karsaii.core.namespaces.DataFunctions;
 import com.github.karsaii.core.namespaces.wait.Wait;
 import com.github.karsaii.core.records.Data;
 import com.github.karsaii.framework.selenium.constants.driver.devtools.DevtoolsDriverFunctionConstants;
@@ -22,7 +23,7 @@ public interface DevtoolsDriverUtilities {
     static Data<Boolean> getBooleanConsoleResultCore(WebDriver driver) {
         final var result = DevtoolsDriverFunctionConstants.GET_CONSOLE_RESULT.apply(driver);
         final var status = BooleanUtils.toBoolean(result.object);
-        return DataFactoryFunctions.getBoolean(status, "getBooleanConsoleResultCore", result.message.toString(), result.exception, result.exceptionMessage);
+        return DataFactoryFunctions.getBoolean(status, "getBooleanConsoleResultCore", DataFunctions.getFormattedMessage(result), result.exception, result.exceptionMessage);
     }
 
     static DriverFunction<Boolean> getBooleanConsoleResult() {

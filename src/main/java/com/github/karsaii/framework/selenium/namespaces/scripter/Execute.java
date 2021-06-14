@@ -7,6 +7,7 @@ import com.github.karsaii.core.extensions.namespaces.NullableFunctions;
 import com.github.karsaii.core.extensions.namespaces.predicates.ExecutorPredicates;
 import com.github.karsaii.core.namespaces.DataExecutionFunctions;
 import com.github.karsaii.core.namespaces.DataFactoryFunctions;
+import com.github.karsaii.core.namespaces.DataFunctions;
 import com.github.karsaii.core.namespaces.predicates.DataPredicates;
 import com.github.karsaii.core.namespaces.validators.CoreFormatter;
 import com.github.karsaii.core.records.Data;
@@ -83,7 +84,7 @@ public interface Execute {
         }
 
         final var status = isValidNonFalse(result);
-        return DataFactoryFunctions.getBoolean(status, CoreFormatter.getExecuteFragment(status) + " Scroll into view: " + result.message.toString() + CoreFormatterConstants.END_LINE);
+        return DataFactoryFunctions.getBoolean(status, CoreFormatter.getExecuteFragment(status) + " Scroll into view: " + DataFunctions.getFormattedMessage(result) + CoreFormatterConstants.END_LINE);
     }
 
     private static DriverFunction<Boolean> setCommonCore(DriverFunction<Boolean> preconditon, String function, Data<Boolean> defaultValue) {
@@ -197,13 +198,13 @@ public interface Execute {
             driver -> {
                 final var parameter = handleDataParameterDefault(data);
                 if(isInvalidOrFalse(parameter)) {
-                    return replaceMessage(SeleniumDataConstants.NULL_ELEMENT, parameter.message.toString());
+                    return replaceMessage(SeleniumDataConstants.NULL_ELEMENT, DataFunctions.getFormattedMessage(parameter));
                 }
 
                 final var result = Driver.executeSingleParameter(ShadowRoot.GET_SHADOW_ROOT, parameter.object).apply(driver);
                 return isValidNonFalse(result) ? (
                     getWith((WebElement)result.object, result.status, result.message)
-                ) : replaceMessage(SeleniumDataConstants.NULL_ELEMENT, result.message.toString());
+                ) : replaceMessage(SeleniumDataConstants.NULL_ELEMENT, DataFunctions.getFormattedMessage(data));
             },
             SeleniumDataConstants.NULL_ELEMENT
         );

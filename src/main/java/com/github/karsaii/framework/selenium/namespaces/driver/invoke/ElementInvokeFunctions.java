@@ -9,6 +9,7 @@ import com.github.karsaii.core.implementations.reflection.message.ParameterizedM
 import com.github.karsaii.core.implementations.reflection.message.RegularMessageData;
 import com.github.karsaii.core.namespaces.DataExecutionFunctions;
 import com.github.karsaii.core.namespaces.DataFactoryFunctions;
+import com.github.karsaii.core.namespaces.DataFunctions;
 import com.github.karsaii.core.namespaces.InvokeFunctions;
 import com.github.karsaii.core.namespaces.repositories.MethodRepository;
 import com.github.karsaii.core.namespaces.validators.CoreFormatter;
@@ -66,9 +67,9 @@ public interface ElementInvokeFunctions {
         final var status = isValidNonFalse(result);
         final var message = (!status) ? (
             messageHandler
-                .apply(new InvokeCommonMessageParametersData(data.message.toString(), methodData.returnType, methodData.methodParameterTypes))
+                .apply(new InvokeCommonMessageParametersData(DataFunctions.getFormattedMessage(data), methodData.returnType, methodData.methodParameterTypes))
                 .apply(result.exception)
-        ) : result.message.toString();
+        ) : DataFunctions.getFormattedMessage(result);
 
         return DataFactoryFunctions.getWith(result.object, status, nameof, message, result.exception);
     }

@@ -1,6 +1,7 @@
 package com.github.karsaii.framework.selenium.namespaces.factories;
 
 import com.github.karsaii.core.namespaces.DataFactoryFunctions;
+import com.github.karsaii.core.namespaces.DataFunctions;
 import com.github.karsaii.core.records.Data;
 import com.github.karsaii.core.records.MethodMessageData;
 import com.github.karsaii.framework.selenium.constants.validators.SeleniumFormatterConstants;
@@ -47,7 +48,7 @@ public interface DriverFunctionFactory {
     }
 
     static <T> DriverFunction<T> get(Data<T> data) {
-        return driver -> DataFactoryFunctions.getWith(data.object, data.status, data.message.toString(), data.exception, data.exceptionMessage);
+        return driver -> DataFactoryFunctions.getWith(data.object, data.status, DataFunctions.getFormattedMessage(data), data.exception, data.exceptionMessage);
     }
 
     static <T> DriverFunction<T> getFunction(Function<WebDriver, Data<T>> function) {

@@ -1,5 +1,6 @@
 package examples.travelpage.tests;
 
+import com.github.karsaii.core.namespaces.DataFunctions;
 import com.github.karsaii.framework.selenium.namespaces.DriverWaits;
 import com.github.karsaii.framework.selenium.namespaces.SeleniumExecutor;
 import com.github.karsaii.framework.selenium.namespaces.element.Element;
@@ -21,7 +22,7 @@ public class HomepageTests {
             /*Element.inputWhenClickable(HomepageConstants.DESTINATION_FIELD_COMPLEX, "XYZ"),
             DisplayedFunctions.isDisplayed(HomepageConstants.DESTINATION_FIELD_COMPLEX)*/
         ).apply(FFDriverFunctions.get());
-        Assertions.assertTrue(result.status, result.message.toString());
+        Assertions.assertTrue(result.status, DataFunctions.getFormattedMessage(result));
     }
 
     @AfterAll

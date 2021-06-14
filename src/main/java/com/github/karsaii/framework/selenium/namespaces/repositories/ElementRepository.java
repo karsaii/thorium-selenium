@@ -7,6 +7,7 @@ import com.github.karsaii.core.extensions.namespaces.CoreUtilities;
 import com.github.karsaii.core.extensions.namespaces.NullableFunctions;
 import com.github.karsaii.core.extensions.namespaces.factories.DecoratedListFactory;
 import com.github.karsaii.core.namespaces.DataFactoryFunctions;
+import com.github.karsaii.core.namespaces.DataFunctions;
 import com.github.karsaii.core.namespaces.validators.CoreFormatter;
 import com.github.karsaii.core.records.Data;
 import com.github.karsaii.framework.core.abstracts.AbstractLazyResult;
@@ -202,7 +203,7 @@ public interface ElementRepository {
         final var externalElement = (externalStatus ? external : regular).object;
         final var currentElement = externalElement.found;
         final var message = WebElementValidators.isNotNullWebElement(currentElement) ? (
-            ElementRepository.cacheIfAbsent(element, FrameworkCoreUtilities.getKeysCopy(externalElement.typeKeys)).message.toString()
+            DataFunctions.getFormattedMessage(ElementRepository.cacheIfAbsent(element, FrameworkCoreUtilities.getKeysCopy(externalElement.typeKeys)))
         ) : "All approaches were tried" + CoreFormatterConstants.END_LINE;
         return prependMessage(currentElement, message);
     }
