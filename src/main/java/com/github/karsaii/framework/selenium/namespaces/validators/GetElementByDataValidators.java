@@ -8,7 +8,7 @@ import static com.github.karsaii.core.namespaces.validators.CoreFormatter.isNull
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public interface GetElementByDataValidators {
-    static String getValidGetElementByDataMessage(GetElementByData<?, ?> data) {
+    static String getValidGetElementByDataMessage(GetElementByData<?, ?, ?> data) {
         var message = isNullMessageWithName(data, "Get Element By Data");
         if (isBlank(message)) {
             message += (

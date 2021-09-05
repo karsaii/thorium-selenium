@@ -43,12 +43,12 @@ public interface LazyElementUtilities {
             return DataFactoryFunctions.getInvalidWith("", nameof, "TU.GE");
         }
 
-        final var status = selectorData.elementFilterData.isFiltered;
+        final var status = selectorData.ELEMENT_FILTER_DATA.isFiltered;
         if (!status) {
             return DataFactoryFunctions.getInvalidWith("", nameof, "TU.GE");
         }
 
-        final String object = String.valueOf(selectorData.elementFilterData.filterParameter);
+        final String object = String.valueOf(selectorData.ELEMENT_FILTER_DATA.filterParameter);
         var handler = "TU.GEBI";
         try {
             Integer.parseInt(object);
@@ -69,9 +69,9 @@ public interface LazyElementUtilities {
         if (NullableFunctions.isNull(selectorData)) {
             return CoreFormatterConstants.EMPTY;
         }
-        final var lazyLocators = selectorData.lazyLocators;
+        final var lazyLocators = selectorData.LAZY_LOCATORS;
         final var lazyLocator = lazyLocators.first();
-        return lazyLocator.locator;
+        return lazyLocator.LOCATOR;
     }
 
     static boolean lazyExitConditionCore(Data<WebElement> element, int index, int attempts) {

@@ -181,7 +181,7 @@ public interface ElementRepository {
             key,
             Specificity.reduce(
                 list.stream().map(
-                    locator -> Specificity.getSelectorSpecificity(locator.locator, (CoreUtilities.isEqual(locator.strategy, SeleniumSelectorStrategy.CSS_SELECTOR) ? Strategy.CSS_SELECTOR : Strategy.XPATH)).specifics
+                    locator -> Specificity.getSelectorSpecificity(locator.LOCATOR, (CoreUtilities.isEqual(locator.STRATEGY, SeleniumSelectorStrategy.CSS_SELECTOR) ? Strategy.CSS_SELECTOR : Strategy.XPATH)).specifics
                 ).toArray(SpecificityData[]::new)
             )
         );

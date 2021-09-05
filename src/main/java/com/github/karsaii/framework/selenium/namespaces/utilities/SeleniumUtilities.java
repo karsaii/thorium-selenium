@@ -46,7 +46,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public interface SeleniumUtilities {
     static boolean isInvalidLazyLocator(LazyLocator data) {
-        return isNull(data) || isBlank(data.locator) || isNull(data.strategy);
+        return isNull(data) || isBlank(data.LOCATOR) || isNull(data.STRATEGY);
     }
 
     static boolean isValidLazyLocator(LazyLocator data) {
@@ -148,8 +148,8 @@ public interface SeleniumUtilities {
             return SeleniumDataConstants.NULL_BY;
         }
 
-        final var locator = data.locator;
-        final var strategy = data.strategy;
+        final var locator = data.LOCATOR;
+        final var strategy = data.STRATEGY;
         final var object = strategyMap.get(SeleniumSelectorStrategy.getValueOf(strategy)).apply(locator);
         return DataFactoryFunctions.getValidWith(object, "getLocator", "Locator: By " + strategy + " with locator: " + locator);
     }
@@ -166,7 +166,7 @@ public interface SeleniumUtilities {
         LazyFilteredElementParameters lep;
         while(keys.hasNext() && values.hasNext()) {
             lep = values.next();
-            map.putIfAbsent(keys.next(), LazyFilteredElementParametersFactory.getWithFilterDataAndLocatorList((ElementFilterData<?>) lep.elementFilterData, lep.probability, lep.lazyLocators, lep.getter));
+            map.putIfAbsent(keys.next(), LazyFilteredElementParametersFactory.getWithFilterDataAndLocatorList((ElementFilterData<?>) lep.ELEMENT_FILTER_DATA, lep.PROBABILITY, lep.LAZY_LOCATORS, lep.GETTER));
         }
 
         return map;

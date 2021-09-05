@@ -97,14 +97,14 @@ public interface LazyElementFactory {
 
     static LazyElement getWithFilterParameters(String name, boolean isIndexed, int index, LazyLocator locator, String getter) {
         final var parameters = LazyFilteredElementParametersFactory.getWithFilterParametersAndLocator(isIndexed, index, locator, getter);
-        final var map = LazyElementParameterMapFactory.getWithLocatorAndParameters(locator.strategy, parameters);
+        final var map = LazyElementParameterMapFactory.getWithLocatorAndParameters(locator.STRATEGY, parameters);
 
         return getWithDefaultValidator(name, map);
     }
 
     static LazyElement getWithFilterParameters(String name, boolean isFiltered, String message, LazyLocator locator, String getter) {
         final var parameters = LazyFilteredElementParametersFactory.getWithFilterParametersAndLocator(isFiltered, message, locator, getter);
-        final var map = LazyElementParameterMapFactory.getWithLocatorAndParameters(locator.strategy, parameters);
+        final var map = LazyElementParameterMapFactory.getWithLocatorAndParameters(locator.STRATEGY, parameters);
 
         return getWithDefaultValidator(name, map);
     }
@@ -142,7 +142,7 @@ public interface LazyElementFactory {
         final var keyList = new ArrayList<String>();
         for(var locator : locators) {
             parameterList.add(LazyFilteredElementParametersFactory.getWithFilterParametersAndLocator(true, 0, locator, getter));
-            keyList.add(locator.strategy + "-" + SeleniumCoreConstants.ELEMENT_ATOMIC_COUNT.getAndIncrement() + "-generated");
+            keyList.add(locator.STRATEGY + "-" + SeleniumCoreConstants.ELEMENT_ATOMIC_COUNT.getAndIncrement() + "-generated");
         }
 
         final var map = LazyElementParameterMapFactory.getWith(IntStream.range(0, keyList.size()).boxed().collect(Collectors.toMap(keyList::get, parameterList::get)));
@@ -185,7 +185,7 @@ public interface LazyElementFactory {
     static LazyElement getWithFilterParameters(By locator, SingleGetter getter) {
         final var lazyLocator = SeleniumLazyLocatorFactory.get(locator);
         final var parameters = LazyFilteredElementParametersFactory.getWithFilterParametersAndLocator(false, lazyLocator, getter.getName());
-        final var map = LazyElementParameterMapFactory.getWithLocatorAndParameters(lazyLocator.strategy, parameters);
+        final var map = LazyElementParameterMapFactory.getWithLocatorAndParameters(lazyLocator.STRATEGY, parameters);
 
         return getWithDefaultNameAndValidator(map);
     }

@@ -7,11 +7,13 @@ import com.github.karsaii.core.namespaces.StringUtilities;
 import com.github.karsaii.core.records.Data;
 import com.github.karsaii.core.records.TypedEnumKeyData;
 import com.github.karsaii.framework.core.namespaces.validators.FrameworkCoreFormatter;
+import com.github.karsaii.framework.selenium.enums.SeleniumTypeKey;
 import com.github.karsaii.framework.selenium.namespaces.element.validators.ElementGetterValidators;
 import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
 import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.WebElementList;
 import com.github.karsaii.framework.selenium.namespaces.factories.DriverFunctionFactory;
 import com.github.karsaii.framework.selenium.records.GetElementByData;
+import com.github.karsaii.framework.selenium.records.SeleniumTypedEnumKeyData;
 import org.openqa.selenium.WebElement;
 
 import java.util.Collections;
@@ -33,29 +35,29 @@ public abstract class DriverFunctionConstants {
     public static final DriverFunction<WebElement> NULL_WEBELEMENT = DriverFunctionFactory.get(SeleniumDataConstants.NULL_ELEMENT);
     public static final DriverFunction<WebElementList> NULL_LIST = DriverFunctionFactory.get(SeleniumDataConstants.NULL_LIST);
 
-    public static final Map<TypeKey, DriverFunction<?>> FUNCTION_MAP = Collections.unmodifiableMap(
+    public static final Map<SeleniumTypeKey, DriverFunction<?>> FUNCTION_MAP = Collections.unmodifiableMap(
         new EnumMap<>(
             Map.ofEntries(
-                entry(TypeKey.BOOLEAN, NULL_BOOLEAN),
-                entry(TypeKey.INTEGER, NULL_INTEGER),
-                entry(TypeKey.VOID, NULL_VOID),
-                entry(TypeKey.WEB_ELEMENT, NULL_WEBELEMENT),
-                entry(TypeKey.STRING, NULL_STRING),
-                entry(TypeKey.STRING_SET, NULL_STRINGSET),
-                entry(TypeKey.WEB_ELEMENT_LIST, NULL_LIST),
-                entry(TypeKey.OBJECT, NULL_OBJECT)
+                entry(SeleniumTypeKey.BOOLEAN, NULL_BOOLEAN),
+                entry(SeleniumTypeKey.INTEGER, NULL_INTEGER),
+                entry(SeleniumTypeKey.VOID, NULL_VOID),
+                entry(SeleniumTypeKey.WEB_ELEMENT, NULL_WEBELEMENT),
+                entry(SeleniumTypeKey.STRING, NULL_STRING),
+                entry(SeleniumTypeKey.STRING_SET, NULL_STRINGSET),
+                entry(SeleniumTypeKey.WEB_ELEMENT_LIST, NULL_LIST),
+                entry(SeleniumTypeKey.OBJECT, NULL_OBJECT)
             )
         )
     );
 
-    public static final TypedEnumKeyData<Boolean> BOOLEAN_FUNCTION_KEY = new TypedEnumKeyData<>(TypeKey.BOOLEAN, Boolean.class);
-    public static final TypedEnumKeyData<Integer> INTEGER_FUNCTION_KEY = new TypedEnumKeyData<>(TypeKey.INTEGER, Integer.class);
-    public static final TypedEnumKeyData<String> STRING_FUNCTION_KEY = new TypedEnumKeyData<>(TypeKey.STRING, String.class);
-    public static final TypedEnumKeyData<StringSet> STRING_SET_FUNCTION_KEY = new TypedEnumKeyData<>(TypeKey.STRING_SET, StringSet.class);
-    public static final TypedEnumKeyData<Object> OBJECT_FUNCTION_KEY = new TypedEnumKeyData<>(TypeKey.OBJECT, Object.class);
-    public static final TypedEnumKeyData<Void> VOID_FUNCTION_KEY = new TypedEnumKeyData<>(TypeKey.VOID, Void.class);
-    public static final TypedEnumKeyData<WebElement> WEB_ELEMENT_FUNCTION_KEY = new TypedEnumKeyData<>(TypeKey.WEB_ELEMENT, WebElement.class);
-    public static final TypedEnumKeyData<WebElementList> WEB_ELEMENT_LIST_FUNCTION_KEY = new TypedEnumKeyData<>(TypeKey.WEB_ELEMENT_LIST, WebElementList.class);
+    public static final SeleniumTypedEnumKeyData<Boolean> BOOLEAN_FUNCTION_KEY = new SeleniumTypedEnumKeyData<>(SeleniumTypeKey.BOOLEAN, Boolean.class);
+    public static final SeleniumTypedEnumKeyData<Integer> INTEGER_FUNCTION_KEY = new SeleniumTypedEnumKeyData<>(SeleniumTypeKey.INTEGER, Integer.class);
+    public static final SeleniumTypedEnumKeyData<String> STRING_FUNCTION_KEY = new SeleniumTypedEnumKeyData<>(SeleniumTypeKey.STRING, String.class);
+    public static final SeleniumTypedEnumKeyData<StringSet> STRING_SET_FUNCTION_KEY = new SeleniumTypedEnumKeyData<>(SeleniumTypeKey.STRING_SET, StringSet.class);
+    public static final SeleniumTypedEnumKeyData<Object> OBJECT_FUNCTION_KEY = new SeleniumTypedEnumKeyData<>(SeleniumTypeKey.OBJECT, Object.class);
+    public static final SeleniumTypedEnumKeyData<Void> VOID_FUNCTION_KEY = new SeleniumTypedEnumKeyData<>(SeleniumTypeKey.VOID, Void.class);
+    public static final SeleniumTypedEnumKeyData<WebElement> WEB_ELEMENT_FUNCTION_KEY = new SeleniumTypedEnumKeyData<>(SeleniumTypeKey.WEB_ELEMENT, WebElement.class);
+    public static final SeleniumTypedEnumKeyData<WebElementList> WEB_ELEMENT_LIST_FUNCTION_KEY = new SeleniumTypedEnumKeyData<>(SeleniumTypeKey.WEB_ELEMENT_LIST, WebElementList.class);
 
     public static final Map<Class<?>, TypeKey> TYPE_MAP = Collections.unmodifiableMap(
         new LinkedHashMap<>(
@@ -85,7 +87,7 @@ public abstract class DriverFunctionConstants {
         return object;
     }
 
-    public static final GetElementByData<String, WebElementList> BY_CONTAINED_TEXT_CONSTANTS = new GetElementByData<>(
+    public static final GetElementByData<String, WebElement, WebElementList> BY_CONTAINED_TEXT_CONSTANTS = new GetElementByData<>(
         "getElementByContainedText",
         ElementGetterValidators::isInvalidElementByTextParameters,
         DriverFunctionConstants::getByContainedText,
@@ -94,7 +96,7 @@ public abstract class DriverFunctionConstants {
         "Text"
     );
 
-    public static final GetElementByData<Integer, WebElementList> BY_INDEX_CONSTANTS = new GetElementByData<>(
+    public static final GetElementByData<Integer, WebElement, WebElementList> BY_INDEX_CONSTANTS = new GetElementByData<>(
         "getElementByIndex",
         ElementGetterValidators::isInvalidElementByIndexParameters,
         DriverFunctionConstants::getByIndex,

@@ -11,7 +11,7 @@ public interface SeleniumLazyLocatorValidators {
         var message = LazyLocatorValidators.isInvalidLazyLocatorCommon(data);
         if (isBlank(message)) {
             message += (
-                SeleniumStrategyValidators.isValidStrategy(data.strategy)
+                SeleniumStrategyValidators.isValidStrategy(data.STRATEGY)
             );
         }
 

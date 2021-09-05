@@ -6,6 +6,7 @@ import com.github.karsaii.core.namespaces.validators.CoreFormatter;
 import com.github.karsaii.core.records.caster.WrappedCastData;
 import com.github.karsaii.core.records.wait.WaitTimeData;
 import com.github.karsaii.framework.core.abstracts.AbstractLazyResult;
+import com.github.karsaii.framework.core.namespaces.extensions.boilers.LazyLocatorList;
 import com.github.karsaii.framework.core.namespaces.validators.FrameworkCoreFormatter;
 import com.github.karsaii.framework.core.records.lazy.LazyElementParameters;
 import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.DriverFunction;
@@ -46,16 +47,16 @@ public interface ElementParameters {
         return isBlank(message) ? message : ("Wait.until: " + message);
     }
 
-    static boolean isInvalidLazyElemenet(LazyElementParameters data) {
-        return NullableFunctions.isNull(data) || StringUtils.isBlank(data.getter) || SeleniumUtilities.areNullLazyLocators(data.lazyLocators);
+    static boolean isInvalidLazyElemenet(LazyElementParameters<LazyLocatorList> data) {
+        return NullableFunctions.isNull(data) || StringUtils.isBlank(data.GETTER) || SeleniumUtilities.areNullLazyLocators(data.LAZY_LOCATORS);
     }
 
-    static boolean isValidLazyElement(LazyElementParameters data) {
+    static boolean isValidLazyElement(LazyElementParameters<LazyLocatorList> data) {
         return !isInvalidLazyElemenet(data);
     }
 
     static boolean isValidLazyFilteredElement(LazyFilteredElementParameters data) {
-        return !(isInvalidLazyElemenet(data) || (NullableFunctions.isNull(data.elementFilterData)) || (NullableFunctions.isNull(data.elementFilterData.filterParameter)));
+        return !(isInvalidLazyElemenet(data) || (NullableFunctions.isNull(data.ELEMENT_FILTER_DATA)) || (NullableFunctions.isNull(data.ELEMENT_FILTER_DATA.filterParameter)));
     }
 
 
