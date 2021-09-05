@@ -230,8 +230,8 @@ public interface SeleniumFormatter {
         var message = CoreFormatter.isNullMessageWithName(locator, parameterName);
         if (isBlank(message)) {
             message += (
-                CoreFormatter.isNullMessageWithName(locator.locator, parameterName + " value") +
-                CoreFormatter.isNullMessageWithName(locator.strategy, parameterName + " strategy")
+                CoreFormatter.isNullMessageWithName(locator.LOCATOR, parameterName + " value") +
+                CoreFormatter.isNullMessageWithName(locator.STRATEGY, parameterName + " strategy")
             );
         }
 

@@ -1,5 +1,6 @@
 package com.github.karsaii.framework.selenium.namespaces.element.validators;
 
+import com.github.karsaii.core.extensions.DecoratedList;
 import com.github.karsaii.core.namespaces.validators.CoreFormatter;
 import com.github.karsaii.core.records.Data;
 import com.github.karsaii.framework.selenium.namespaces.extensions.boilers.WebElementList;
@@ -9,18 +10,18 @@ import java.util.function.Function;
 import static com.github.karsaii.core.namespaces.validators.CoreFormatter.getNamedErrorMessageOrEmpty;
 
 public interface ElementGetterValidators {
-    private static String isInvalidElementList(Data<WebElementList> data) {
+    private static <T, U extends DecoratedList<T>> String isInvalidElementList(Data<U> data) {
         return getNamedErrorMessageOrEmpty(
             "isInvalidElementList",
             CoreFormatter.getValidNonFalseAndValidContainedMessage(data, CoreFormatter::isNullOrEmptyListMessage)
         );
     }
 
-    private static Function<WebElementList, String> getContainsIndexMessage(int index) {
+    private static <T, U extends DecoratedList<T>> Function<U, String> getContainsIndexMessage(int index) {
         return list -> CoreFormatter.getContainsIndexMessage(list, index);
     }
 
-    static String isInvalidElementByTextParameters(Data<WebElementList> data, String text) {
+    static <T, U extends DecoratedList<T>> String isInvalidElementByTextParameters(Data<U> data, String text) {
         return getNamedErrorMessageOrEmpty(
             "isInvalidElementByTextParameters",
             (
@@ -30,7 +31,7 @@ public interface ElementGetterValidators {
         );
     }
 
-    static String isInvalidElementByIndexParameters(Data<WebElementList> data, int index) {
+    static <T, U extends DecoratedList<T>> String isInvalidElementByIndexParameters(Data<U> data, int index) {
         return getNamedErrorMessageOrEmpty(
             "isInvalidElementByIndexParameters",
             (

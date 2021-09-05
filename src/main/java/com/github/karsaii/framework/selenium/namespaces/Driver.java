@@ -10,7 +10,6 @@ import com.github.karsaii.core.extensions.namespaces.NullableFunctions;
 import com.github.karsaii.core.extensions.namespaces.factories.DecoratedListFactory;
 import com.github.karsaii.core.extensions.namespaces.predicates.BasicPredicates;
 import com.github.karsaii.core.extensions.namespaces.predicates.SizablePredicates;
-import com.github.karsaii.core.namespaces.BaseExecutionFunctions;
 import com.github.karsaii.core.namespaces.DataFactoryFunctions;
 import com.github.karsaii.core.namespaces.DataFunctions;
 import com.github.karsaii.core.namespaces.factories.MethodMessageDataFactory;
@@ -79,7 +78,6 @@ import com.github.karsaii.framework.selenium.records.lazy.GetLazyElementData;
 import com.github.karsaii.framework.selenium.records.lazy.LazyElement;
 import com.github.karsaii.framework.selenium.records.lazy.LazyElementWithOptionsData;
 import com.github.karsaii.framework.selenium.records.lazy.filtered.LazyFilteredElementParameters;
-import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchFrameException;
 import org.openqa.selenium.SearchContext;
@@ -116,7 +114,6 @@ import static com.github.karsaii.core.namespaces.validators.CoreFormatter.isNull
 import static com.github.karsaii.framework.core.namespaces.FrameworkCoreUtilities.isNullLazyLocator;
 import static com.github.karsaii.framework.selenium.namespaces.ExecutionCore.ifData;
 import static com.github.karsaii.framework.selenium.namespaces.ExecutionCore.ifDriver;
-import static com.github.karsaii.framework.selenium.namespaces.ExecutionCore.ifDriverGuardData;
 import static com.github.karsaii.framework.selenium.namespaces.ExecutionCore.validChain;
 import static com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilities.getLocator;
 import static com.github.karsaii.framework.selenium.namespaces.utilities.SeleniumUtilities.isNotNullLazyLocator;
@@ -509,8 +506,8 @@ public interface Driver {
             }
 
             list = data.object;
-            if (Objects.equals(locator.strategy, "id") && (list.isMany())) {
-                message.append("There's more than one element with id(\"" + locator.locator + "\") - amount(\"" + list.size() + "\"). Returning" + CoreFormatterConstants.END_LINE);
+            if (Objects.equals(locator.STRATEGY, "id") && (list.isMany())) {
+                message.append("There's more than one element with id(\"" + locator.LOCATOR + "\") - amount(\"" + list.size() + "\"). Returning" + CoreFormatterConstants.END_LINE);
                 break;
             }
 
@@ -540,7 +537,7 @@ public interface Driver {
         return getElementsIf(getElementsParametersMessage(locators), driver -> getElements(driver, locators, Driver::getElements));
     }
 
-    static <T> Data<WebElement> getElementBy(GetElementByData<T, WebElementList> defaults, Data<WebElementList> data, T filter) {
+    static <T> Data<WebElement> getElementBy(GetElementByData<T, WebElement, WebElementList> defaults, Data<WebElementList> data, T filter) {
         final var guardName = "getElementBy";
         var errorMessage = GetElementByDataValidators.getValidGetElementByDataMessage(defaults);
         if (isNotBlank(errorMessage)) {
@@ -963,7 +960,7 @@ public interface Driver {
         SwitchResultMessageData<T> messageData
     ) {
         final var nameof = "switchTo";
-        if (areAnyNull(target, locator) || !guardCondition) {
+        if (areAnyNull(target, locator) || CoreUtilities.isFalse(guardCondition)) {
             DataFactoryFunctions.getInvalidBooleanWith(nameof, formatter.apply(false, messageData));
         }
 
@@ -1375,7 +1372,7 @@ public interface Driver {
                     locator = SeleniumLazyLocatorFactory.get(selector.object, selectorType);
                     parameterKey = FrameworkCoreFormatter.getUniqueGeneratedName(selectorType, SeleniumCoreConstants.ATOMIC_COUNT);
                     lep = LazyFilteredElementParametersFactory.getWithFilterParametersAndLocator(false, 0, locator);
-                    currentElement = ElementFilterFunctions.getElement(lep.lazyLocators, ElementFinderConstants.singleGetterMap, SingleGetter.DEFAULT).apply(driver);
+                    currentElement = ElementFilterFunctions.getElement(lep.LAZY_LOCATORS, ElementFinderConstants.singleGetterMap, SingleGetter.DEFAULT).apply(driver);
                     if (isNullWebElement(currentElement)) {
                         break;
                     }
@@ -1384,7 +1381,7 @@ public interface Driver {
                 }
 
                 element.parameters.putIfAbsent(parameterKey, lep);
-                final var update = ElementRepository.updateTypeKeys(element.name, lep.lazyLocators, typeKeys, parameterKey);
+                final var update = ElementRepository.updateTypeKeys(element.name, lep.LAZY_LOCATORS, typeKeys, parameterKey);
                 return isNotNullWebElement(currentElement) ? (
                     DataFactoryFunctions.getWith(new ExternalElementData(typeKeys, currentElement), true, nameof, "External function element" + CoreFormatterConstants.END_LINE)
                 ) : replaceMessage(defaultValue, nameof, "All(\"" + length + "\") approaches were tried" + CoreFormatterConstants.END_LINE + DataFunctions.getFormattedMessage(currentElement));
@@ -1477,17 +1474,17 @@ public interface Driver {
 
             final var key = keyData.object.strategy;
             var parameters = parameterMap.get(key);
-            if (isNull(parameters) || parameters.lazyLocators.isNullOrEmpty()) {
+            if (isNull(parameters) || parameters.LAZY_LOCATORS.isNullOrEmpty()) {
                 continue;
             }
 
-            var locators = parameters.lazyLocators;
+            var locators = parameters.LAZY_LOCATORS;
             var update = ElementRepository.updateTypeKeys(name, locators, typeKeys, key);
             if (isInvalidOrFalse(update)) {
                 continue;
             }
 
-            current = defaults.getter.apply(parameters.elementFilterData, locators, parameters.getter).apply(driver);
+            current = defaults.getter.apply(parameters.ELEMENT_FILTER_DATA, locators, parameters.GETTER).apply(driver);
             message.append(DataFunctions.getFormattedMessage(current));
             message.append(DataFunctions.getFormattedMessage(Adjuster.adjustProbability(parameters, typeKeys, key, isValidNonFalse(current), data.probabilityData)));
             cacheKeyData = new CachedLookupKeysData(name, keyData.object.entryName, keyData.object.strategy, isCached ? keyData.object.index : ++parameterIndex);

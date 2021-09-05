@@ -1,6 +1,8 @@
 package com.github.karsaii.framework.selenium.records;
 
 import com.github.karsaii.core.extensions.DecoratedList;
+import com.github.karsaii.core.extensions.namespaces.CoreUtilities;
+import com.github.karsaii.core.extensions.namespaces.NullableFunctions;
 import com.github.karsaii.core.records.Data;
 import com.github.karsaii.framework.core.records.GetByFilterFormatterData;
 import org.openqa.selenium.WebElement;
@@ -9,21 +11,20 @@ import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-
-public class GetElementByData<T, U extends DecoratedList<WebElement>> {
+public class GetElementByData<T, ElementType, ListType extends DecoratedList<ElementType>> {
     public final String nameof;
-    public final BiFunction<Data<U>, T, String> validator;
-    public final BiFunction<Data<U>, T, WebElement> getter;
+    public final BiFunction<Data<ListType>, T, String> validator;
+    public final BiFunction<Data<ListType>, T, ElementType> getter;
     public final Function<GetByFilterFormatterData<T>, String> formatter;
-    public final Data<WebElement> defaultValue;
+    public final Data<ElementType> defaultValue;
     public final String filterName;
 
     public GetElementByData(
         String nameof,
-        BiFunction<Data<U>, T, String> validator,
-        BiFunction<Data<U>, T, WebElement> getter,
+        BiFunction<Data<ListType>, T, String> validator,
+        BiFunction<Data<ListType>, T, ElementType> getter,
         Function<GetByFilterFormatterData<T>, String> formatter,
-        Data<WebElement> defaultValue,
+        Data<ElementType> defaultValue,
         String filterName
     ) {
         this.nameof = nameof;
@@ -36,16 +37,22 @@ public class GetElementByData<T, U extends DecoratedList<WebElement>> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        final var that = (GetElementByData<?, ?>) o;
+        if (CoreUtilities.isEqual(this, o)) {
+            return true;
+        }
+        
+        if (NullableFunctions.isNull(o) || CoreUtilities.isNotEqual(getClass(), o.getClass())) {
+            return false;
+        }
+
+        final var that = (GetElementByData<?, ?, ?>) o;
         return (
-            Objects.equals(nameof, that.nameof) &&
-            Objects.equals(validator, that.validator) &&
-            Objects.equals(getter, that.getter) &&
-            Objects.equals(formatter, that.formatter) &&
-            Objects.equals(defaultValue, that.defaultValue) &&
-            Objects.equals(filterName, that.filterName)
+            CoreUtilities.isEqual(nameof, that.nameof) &&
+            CoreUtilities.isEqual(validator, that.validator) &&
+            CoreUtilities.isEqual(getter, that.getter) &&
+            CoreUtilities.isEqual(formatter, that.formatter) &&
+            CoreUtilities.isEqual(defaultValue, that.defaultValue) &&
+            CoreUtilities.isEqual(filterName, that.filterName)
         );
     }
 

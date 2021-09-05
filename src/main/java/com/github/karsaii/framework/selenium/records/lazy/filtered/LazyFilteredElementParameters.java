@@ -8,7 +8,7 @@ import com.github.karsaii.framework.selenium.records.element.finder.ElementFilte
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-public class LazyFilteredElementParameters extends AbstractLazyFilteredElementParameters<WebDriver, ManyGetter, ElementFilterParameters, WebElementList, WebElement> {
+public class LazyFilteredElementParameters extends AbstractLazyFilteredElementParameters<WebDriver, ManyGetter, ElementFilterParameters, LazyLocatorList, WebElementList, WebElement> {
     public LazyFilteredElementParameters(ElementFilterData<?> elementFilterData, Class clazz, double probability, LazyLocatorList lazyLocators, String getter) {
         super(elementFilterData, clazz, probability, lazyLocators, getter);
     }
