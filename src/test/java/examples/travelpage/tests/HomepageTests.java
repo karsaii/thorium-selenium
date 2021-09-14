@@ -1,10 +1,10 @@
 package examples.travelpage.tests;
 
-import com.github.karsaii.core.namespaces.DataFunctions;
-import com.github.karsaii.framework.selenium.namespaces.DriverWaits;
-import com.github.karsaii.framework.selenium.namespaces.SeleniumExecutor;
-import com.github.karsaii.framework.selenium.namespaces.element.Element;
-import com.github.karsaii.framework.selenium.namespaces.element.ElementExpectedConditions;
+import com.neathorium.framework.selenium.namespaces.DriverWaits;
+import com.neathorium.framework.selenium.namespaces.SeleniumExecutor;
+import com.neathorium.framework.selenium.namespaces.element.Element;
+import com.neathorium.framework.selenium.namespaces.element.ElementExpectedConditions;
+import com.neathorium.core.namespaces.DataFunctions;
 import examples.travelpage.constants.HomepageConstants;
 import examples.travelpage.namespaces.FFDriverFunctions;
 import org.junit.jupiter.api.AfterAll;

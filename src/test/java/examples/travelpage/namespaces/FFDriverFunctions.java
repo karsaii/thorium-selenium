@@ -1,6 +1,6 @@
 package examples.travelpage.namespaces;
 
-import com.github.karsaii.framework.selenium.namespaces.Driver;
+import com.neathorium.framework.selenium.namespaces.Driver;
 import examples.travelpage.constants.DriverConstants;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxBinary;

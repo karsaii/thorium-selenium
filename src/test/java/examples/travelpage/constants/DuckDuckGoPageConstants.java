@@ -1,9 +1,9 @@
 package examples.travelpage.constants;
 
-import com.github.karsaii.framework.selenium.records.lazy.LazyElement;
+import com.neathorium.framework.selenium.records.lazy.LazyElement;
 
-import static com.github.karsaii.framework.selenium.namespaces.factories.SeleniumLazyLocatorFactory.getID;
-import static com.github.karsaii.framework.selenium.namespaces.factories.lazy.simple.SimpleLazyElementFactory.getSimple;
+import static com.neathorium.framework.selenium.namespaces.factories.SeleniumLazyLocatorFactory.getID;
+import static com.neathorium.framework.selenium.namespaces.factories.lazy.simple.SimpleLazyElementFactory.getSimple;
 
 public abstract class DuckDuckGoPageConstants {
     public static final String NAME = "DuckDuckGo page - ";

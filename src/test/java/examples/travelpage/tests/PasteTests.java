@@ -1,18 +1,18 @@
 package examples.travelpage.tests;
 
-import com.github.karsaii.core.namespaces.clipboard.ClipboardFunctions;
-import com.github.karsaii.core.namespaces.executor.step.StepExecutor;
-import com.github.karsaii.framework.selenium.namespaces.Driver;
-import com.github.karsaii.framework.selenium.namespaces.SeleniumExecutor;
-import com.github.karsaii.framework.selenium.namespaces.element.Element;
-import com.github.karsaii.framework.selenium.namespaces.element.ElementExpectedConditions;
+import com.neathorium.framework.selenium.namespaces.Driver;
+import com.neathorium.framework.selenium.namespaces.SeleniumExecutor;
+import com.neathorium.framework.selenium.namespaces.element.Element;
+import com.neathorium.framework.selenium.namespaces.element.ElementExpectedConditions;
+import com.neathorium.core.namespaces.clipboard.ClipboardFunctions;
+import com.neathorium.core.namespaces.executor.step.StepExecutor;
 import examples.travelpage.constants.DuckDuckGoPageConstants;
 import examples.travelpage.namespaces.FFDriverFunctions;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Keys;
 
-import static com.github.karsaii.core.namespaces.executor.step.StepFactory.step;
+import static com.neathorium.core.namespaces.executor.step.StepFactory.step;
 import static common.AssertionConstants.assertDataTrue;
 
 public class PasteTests {

@@ -1,11 +1,11 @@
 package examples.travelpage.constants;
 
-import com.github.karsaii.framework.core.namespaces.extensions.boilers.LazyLocatorList;
-import com.github.karsaii.framework.core.namespaces.factory.LazyLocatorFactory;
-import com.github.karsaii.framework.core.records.lazy.LazyLocator;
-import com.github.karsaii.framework.selenium.constants.SelectorStrategyNameConstants;
-import com.github.karsaii.framework.selenium.namespaces.factories.lazy.LazyElementFactory;
-import com.github.karsaii.framework.selenium.records.lazy.LazyElement;
+import com.neathorium.framework.selenium.constants.SelectorStrategyNameConstants;
+import com.neathorium.framework.selenium.namespaces.factories.lazy.LazyElementFactory;
+import com.neathorium.framework.selenium.records.lazy.LazyElement;
+import com.neathorium.framework.core.namespaces.extensions.boilers.LazyLocatorList;
+import com.neathorium.framework.core.namespaces.factory.LazyLocatorFactory;
+import com.neathorium.framework.core.records.lazy.LazyLocator;
 
 import java.util.Arrays;
 import java.util.Collections;

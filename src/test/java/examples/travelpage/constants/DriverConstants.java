@@ -1,6 +1,6 @@
 package examples.travelpage.constants;
 
-import com.github.karsaii.core.constants.project.ProjectPathConstants;
+import com.neathorium.core.constants.project.ProjectPathConstants;
 import org.openqa.selenium.WebDriver;
 
 import java.util.HashMap;
